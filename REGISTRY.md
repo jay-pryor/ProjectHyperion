@@ -13,7 +13,7 @@ related: [HYP-000]
 
 <!-- GENERATED FILE — do not edit. Run: python tooling/build_registry.py -->
 
-Generated 2026-08-31 · 42 documents
+Generated 2026-08-31 · 43 documents
 
 ## Standing context loadout
 
@@ -64,6 +64,7 @@ context budget in every session.
 | `CORE-REV-004` | Targeted Human Reads | active | on-task | [core/reviews/targeted-human-reads.md](core/reviews/targeted-human-reads.md) |
 | `CORE-SES-001` | Session Protocol | active | always | [core/session-protocol.md](core/session-protocol.md) |
 | `CORE-TST-001` | Test Strategy | active | on-task | [core/testing/test-strategy.md](core/testing/test-strategy.md) |
+| `CORE-TRC-001` | Traceability | active | on-task | [core/traceability.md](core/traceability.md) |
 
 ## profile
 

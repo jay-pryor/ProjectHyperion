@@ -3,10 +3,10 @@ id: TPL-001
 title: "Template — Module Contract"
 tier: templates
 status: active
-version: 0.1
+version: 0.2
 audience: [human, model]
 load: on-task
-related: [CORE-CON-001]
+related: [CORE-CON-001, CORE-TRC-001]
 ---
 
 # Template — Module Contract
@@ -43,8 +43,11 @@ Version: 1.0 · Status: draft | active | superseded
 <Complexity, latency budget, memory bound. Omit if genuinely unconstrained.>
 
 ## 7. Trace
-| Requirement ID | Hazard ID | Conformance test |
-|---|---|---|
+<Requirement IDs this contract satisfies. The authoritative trace lives in
+`trace/requirements.yaml` (allocated_to must name this module) and is checked by
+`tooling/check_traces.py`. List IDs here for the reader; do not restate the mapping.>
+
+- REQ-nnn, REQ-nnn
 
 ## Explicitly not promised
 <Behaviour consumers must not depend on. This section prevents accidental coupling and is

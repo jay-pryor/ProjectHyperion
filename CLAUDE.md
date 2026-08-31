@@ -47,7 +47,7 @@ Then stop and wait. Do not begin in the same turn.
 6. **Frontmatter is mandatory** and must match `tooling/doc-frontmatter-schema.md`. IDs are
    stable and never reused. Cross-references use IDs, not paths.
 
-7. **Regenerate the registry** after any change (IMP-13, TOOL-001):
+7. **Regenerate the registry** after any change (IMP-F1, TOOL-001):
 
        python tooling/build_registry.py
 
@@ -63,7 +63,7 @@ Then stop and wait. Do not begin in the same turn.
    still holds, then clear with `--accept`. Clearing without re-reading defeats the check.
    Definition and rules: `core/imperatives.md` (CORE-IMP-001).
 
-9. **A rule with no principle is a defect** (IMP-14, CORE-PRN-001). Applies to imperatives
+9. **A rule with no principle is a defect** (IMP-F2, CORE-PRN-001). Applies to imperatives
    in `CLAUDE.md` files as much as to rules in core. If you write an imperative you cannot
    trace, either the principles are incomplete — say so — or the rule should not exist.
 

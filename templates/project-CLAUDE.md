@@ -81,6 +81,8 @@ defect — find its principle in core or delete it (CORE-IMP-001).
 | IMP-10 | Seed RNG per stochastic stream; iterate in order; no wall-clock time in logic. *(Simulation)* | SIM-DET-001 |
 | IMP-11 | Never silently extrapolate outside a stated validity envelope. Detect and report. *(Simulation)* | SIM-VAL-001 |
 | IMP-12 | Give every hard-coded tolerance a stated justification naming its basis. *(Simulation)* | SIM-RDS-001 |
+| IMP-13 | Update `trace/` in the same session that changes the thing being traced. Never batch trace updates. | CORE-TRC-001 |
+| IMP-14 | Never set `mitigation_status: verified` without a named test that exists and passes. | CORE-TRC-001 |
 
 Two more that are conventions rather than derived rules, and are marked as such:
 
@@ -138,9 +140,14 @@ and why before loading it.
     <conformance>       # conformance only
     <validation>        # validation suite — separate from tests
     <lint>              # includes boundary and token checks
+    <collect-tests>     # regenerate trace/tests.txt — run BEFORE check-traces
+    <check-traces>      # python hyperion/tooling/check_traces.py
+    <trace-matrix>      # python hyperion/tooling/check_traces.py --report > trace/matrix.md
     <registry>          # python hyperion/tooling/build_registry.py --check
 
-Run `<lint>` and `<conformance>` before declaring any work complete.
+Run `<lint>`, `<conformance>`, and `<check-traces>` before declaring any work complete.
+`trace/tests.txt` is generated, never hand-edited — a hand-maintained manifest makes the
+trace check meaningless.
 
 ## Definition of done for a slice
 
@@ -150,5 +157,6 @@ Run `<lint>` and `<conformance>` before declaring any work complete.
 - [ ] Findings dispositioned; S1 and S2 closed
 - [ ] Lessons recorded and promoted
 - [ ] Decision records written for anything decided
+- [ ] `trace/` updated; `check_traces.py` green
 - [ ] Slice acceptance record completed
 ```

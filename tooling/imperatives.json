@@ -98,7 +98,7 @@
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
-      "id": "IMP-13",
+      "id": "IMP-F1",
       "text": "Regenerate the registry after any change to this repository",
       "source_id": "TOOL-001",
       "source_path": "tooling/doc-frontmatter-schema.md",
@@ -106,12 +106,28 @@
       "carried_in": "CLAUDE.md"
     },
     {
-      "id": "IMP-14",
+      "id": "IMP-F2",
       "text": "Every rule added to core must trace to a principle",
       "source_id": "CORE-PRN-001",
       "source_path": "core/00-principles.md",
       "source_hash": "ea8c7fa9af1127e4",
       "carried_in": "CLAUDE.md"
+    },
+    {
+      "id": "IMP-13",
+      "text": "Update trace/ in the same session that changes the thing being traced",
+      "source_id": "CORE-TRC-001",
+      "source_path": "core/traceability.md",
+      "source_hash": "ffa79e50de047cea",
+      "carried_in": "templates/project-CLAUDE.md"
+    },
+    {
+      "id": "IMP-14",
+      "text": "Never set mitigation_status verified without a named test that exists and passes",
+      "source_id": "CORE-TRC-001",
+      "source_path": "core/traceability.md",
+      "source_hash": "ffa79e50de047cea",
+      "carried_in": "templates/project-CLAUDE.md"
     }
   ]
 }
