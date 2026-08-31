@@ -1,0 +1,26 @@
+name: hyperion
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  framework-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # The registry is generated, never hand-maintained. A stale index is worse
+      # than none, because it is trusted. Also validates frontmatter, duplicate
+      # IDs, dangling cross-references, and human-only docs in the model loadout.
+      - name: Registry current and references resolve
+        run: python tooling/build_registry.py --check
+
+      # CLAUDE.md imperatives derive from core documents and can go stale silently.
+      # This does not prove an imperative is still correct; it forces someone to look.
+      - name: Imperatives confirmed against their sources
+        run: python tooling/check_imperatives.py
