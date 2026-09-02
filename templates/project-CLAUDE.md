@@ -27,7 +27,8 @@ defaults; where they conflict, this file wins. Project state lives in `trace/`, 
 
 ## Open the session with a declaration
 
-Before reading or writing anything, output exactly:
+Type the session's skill (`/implement SL-02 <scope>`); it prints the declaration below and
+records the type for the scope hook (CORE-HRN-001). Without it, output by hand, before anything else:
 
     SESSION: <GATE | CONTRACT | CONFORMANCE | IMPLEMENT | REVIEW | INTEGRATE | LESSON | BASELINE | QUERY>
     SLICE: <SL-nn or n/a>
@@ -60,9 +61,8 @@ modify". Full definition: `hyperion/core/session-protocol.md` (CORE-SES-001).
 
 ## Imperatives
 
-Each carries the core section it derives from. Follow the imperative; open the pointer
-only when a marginal case needs the reasoning behind it. An imperative with no source is
-a rule invented here rather than derived, which is a defect (CORE-IMP-001).
+Each carries the core section it derives from; open the pointer only when a marginal case
+needs the reasoning. An imperative with no source is invented here, not derived: a defect (CORE-IMP-001).
 
 <!-- generated:imperatives -->
 | # | Imperative | Source |
@@ -89,8 +89,8 @@ Two conventions rather than derived rules, marked as such:
 ## Keeping this file honest
 
 The table above is generated; never edit it by hand. `python hyperion/tooling/check_imperatives.py`
-fails when a source section changed, when the table differs from `.hyperion/imperatives.json`,
-or when an imperative is on one side only. After moving the vendored framework, run
+fails when a source section changed, the table differs from `.hyperion/imperatives.json`, or an
+imperative is on one side only. After moving the vendored framework, run
 `python hyperion/tooling/init_project.py --upgrade .` and re-read what changed (CORE-IMP-001).
 
 ## STOP conditions
@@ -108,25 +108,23 @@ Stop, state the condition, and end the session. Do not work around it or ask per
 - You are about to write a second implementation of something that already exists.
 <!-- /generated -->
 
-Each of these is a gate in disguise. Hitting one is a normal outcome, not a failure.
-
 ## Context loadout
 
-Load only what the session type needs, plus this file; `python hyperion/tooling/loadout.py --session <TYPE>`
-prints the paths. If you need a document not listed, say which and why first.
+Load only what the session type needs, plus this file; the skill lists the paths, as does
+`python hyperion/tooling/loadout.py --session <TYPE>`. Need more? Say which and why first.
 
 <!-- generated:loadout -->
 | Session | Load |
 |---|---|
 | every session | CORE-CHG-001, CORE-CON-003, CORE-LFC-001, CORE-LFC-006, CORE-PRN-001, CORE-SES-001 |
-| GATE | CORE-DEC-001, CORE-LFC-002, CORE-LFC-003, CORE-LFC-004, CORE-LFC-005, CORE-REV-003, CORE-TRC-001, CORE-TRC-002, TPL-002, TPL-004, TPL-005, TPL-008, `docs/decisions/**`, `trace/**` |
-| CONTRACT | CORE-CON-001, CORE-CON-002, CORE-DEC-001, CORE-TRC-002, TPL-001, TPL-002, TPL-005, `modules/<module>/CONTRACT.md`, `docs/slices/<slice>.md` |
-| CONFORMANCE | CORE-CON-002, CORE-REV-005, CORE-TRC-002, CORE-TST-001, CORE-TST-002, `modules/<module>/CONTRACT.md`, `docs/slices/<slice>.md` |
-| IMPLEMENT | CORE-TST-002, `modules/<module>/CONTRACT.md`, `modules/<module>/CLAUDE.md`, `docs/slices/<slice>.md` |
-| REVIEW | CORE-REV-001, CORE-REV-003, CORE-REV-005, CORE-TRC-003, AGT-000, AGT-LNS-001, AGT-VAL-001, AGT-VER-001, one agent file plus the inputs it permits, nothing else |
-| INTEGRATE | CORE-TRC-003, CORE-TST-002, `modules/*/CONTRACT.md`, `docs/slices/<slice>.md` |
-| LESSON | CORE-LSN-001, CORE-REV-005, CORE-TRC-003, TPL-003, TPL-007, `docs/slices/<slice>.md`, `lessons/**` |
-| BASELINE | CORE-CHG-002, CORE-DEC-001, CORE-TRC-003, TPL-002, `docs/decisions/<DEC-nnn>.md` |
+| GATE | CORE-DEC-001, CORE-HRN-001, CORE-LFC-002, CORE-LFC-003, CORE-LFC-004, CORE-LFC-005, CORE-REV-003, CORE-TRC-001, CORE-TRC-002, TPL-002, TPL-004, TPL-005, TPL-008, `docs/decisions/**`, `trace/**` |
+| CONTRACT | CORE-CON-001, CORE-CON-002, CORE-DEC-001, CORE-HRN-001, CORE-TRC-002, TPL-001, TPL-002, TPL-005, `modules/<module>/CONTRACT.md`, `docs/slices/<slice>.md` |
+| CONFORMANCE | CORE-CON-002, CORE-HRN-001, CORE-REV-005, CORE-TRC-002, CORE-TST-001, CORE-TST-002, `modules/<module>/CONTRACT.md`, `docs/slices/<slice>.md` |
+| IMPLEMENT | CORE-HRN-001, CORE-TST-002, `modules/<module>/CONTRACT.md`, `modules/<module>/CLAUDE.md`, `docs/slices/<slice>.md` |
+| REVIEW | CORE-HRN-001, CORE-REV-001, CORE-REV-003, CORE-REV-005, CORE-TRC-003, AGT-000, AGT-LNS-001, AGT-VAL-001, AGT-VER-001, one agent file plus the inputs it permits, nothing else |
+| INTEGRATE | CORE-HRN-001, CORE-TRC-003, CORE-TST-002, `modules/*/CONTRACT.md`, `docs/slices/<slice>.md` |
+| LESSON | CORE-HRN-001, CORE-LSN-001, CORE-REV-005, CORE-TRC-003, TPL-003, TPL-007, `docs/slices/<slice>.md`, `lessons/**` |
+| BASELINE | CORE-CHG-002, CORE-DEC-001, CORE-HRN-001, CORE-TRC-003, TPL-002, `docs/decisions/<DEC-nnn>.md` |
 | QUERY | whatever the question needs; the only type with no ceiling |
 <!-- /generated -->
 
@@ -137,9 +135,11 @@ prints the paths. If you need a document not listed, say which and why first.
     <validation>        # validation suite — separate from tests
     <lint>              # includes boundary and token checks
     <check-traces>      # python hyperion/tooling/check_traces.py — run AFTER <test>; --report for the matrix
+    <null-doubles>      # python hyperion/tooling/check_null_doubles.py . — every suite must FAIL its null double
+    <mutation>          # python hyperion/tooling/mutation_score.py --slice SL-nn . — at acceptance; --write to record
     <check-commit>      # python hyperion/tooling/check_commit.py <base>..HEAD
 
-Run `<lint>`, `<conformance>`, and `<check-traces>` before declaring any work complete.
+Run `<lint>`, `<conformance>`, and `<check-traces>` before declaring any work complete;
 `trace/results.xml` is generated, never committed. Every commit carries a `Session: <TYPE>`
 trailer; CI rejects one whose paths fall outside that type.
 

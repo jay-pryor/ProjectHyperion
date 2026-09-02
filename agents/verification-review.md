@@ -10,7 +10,7 @@ sessions: [REVIEW]
 lens: verification
 question: "Does the implementation satisfy the contract?"
 run_when: "Every slice"
-model: sonnet
+model: sonnet   # verification runs on a different family from the authoring session (CORE-HRN-001)
 related: [CORE-REV-003, CORE-CON-001]
 ---
 

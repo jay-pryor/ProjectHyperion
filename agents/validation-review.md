@@ -10,7 +10,7 @@ sessions: [REVIEW]
 lens: validation
 question: "Is the contract itself wrong?"
 run_when: "Every slice, and on gate artifacts at G2 and G3"
-model: sonnet
+model: opus   # specification review runs on a different family from the authoring session (CORE-HRN-001)
 related: [CORE-REV-003, CORE-LFC-003]
 ---
 

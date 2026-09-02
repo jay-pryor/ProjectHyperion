@@ -19,12 +19,12 @@ between documents and tooling. Read by FRAMEWORK sessions adding or re-tagging a
 ```yaml
 id: CORE-XXX-nnn      # stable, never reused, survives file moves
 title: Human Title
-tier: root | core | profile | agents | templates | tooling
+tier: root | handbook | core | profile | agents | templates | tooling
 status: draft | active | superseded
 version: 0.1
 audience: [human, model]   # who reads this
-load: always | on-task | reference
-sessions: [GATE, CONTRACT]   # on-task only: which session types load it
+load: always | on-task | reference | never
+sessions: [GATE, CONTRACT]   # on-task: which session types load it; never: []
 related: [ID, ID]
 ```
 
@@ -55,13 +55,15 @@ imperative cannot derive from a human-only document ([CORE-IMP-001](../core/impe
 | `always` | In the standing loadout of every session on a project that uses this tier or profile |
 | `on-task` | Loaded by the session types in `sessions:` |
 | `reference` | Human lookup only; never loaded automatically |
+| `never` | No session loads it: `tier: handbook` orientation for the person, rendered by the console. Requires `audience: [human]` and `sessions: []` |
 
-**`sessions`** — required with `load: on-task`, forbidden otherwise. Each entry is a type
+**`sessions`** — required with `load: on-task`, `[]` with `load: never`, forbidden otherwise. Each entry is a type
 from the `session-types` block in [CORE-SES-001](../core/session-protocol.md). This field is
 the only definition of a session's loadout: `build_layer.py` renders the project
 template's loadout table from it and `loadout.py --session <TYPE>` prints the file list.
 `[]` on a human-only document says explicitly that no session loads it. `tier: root`
-documents are the framework's own and never enter a project loadout.
+documents are the framework's own and never enter a project loadout; `tier: handbook`
+documents ([HBK-000](../handbook/00-reading-order.md)) are read by people, in the console.
 
 **`model`** — a reviewer on the authoring model shares its blind spots
 ([CORE-REV-003](../core/reviews/lens-reviews.md)); the default is a different alias from the

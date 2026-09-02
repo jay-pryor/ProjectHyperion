@@ -62,10 +62,11 @@ def _stringify(value):
 
 def collect_docs(root=FRAMEWORK_ROOT):
     """Every framework document with frontmatter, keyed by path. examples/ holds
-    projects built under the framework, not documents of it, and is skipped."""
+    projects built under the framework, not documents of it, and .claude/ holds the
+    generated binding (CORE-HRN-001); both are skipped."""
     docs = {}
     for path in sorted(Path(root).rglob("*.md")):
-        if ".git" in path.parts or "examples" in path.parts:
+        if ".git" in path.parts or "examples" in path.parts or ".claude" in path.parts:
             continue
         text = read(path)
         fm, body = split_frontmatter(text)

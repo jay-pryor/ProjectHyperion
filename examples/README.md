@@ -17,6 +17,16 @@ in twenty minutes; complete enough to exercise every mechanism the framework nam
 | `validation/` | Analytical, convergence, envelope, and determinism cases, separate from the test suite |
 | `trace/` | Every record the framework names: requirements, hazards, slices, findings (admitted and rejected), reviews (gates, targeted reads, an inspection), needs, assumptions, goals, changes |
 | `docs/` | A slice definition with its acceptance record, a decision record with rejected alternatives, a module map |
+| `.claude/`, `.devcontainer/` | The generated Claude Code binding (CORE-HRN-001): one skill per session type, the read-only lens agents, the scope hook, the plugin list, the container |
+
+### Open a session
+
+In Claude Code, from `examples/minimal/`, type the session's skill: `/implement SL-02 drag
+in the integrator`, `/conformance SL-02 envelope cases`, `/review SL-01 verification
+numerical-integrity`, `/query why is atmosphere a separate module`. The skill prints the
+declaration, records the type in `.hyperion/session`, and from then on the hook denies a
+write outside that type's globs. `/review` runs the lenses as parallel subagents and appends
+their findings; it fixes nothing.
 
 ### Run it
 
@@ -25,12 +35,16 @@ in twenty minutes; complete enough to exercise every mechanism the framework nam
     pytest -q                                      # 27 passed; writes trace/results.xml
     python ../../tooling/check_traces.py           # chain intact, every record validated
     python ../../tooling/check_traces.py --report  # the matrix; exits 1 over a broken chain
+    python ../../tooling/build_console.py .        # console/index.html: open it in a browser
     python ../../tooling/check_null_doubles.py .   # both suites fail against their null double, per file
     pip install mutmut
     python ../../tooling/mutation_score.py --slice SL-01 .   # score and survivor rows, printed, not written
 
 The null-double check and the mutation run write their own results elsewhere, so
-`trace/results.xml` keeps the real run.
+`trace/results.xml` keeps the real run. The console is one self-contained page: the
+overview, hazards, the requirement matrix, module map, plan, findings and reviews,
+decisions and changes, and a handbook tab rendering the framework documents. It is
+generated on every CI run and uploaded as a build artifact; `console/` is not committed.
 
 ### What is ahead of the tooling
 

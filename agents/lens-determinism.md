@@ -10,7 +10,7 @@ sessions: [REVIEW]
 lens: determinism
 question: "Can two identical runs differ?"
 run_when: "Any slice touching state, RNG, iteration, or parallelism"
-model: sonnet
+model: sonnet   # lenses run on a different family from the authoring session (CORE-HRN-001)
 profile: simulation
 related: [CORE-REV-003, SIM-DET-001]
 ---

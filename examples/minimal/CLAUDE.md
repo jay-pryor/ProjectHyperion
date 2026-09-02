@@ -63,14 +63,14 @@ Project state lives in `trace/`; never restate it here.
 | Session | Load |
 |---|---|
 | every session | CORE-CHG-001, CORE-CON-003, CORE-LFC-001, CORE-LFC-006, CORE-PRN-001, CORE-SES-001, SIM-000, SIM-DET-001 |
-| GATE | CORE-DEC-001, CORE-LFC-002, CORE-LFC-003, CORE-LFC-004, CORE-LFC-005, CORE-REV-003, CORE-TRC-001, CORE-TRC-002, SIM-VAL-001, TPL-002, TPL-004, TPL-005, TPL-008, `docs/decisions/**`, `trace/**` |
-| CONTRACT | CORE-CON-001, CORE-CON-002, CORE-DEC-001, CORE-TRC-002, TPL-001, TPL-002, TPL-005, `modules/<module>/CONTRACT.md`, `docs/slices/<slice>.md` |
-| CONFORMANCE | CORE-CON-002, CORE-REV-005, CORE-TRC-002, CORE-TST-001, CORE-TST-002, SIM-VAL-001, `modules/<module>/CONTRACT.md`, `docs/slices/<slice>.md`, `fixtures/<scenario>/tolerance.yaml` |
-| IMPLEMENT | CORE-TST-002, `modules/<module>/CONTRACT.md`, `modules/<module>/CLAUDE.md`, `docs/slices/<slice>.md` |
-| REVIEW | CORE-REV-001, CORE-REV-003, CORE-REV-005, CORE-TRC-003, AGT-000, AGT-LNS-001, AGT-LNS-002, AGT-LNS-003, AGT-VAL-001, AGT-VER-001, one agent file plus the inputs it permits, nothing else |
-| INTEGRATE | CORE-TRC-003, CORE-TST-002, `modules/*/CONTRACT.md`, `docs/slices/<slice>.md`, `fixtures/<scenario>/config.yaml`, `fixtures/<scenario>/seed` |
-| LESSON | CORE-LSN-001, CORE-REV-005, CORE-TRC-003, TPL-003, TPL-007, `docs/slices/<slice>.md`, `lessons/**` |
-| BASELINE | CORE-CHG-002, CORE-DEC-001, CORE-TRC-003, TPL-002, `docs/decisions/<DEC-nnn>.md` |
+| GATE | CORE-DEC-001, CORE-HRN-001, CORE-LFC-002, CORE-LFC-003, CORE-LFC-004, CORE-LFC-005, CORE-REV-003, CORE-TRC-001, CORE-TRC-002, SIM-VAL-001, TPL-002, TPL-004, TPL-005, TPL-008, `docs/decisions/**`, `trace/**` |
+| CONTRACT | CORE-CON-001, CORE-CON-002, CORE-DEC-001, CORE-HRN-001, CORE-TRC-002, TPL-001, TPL-002, TPL-005, `modules/<module>/CONTRACT.md`, `docs/slices/<slice>.md` |
+| CONFORMANCE | CORE-CON-002, CORE-HRN-001, CORE-REV-005, CORE-TRC-002, CORE-TST-001, CORE-TST-002, SIM-VAL-001, `modules/<module>/CONTRACT.md`, `docs/slices/<slice>.md`, `fixtures/<scenario>/tolerance.yaml` |
+| IMPLEMENT | CORE-HRN-001, CORE-TST-002, `modules/<module>/CONTRACT.md`, `modules/<module>/CLAUDE.md`, `docs/slices/<slice>.md` |
+| REVIEW | CORE-HRN-001, CORE-REV-001, CORE-REV-003, CORE-REV-005, CORE-TRC-003, AGT-000, AGT-LNS-001, AGT-LNS-002, AGT-LNS-003, AGT-VAL-001, AGT-VER-001, one agent file plus the inputs it permits, nothing else |
+| INTEGRATE | CORE-HRN-001, CORE-TRC-003, CORE-TST-002, `modules/*/CONTRACT.md`, `docs/slices/<slice>.md`, `fixtures/<scenario>/config.yaml`, `fixtures/<scenario>/seed` |
+| LESSON | CORE-HRN-001, CORE-LSN-001, CORE-REV-005, CORE-TRC-003, TPL-003, TPL-007, `docs/slices/<slice>.md`, `lessons/**` |
+| BASELINE | CORE-CHG-002, CORE-DEC-001, CORE-HRN-001, CORE-TRC-003, TPL-002, `docs/decisions/<DEC-nnn>.md` |
 | QUERY | whatever the question needs; the only type with no ceiling |
 <!-- /generated -->
 
@@ -86,4 +86,5 @@ Project state lives in `trace/`; never restate it here.
     python hyperion/tooling/check_null_doubles.py .              # every suite must FAIL its null double
     python hyperion/tooling/mutation_score.py --slice SL-nn .    # at acceptance; --write to record
     python hyperion/tooling/check_traces.py
-    python hyperion/tooling/check_traces.py --report > trace/matrix.md
+    python hyperion/tooling/check_traces.py --report     # plain-text matrix on stdout
+    python hyperion/tooling/build_console.py .           # console/index.html, the reviewer's artifact

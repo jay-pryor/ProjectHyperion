@@ -4,12 +4,14 @@
   hazards: [HZ-002]
   contracts: [trajectory]
   status: accepted
+  authored_by: sonnet
 - id: SL-02
   name: Drag and the atmosphere envelope
   requirements: [REQ-001, REQ-003]
   hazards: [HZ-001]
   contracts: [atmosphere, trajectory]
   status: in_progress
+  authored_by: sonnet
 - id: SL-03
   name: Scenario files and a range table for the planner
   requirements: []

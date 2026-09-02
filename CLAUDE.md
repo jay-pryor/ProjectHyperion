@@ -15,17 +15,15 @@ This repository **is the framework**, not a project built with it. Sessions here
 process documents. For sessions building software under Hyperion, see
 `templates/project-CLAUDE.md`.
 
-## Open every session with
+## Open every session with (`/framework <scope>`, `/review`, `/query <question>` print it)
 
     SESSION: <FRAMEWORK | REVIEW | QUERY>
     SCOPE: <the one document or change this session will produce, or the question>
     MAY MODIFY: <explicit paths, or nothing>
     PRINCIPLE: <which of P1-P10 this change serves>
 
-Then stop and wait. Do not begin in the same turn. All three types are defined in
-`core/session-protocol.md` (CORE-SES-001). REVIEW and QUERY have no scope to confirm and
-do not wait: REVIEW appends findings and modifies nothing else; QUERY modifies nothing and
-ends by naming the session that should make any change it uncovers.
+Then stop and wait; do not begin in the same turn. The types are defined in
+`core/session-protocol.md` (CORE-SES-001); REVIEW and QUERY have no scope to confirm and do not wait.
 
 ## Rules for editing this repository
 
@@ -54,7 +52,8 @@ ends by naming the session that should make any change it uncovers.
 
        python tooling/build_registry.py && python tooling/build_layer.py
 
-   Verify both with `--check` before finishing. Stale generated output fails CI.
+   Verify both with `--check` before finishing. Stale generated output fails CI. This
+   repository's `.claude/`, `.hyperion/`, and `.devcontainer/` are outputs (CORE-HRN-001).
 
 8. **Check the imperatives you may have invalidated.** Imperatives derive from sections
    of core; changing a section does not change the imperative derived from it.
@@ -102,7 +101,8 @@ already does by default does not belong here; it costs context and prevents noth
 
 ## Health checks
 
-Run quarterly, with the lesson prune:
+Run quarterly, with the lesson prune. The numbers a project's records can yield are on
+the overview view of its console (`tooling/build_console.py`); read them there.
 
 - **Standing loadout size.** `load: always` should be roughly a dozen short documents.
   Growth means something is mis-tagged and every session's attention is being diluted.

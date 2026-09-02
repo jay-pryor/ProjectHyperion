@@ -10,7 +10,7 @@ sessions: [REVIEW]
 lens: partial-failure
 question: "Can state be left inconsistent mid-operation?"
 run_when: "Slices with multi-step operations or external systems"
-model: sonnet
+model: sonnet   # lenses run on a different family from the authoring session (CORE-HRN-001)
 related: [CORE-REV-003]
 ---
 

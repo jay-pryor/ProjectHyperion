@@ -12,8 +12,9 @@ Usage:
     python hyperion/tooling/init_project.py --upgrade [--profiles ...] <project_root>
     python hyperion/tooling/init_project.py --name <PROJECT> ...   # default: directory name
 
---upgrade re-renders the generated blocks of CLAUDE.md and docs/module-map.md, re-pins
-the version, and leaves every hand-written section untouched. Without --upgrade the
+--upgrade re-renders the generated blocks of CLAUDE.md and docs/module-map.md and the
+Claude Code binding (.claude/, .hyperion/session-types.json, .devcontainer/; CORE-HRN-001),
+re-pins the version, and leaves every hand-written section untouched. Without --upgrade the
 script refuses to overwrite an existing CLAUDE.md.
 """
 

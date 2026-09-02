@@ -96,6 +96,7 @@ clause is a marked `C-nnn` in its `CONTRACT.md` ([CORE-CON-001](../contracts/con
   status: planned | in_progress | accepted
   mutation_score: <0 to 1>              # acceptance record; killed / total
   survivors_triaged: true | false       # every survivor has a findings row, source mutation
+  authored_by: <model alias or id>      # optional: the implementing session's model (CORE-HRN-001)
 ```
 
 An `accepted` slice may claim only `verified` requirements and hazards, whatever the

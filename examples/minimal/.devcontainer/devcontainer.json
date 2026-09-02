@@ -1,0 +1,19 @@
+{
+  // Rendered by build_layer.py from tooling/claude-code/devcontainer.json (CORE-HRN-001).
+  // After Anthropic's reference container (github.com/anthropics/claude-code, .devcontainer):
+  // Node plus the Claude Code CLI, with Python 3.11 and the framework's tooling added so
+  // every Codespace is the same machine. Not yet exercised in a Codespace; the first
+  // project that boots it owns the fixes.
+  "name": "minimal",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "20" },
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.11" }
+  },
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code && pip install pytest mutmut pyyaml",
+  "customizations": {
+    "vscode": { "extensions": ["anthropic.claude-code"] }
+  }
+  // Plugins are declared in .claude/settings.json (enabledPlugins), rendered from the
+  // profile fragments; the toolchain decision governs the list. Declared here: pyright-lsp@claude-plugins-official
+}

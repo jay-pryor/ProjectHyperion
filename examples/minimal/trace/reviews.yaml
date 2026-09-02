@@ -16,14 +16,14 @@
   kind: gate
   gate: G2
   date: 2026-08-14
-  reviewer: external systems engineer
+  reviewer: external systems engineer; validation-review on opus
   disposition: passed
   notes: Questioned whether atmosphere should be inside trajectory; kept separate because the envelope hazard belongs to it alone (DEC-001)
 - id: REV-004
   kind: gate
   gate: G3
   date: 2026-08-16
-  reviewer: self
+  reviewer: self; validation-review on opus
   disposition: passed
   notes: Contracts 1.0 for both modules; suites fail against empty implementations; SL-01 is the riskiest path
 - id: REV-005

@@ -4,7 +4,7 @@
 The registry is generated, never hand-maintained: a hand-maintained index rots, and a
 rotted index is worse than none because it is trusted. --check also validates what the
 schema demands: required fields, unique IDs, resolving `related`, `sessions` on every
-on-task document naming real session types, agent fields on every lens, no human-only
+on-task document naming real session types, `load: never` only on human-only documents, agent fields on every lens, no human-only
 document in the standing loadout, and every ID cited in any body resolving. The ID
 pattern is built from the IDs actually found, so a new prefix needs no script change.
 
@@ -25,8 +25,8 @@ REGISTRY = ROOT / fd.REGISTRY
 
 REQUIRED = ["id", "title", "tier", "status", "version", "audience", "load"]
 AGENT_FIELDS = ["lens", "question", "run_when", "model"]
-TIER_ORDER = ["root", "core", "profile", "agents", "templates", "tooling"]
-LOADS = {"always", "on-task", "reference"}
+TIER_ORDER = ["root", "handbook", "core", "profile", "agents", "templates", "tooling"]
+LOADS = {"always", "on-task", "reference", "never"}
 
 
 def validate(docs, types):
@@ -50,8 +50,11 @@ def validate(docs, types):
                 for s in fm["sessions"]:
                     if s not in types:
                         errors.append(f"{rel}: sessions names unknown session type {s}")
+        elif fm["load"] == "never":
+            if fm.get("audience") != ["human"] or fm.get("sessions") != []:
+                errors.append(f"{rel}: load=never means audience: [human] and sessions: [] (TOOL-001)")
         elif "sessions" in fm:
-            errors.append(f"{rel}: sessions is only meaningful with load: on-task")
+            errors.append(f"{rel}: sessions is only meaningful with load: on-task or never")
         if fm["load"] == "always" and fm.get("audience") == ["human"]:
             errors.append(f"{rel}: load=always but audience=[human]; "
                           "human-only docs must be on-task or reference")

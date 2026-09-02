@@ -77,11 +77,22 @@ jobs:
         run: pytest -q
 
       # Strictness comes from the gate record in trace/reviews.yaml, not a flag.
-      # --report must exit 0 on a clean chain and 1 on a broken one.
+      # --report must exit 0 on a clean chain and 1 on a broken one; the matrix goes
+      # to the log, and the console below is the artifact a reviewer receives.
       - name: Traceability chain intact
         run: |
           python ../../tooling/check_traces.py
-          python ../../tooling/check_traces.py --report > trace/matrix.md
+          python ../../tooling/check_traces.py --report
+
+      # The console (M8) is a pure function of the repository: one HTML file carrying
+      # the commit hash and the checker's verdict, built after the check so its header
+      # is honest. Uploaded, never committed.
+      - name: Project console
+        run: python ../../tooling/build_console.py . --out console/index.html
+      - uses: actions/upload-artifact@v4
+        with:
+          name: console
+          path: examples/minimal/console/index.html
 
       # CORE-TST-002 rung 1: every module ships a null double and its conformance
       # suite must fail against it in errors, invariants, and boundaries. The script

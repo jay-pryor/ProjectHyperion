@@ -72,14 +72,20 @@ and locally, or the check passes against yesterday's run.
 
 ## The review artifact
 
-    python tooling/check_traces.py --report > trace/matrix.md
+    python tooling/check_traces.py --report          # plain-text matrix on stdout
+    python tooling/build_console.py .                # console/index.html
 
-A requirement-by-requirement and hazard-by-hazard matrix in markdown, opening with the
-checker's verdict. Over a broken chain it prints the errors first and exits non-zero, so
-the artifact a reviewer receives states its own trustworthiness. This is the gate
-artifact for a reviewer who does not read code ([CORE-REV-002](../reviews/gate-reviews.md)):
-a systems engineer can check that every hazard has a control and every requirement has
-verification and validation without reading the implementation.
+The matrix is a view of the project console, one static HTML page rendered by
+`tooling/build_console.py` from the checker's own data, with every other record, the
+commit hash, and the checker's verdict in its header. It is built in CI on every run and
+handed to the reviewer as one file; it is never committed and has no write path back to
+any record. `--report` is the same matrix as plain text. Both open with the verdict: over
+a broken chain they lead with the errors, `--report` exits non-zero, and the console
+shows no green, so the artifact a reviewer receives states its own trustworthiness. This
+is the gate artifact for a reviewer who does not read code
+([CORE-REV-002](../reviews/gate-reviews.md)): a systems engineer can check that every
+hazard has a control and every requirement has verification and validation without
+reading the implementation.
 
 ## Discipline
 

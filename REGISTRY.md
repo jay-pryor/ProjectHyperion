@@ -13,7 +13,7 @@ related: [HYP-000]
 
 <!-- GENERATED FILE — do not edit. Run: python tooling/build_registry.py -->
 
-Generated 2026-09-02 · 48 documents
+Generated 2026-09-02 · 55 documents
 
 ## Standing context loadout
 
@@ -39,6 +39,17 @@ context budget in every session.
 | `HYP-000` | Hyperion | active | always |  | [README.md](README.md) |
 | `HYP-001` | Registry | active | reference |  | [REGISTRY.md](REGISTRY.md) |
 
+## handbook
+
+| ID | Title | Status | Load | Sessions | Path |
+|---|---|---|---|---|---|
+| `HBK-000` | Reading Order | active | never |  | [handbook/00-reading-order.md](handbook/00-reading-order.md) |
+| `HBK-001` | The Artifact Map | active | never |  | [handbook/artifact-map.md](handbook/artifact-map.md) |
+| `HBK-005` | Glossary | active | never |  | [handbook/glossary.md](handbook/glossary.md) |
+| `HBK-004` | One Slice, Session by Session | active | never |  | [handbook/one-slice-session-by-session.md](handbook/one-slice-session-by-session.md) |
+| `HBK-003` | What Do I Do Now | active | never |  | [handbook/what-do-i-do-now.md](handbook/what-do-i-do-now.md) |
+| `HBK-002` | Who Does What | active | never |  | [handbook/who-does-what.md](handbook/who-does-what.md) |
+
 ## core
 
 | ID | Title | Status | Load | Sessions | Path |
@@ -50,6 +61,7 @@ context budget in every session.
 | `CORE-CON-002` | Conformance Suites | active | on-task | CONTRACT, CONFORMANCE | [core/contracts/conformance-suites.md](core/contracts/conformance-suites.md) |
 | `CORE-CON-001` | Contract Definition | active | on-task | CONTRACT | [core/contracts/contract-definition.md](core/contracts/contract-definition.md) |
 | `CORE-DEC-001` | Decision Log | active | on-task | GATE, CONTRACT, BASELINE | [core/decisions/decision-log.md](core/decisions/decision-log.md) |
+| `CORE-HRN-001` | Harness Binding | active | on-task | GATE, CONTRACT, CONFORMANCE, IMPLEMENT, REVIEW, INTEGRATE, LESSON, BASELINE, QUERY, FRAMEWORK | [core/harness.md](core/harness.md) |
 | `CORE-IMP-001` | Imperatives | active | on-task | FRAMEWORK | [core/imperatives.md](core/imperatives.md) |
 | `CORE-LSN-001` | Lesson Ladder | active | on-task | LESSON | [core/lessons/lesson-ladder.md](core/lessons/lesson-ladder.md) |
 | `CORE-LFC-001` | Gate Overview | active | always |  | [core/lifecycle/00-gates-overview.md](core/lifecycle/00-gates-overview.md) |

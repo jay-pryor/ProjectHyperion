@@ -31,7 +31,7 @@ is never restated in `CLAUDE.md` (gate and slice are records, rendered by the co
 and each lens runs as a generated read-only agent definition whose prompt is
 self-contained and instructs it to disregard project operating instructions other than
 the read-only restriction. The definitions are generated from `agents/` by the harness
-binding, which is not yet written.
+binding ([CORE-HRN-001](../harness.md)), which also runs them in parallel as `/review`.
 
 **3. One lens per session.** Named failure mode, nothing else. General review returns
 generic advice.

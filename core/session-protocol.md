@@ -82,7 +82,7 @@ QUERY:
 FRAMEWORK:
   purpose: Change the framework itself
   scope: framework
-  may_modify: [core/**, profiles/**, agents/**, templates/**, tooling/**, examples/**, .github/**, CLAUDE.md, README.md, REGISTRY.md]
+  may_modify: [core/**, profiles/**, agents/**, templates/**, tooling/**, examples/**, handbook/**, imperatives/**, .github/**, .claude/**, .devcontainer/**, .hyperion/**, .gitignore, CLAUDE.md, README.md, REGISTRY.md]
   must_not_modify: []   # nothing by path; every change traces to a principle (HYP-002)
 ```
 
@@ -102,8 +102,8 @@ FRAMEWORK:
 
 Session discipline is honour-based, but its main violation is visible in the diff.
 `tooling/check_commit.py` reads the block above and rejects a commit whose paths fall outside
-its `Session:` trailer's type: not proof the sessions were separate, but the shortcut made
-inconvenient ([P2](00-principles.md)).
+its `Session:` trailer's type, and the harness denies the write itself ([CORE-HRN-001](harness.md)):
+not proof the sessions were separate, but the shortcut made inconvenient ([P2](00-principles.md)).
 
 ## Declaration, stop, and escalate
 

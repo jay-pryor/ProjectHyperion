@@ -18,16 +18,17 @@ import argparse
 import sys
 from pathlib import Path
 
-import build_layer
 import framework_docs as fd
 
 
-def loadout(src, session, profiles):
-    """{'always': [paths], 'session': [paths], 'project': [globs], 'note': str|None}."""
+def loadout(src, session, profiles, framework=False):
+    """{'always': [paths], 'session': [paths], 'project': [globs], 'note': str|None}.
+    `framework`: resolve for the framework repository itself, whose sessions load its
+    own documents, root tier included."""
     if session not in src.types:
         raise SystemExit(f"ERROR unknown session type {session}; have {', '.join(src.types)}")
     t = src.types[session]
-    docs = src.project_docs(profiles) if t["scope"] != "framework" else [
+    docs = src.project_docs(profiles) if not framework and t["scope"] != "framework" else [
         d for d in src.docs.values() if d["fm"] and fd.model_readable(d["fm"])
         and d["fm"].get("status") != "superseded"]
     if (t.get("project_files") or []) == ["**"]:
@@ -53,6 +54,7 @@ def main(argv=None):
     args = ap.parse_args(argv)
     args.profiles = fd.split_profiles(args.profiles)
 
+    import build_layer          # here, not at the top: build_layer's renderers import this module
     src = build_layer.Sources()
     if args.list or not args.session:
         for name, t in src.types.items():

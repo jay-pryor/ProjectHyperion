@@ -45,6 +45,9 @@ loadout:
 # (CORE-REV-004). Rendered as one checklist line in the definition of done.
 targeted_reads: [SIM-RDS-001]
 
-# Claude Code plugins the project enables (F-47). Empty until the toolchain decision in
-# SIM-000 is made; the harness binding writes this list into .claude/settings.json.
-plugins: []
+# Claude Code plugins the project enables and the test command a lens agent may run
+# (CORE-HRN-001). The toolchain decision in SIM-000 governs both: the example toolchain is
+# Python, so the language server is pyright. build_layer.py writes the list into
+# .claude/settings.json and the command into .hyperion/session-types.json.
+plugins: [pyright-lsp@claude-plugins-official]
+test_command: pytest

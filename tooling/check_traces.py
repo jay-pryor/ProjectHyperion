@@ -5,7 +5,8 @@ Trace tables written in prose are intentions: a renamed test, a deleted requirem
 a mitigation pointing at nothing stays invisible until it matters. This script makes the
 whole record store checkable. Rationale: CORE-TRC-001. Schema it enforces: CORE-TRC-002
 (registers: requirements, hazards, slices) and CORE-TRC-003 (logs: findings, reviews,
-needs, assumptions, goals, changes, and the generated results.xml).
+needs, assumptions, goals, changes, and the generated results.xml), plus the model
+independence rule of CORE-HRN-001 over reviews and a slice's authored_by.
 
 Usage (run from the project root, or pass --root):
     python tooling/check_traces.py                 # CI: exit 1 on any break
@@ -70,6 +71,10 @@ GATES = ["G0", "G1", "G2", "G3", "G4"]
 DISPOSITION = {"passed", "failed", "pending", "no_findings", "findings_raised"}
 POSITIVE_DISPOSITION = {"passed", "no_findings"}
 CHANGE_TIER = {"interface", "baseline"}
+
+MODEL_RE = re.compile(r"claude|opus|sonnet|haiku|fable", re.I)     # a reviewer names a model (CORE-HRN-001)
+MODEL_FAMILY_RE = re.compile(r"opus|sonnet|haiku|fable", re.I)
+MODEL_REVIEW_KIND = {"gate", "specification", "lens"}
 
 ID_RE = re.compile(r"^[A-Z]{2,4}-\d{2,3}$")      # SL-nn is two digits (TPL-005)
 CLAUSE_RE = re.compile(r"\bC-\d{3}\b")
@@ -485,6 +490,8 @@ def check_slices(project, err, warn):
             err(sid, "mutation_score must be a number from 0 to 1 (killed / total)")
         if "survivors_triaged" in s and not isinstance(s["survivors_triaged"], bool):
             err(sid, "survivors_triaged must be true or false")
+        if "authored_by" in s and not (isinstance(s["authored_by"], str) and s["authored_by"].strip()):
+            err(sid, "authored_by must name the implementing session's model (CORE-HRN-001)")
         # CORE-TST-002 rung 2: triaged means no mutation finding on the slice is still open,
         # and an accepted slice may not carry open survivors.
         open_survivors = [f["id"] for f in project.records["findings"]
@@ -544,6 +551,28 @@ def check_findings(project, err, warn):
                          "a clause finding closes when the contract changes")
 
 
+def _same_model(a, b):
+    """Two model names agree when their families agree, else when the strings do."""
+    fa, fb = MODEL_FAMILY_RE.search(a), MODEL_FAMILY_RE.search(b)
+    if fa and fb:
+        return fa.group(0).lower() == fb.group(0).lower()
+    return a.strip().lower() == b.strip().lower()
+
+
+def _check_independence(project, rid, kind, reviewer, slice_id, err, warn):
+    """CORE-HRN-001: a gate or specification review names its model; no model review
+    runs on the model that authored the slice."""
+    names_model = bool(MODEL_RE.search(reviewer))
+    if kind in ("gate", "specification") and not names_model:
+        warn(rid, f"{kind} review names no model in reviewer; if a model reviewed, name it so "
+                  "independence can be checked (CORE-HRN-001)")
+    slice_row = project.by_id("slices").get(slice_id) if slice_id else None
+    authored = (slice_row or {}).get("authored_by")
+    if kind in MODEL_REVIEW_KIND and names_model and isinstance(authored, str) and _same_model(reviewer, authored):
+        err(rid, f"{kind} review ran on the model that authored {slice_id} (authored_by: {authored}); "
+                 "a review on the authoring model shares its blind spots (CORE-HRN-001)")
+
+
 def check_reviews(project, err, warn):
     slices = project.ids("slices")
     known = project.ids("requirements") | project.ids("hazards") | slices | project.decisions
@@ -554,6 +583,8 @@ def check_reviews(project, err, warn):
         _check_date(rid, r.get("date"), err)
         if not isinstance(r.get("reviewer"), str) or not r["reviewer"].strip():
             err(rid, "reviewer must name a person and/or a model")
+        else:
+            _check_independence(project, rid, kind, r["reviewer"], r.get("slice"), err, warn)
         _check_enum(rid, "disposition", r.get("disposition"), DISPOSITION, err)
         if kind == "gate":
             gate = r.get("gate")

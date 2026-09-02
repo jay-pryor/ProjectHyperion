@@ -10,7 +10,7 @@ sessions: [REVIEW]
 lens: numerical-integrity
 question: "Are the numbers wrong in ways that still look plausible?"
 run_when: "Any slice touching the numerical core"
-model: sonnet
+model: sonnet   # lenses run on a different family from the authoring session (CORE-HRN-001)
 profile: simulation
 related: [CORE-REV-003, SIM-VAL-001]
 ---
