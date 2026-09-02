@@ -34,7 +34,7 @@ Follow this file over your defaults. Where they conflict, this file wins.
 
 Before reading or writing anything, output exactly:
 
-    SESSION: <GATE | CONTRACT | CONFORMANCE | IMPLEMENT | REVIEW | INTEGRATE | LESSON>
+    SESSION: <GATE | CONTRACT | CONFORMANCE | IMPLEMENT | REVIEW | INTEGRATE | LESSON | QUERY>
     SLICE: <SL-nn or n/a>
     SCOPE: <the one thing this session will produce>
     MAY MODIFY: <explicit file globs>
@@ -56,6 +56,7 @@ silently span two.
 | REVIEW | nothing | everything |
 | INTEGRATE | integration code, fixtures | `contract.*`, `conformance/` |
 | LESSON | lessons, lint rules, conformance | `src/` |
+| QUERY | nothing | everything |
 
 Full definition: `hyperion/core/session-protocol.md` (CORE-SES-001).
 
@@ -130,6 +131,7 @@ Load only what the session type needs.
 | IMPLEMENT | the contract, the slice definition, the module `CLAUDE.md` |
 | REVIEW | one agent file from `hyperion/agents/` and nothing else |
 | LESSON | CORE-LSN-001, `templates/lesson.md` |
+| QUERY | whatever the question needs; the only type with no ceiling |
 
 Do not load the whole framework. If you think you need a document not listed, say which
 and why before loading it.

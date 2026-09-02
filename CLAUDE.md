@@ -17,12 +17,14 @@ process documents. For sessions building software under Hyperion, see
 
 ## Open every session with
 
-    SESSION: FRAMEWORK
-    SCOPE: <the one document or change this session will produce>
-    MAY MODIFY: <explicit paths>
+    SESSION: <FRAMEWORK | QUERY>
+    SCOPE: <the one document or change this session will produce, or the question>
+    MAY MODIFY: <explicit paths, or nothing>
     PRINCIPLE: <which of P1-P10 this change serves>
 
-Then stop and wait. Do not begin in the same turn.
+Then stop and wait. Do not begin in the same turn. Both types are defined in
+`core/session-protocol.md` (CORE-SES-001). A QUERY session modifies nothing and ends by
+naming the session that should make any change it uncovers.
 
 ## Rules for editing this repository
 

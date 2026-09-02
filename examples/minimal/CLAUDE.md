@@ -4,7 +4,7 @@ Built under Hyperion (vendored at `hyperion/`, version pinned in `.hyperion/vers
 Project state lives in `trace/`; never restate it here.
 
 ## Declaration
-    SESSION: <GATE | CONTRACT | CONFORMANCE | IMPLEMENT | REVIEW | INTEGRATE | LESSON | BASELINE>
+    SESSION: <GATE | CONTRACT | CONFORMANCE | IMPLEMENT | REVIEW | INTEGRATE | LESSON | BASELINE | QUERY>
     SLICE: <SL-nn>
     SCOPE: <one thing>
     MAY MODIFY: <globs from the session table>

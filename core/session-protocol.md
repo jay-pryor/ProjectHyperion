@@ -27,7 +27,7 @@ activities in separate sessions with separate contexts.
 Session type is therefore a first-class concept, declared at the start of every session
 and constraining what may be touched.
 
-## The seven session types
+## Session types
 
 | Type | Purpose | May modify | Must not modify |
 |---|---|---|---|
@@ -38,6 +38,8 @@ and constraining what may be touched.
 | **REVIEW** | Run one agent from `agents/` | Nothing | Everything |
 | **INTEGRATE** | Wire modules, run slices end to end | Integration code, fixtures | `contract.*`, `conformance/` |
 | **LESSON** | Promote findings to checks | Lessons, lint rules, conformance | `src/` |
+| **QUERY** | Answer a question about the framework or the project | Nothing | Everything |
+| **FRAMEWORK** | Change the framework itself. Valid only in the Hyperion repository | Framework documents, tooling, examples | Nothing by path; every change traces to a principle (HYP-002) |
 
 ## The load-bearing prohibitions
 
@@ -56,6 +58,11 @@ within existing contracts, the session stops and an Interface gate runs
 
 **REVIEW modifies nothing.** A reviewer that can fix things stops reporting and starts
 patching, and the finding is never recorded as a lesson.
+
+**QUERY modifies nothing, and may read anything.** A model asked a question starts editing,
+because a fix looks more helpful than an answer. It is the one type with no loadout ceiling:
+the question decides what is relevant, including human-only documents. If the answer reveals
+a change that should be made, the session ends by naming the session type that makes it.
 
 ## Mechanical backstop
 

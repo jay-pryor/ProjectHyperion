@@ -54,7 +54,7 @@
       "text": "Declare session type and permitted files before touching anything",
       "source_id": "CORE-SES-001",
       "source_path": "core/session-protocol.md",
-      "source_hash": "46ac0b3650c9098a",
+      "source_hash": "e066ac23f34eded7",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
