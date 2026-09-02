@@ -1,0 +1,27 @@
+- id: FND-001
+  date: 2026-08-20
+  slice: SL-01
+  source: lens:numerical-integrity
+  form: test
+  severity: S1
+  status: fixed
+  ref: modules/trajectory/conformance/test_errors.py::test_leaving_envelope_raises_C104
+  summary: Integrator skipped the density call when drag was zero, bypassing the envelope check, so a shot leaving the envelope returned a range
+- id: FND-002
+  date: 2026-08-20
+  slice: SL-01
+  source: lens:numerical-integrity
+  form: test
+  severity: S3
+  status: rejected
+  reason: Proposed test derived its expected value by running this implementation, which the lens output contract forbids
+  summary: Ground-crossing interpolation error claimed to exceed tolerance
+- id: FND-003
+  date: 2026-08-19
+  slice: SL-01
+  source: review:specification
+  form: clause
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/CONTRACT.md::C-106
+  summary: Contract did not bound dt, so an arbitrarily coarse step was a silently wrong answer

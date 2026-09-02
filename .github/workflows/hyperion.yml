@@ -24,3 +24,37 @@ jobs:
       # This does not prove an imperative is still correct; it forces someone to look.
       - name: Imperatives confirmed against their sources
         run: python tooling/check_imperatives.py
+
+  example-project:
+    # examples/minimal is a project built under the framework. Running it here is
+    # what makes the tooling testable: the trace checker runs against a real trace
+    # directory, and the conformance suite is shown to fail against a null double.
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/minimal
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: pip install pytest
+
+      - name: Conformance, unit, and validation suites
+        run: pytest -q
+
+      # Order matters: collect first, or the manifest is stale (CORE-TRC-001).
+      - name: Traceability chain intact
+        run: |
+          pytest --collect-only -q | grep '::' > trace/tests.txt
+          python ../../tooling/check_traces.py --strict
+
+      # Stub-as-mutant rule: a suite the null double passes checks shape, not
+      # behaviour. The suite must fail against it.
+      - name: Conformance suite fails against the null double
+        run: |
+          if ATMOSPHERE_IMPL=null pytest -q modules/atmosphere/conformance; then
+            echo "conformance suite passed against the null double: it cannot fail"; exit 1
+          fi

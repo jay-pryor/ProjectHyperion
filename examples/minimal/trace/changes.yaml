@@ -1,0 +1,13 @@
+# Interface and baseline changes. Rate is the health metric for G2 and G3 calibration.
+- id: CHG-001
+  date: 2026-08-18
+  tier: interface
+  driver: SL-01 needed density above the stub's fixed altitude; atmosphere contract 1.0 to 1.1 adds the envelope clause C-003
+  decision: DEC-001
+  contracts: [atmosphere]
+- id: CHG-002
+  date: 2026-08-19
+  tier: interface
+  driver: FND-003, dt unbounded; trajectory contract 1.1 to 1.2 adds C-106
+  decision: none
+  contracts: [trajectory]

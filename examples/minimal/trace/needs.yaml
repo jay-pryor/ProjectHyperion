@@ -1,0 +1,7 @@
+# Stakeholder needs. Source of requirements that are not hazard-driven.
+- id: STK-001
+  statement: A planner needs the ground range of a projectile for a training scenario
+  owner: exercise planning lead
+- id: STK-002
+  statement: Any result shown in a planning brief must be reproducible on request
+  owner: exercise planning lead

@@ -1,0 +1,4 @@
+- id: ASM-001
+  statement: An exponential atmosphere with 8500 m scale height is adequate to 80 km for range estimates at this fidelity
+  owner: self
+  revisit_when: a scenario needs better than 5 percent range accuracy above 30 km

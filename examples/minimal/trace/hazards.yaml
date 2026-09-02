@@ -1,0 +1,20 @@
+- id: HZ-001
+  register: local
+  never_statement: The engine must never report a range computed from air density at an altitude the model was not validated for
+  failure_mode: failed_silently
+  severity: 3
+  likelihood: 2
+  mitigation_contract: modules/atmosphere/CONTRACT.md::C-003
+  mitigation_test: modules/atmosphere/conformance/test_errors.py::test_above_envelope_raises_C003
+  mitigation_status: traced
+  requirement: REQ-003
+- id: HZ-002
+  register: local
+  never_statement: A range must never be shown in a brief without the information needed to reproduce it
+  failure_mode: not_performed
+  severity: 2
+  likelihood: 3
+  mitigation_contract: modules/trajectory/CONTRACT.md::C-103
+  mitigation_test: modules/trajectory/conformance/test_operations.py::test_provenance_present_C103
+  mitigation_status: verified
+  requirement: REQ-004

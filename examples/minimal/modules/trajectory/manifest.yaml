@@ -1,0 +1,5 @@
+module: trajectory
+allowed_imports:
+  - baseline/units
+  - baseline/faults
+  - modules/atmosphere/contract

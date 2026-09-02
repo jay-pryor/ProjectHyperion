@@ -34,6 +34,8 @@ Hyperion is **core + profiles**.
 - **`agents/`** — ready-to-use prompts for machine reviews. One file per review type.
 - **`templates/`** — scaffolds for the artifacts the gates produce.
 - **`tooling/`** — mechanical enforcement: registry generation, CI checks.
+- **`examples/`** — a complete, tiny project built under the framework. Read it first;
+  CI runs the tooling against it, so it is also the fixture.
 - **`CLAUDE.md`** — operating instructions for sessions editing *this repository*.
   Projects get their own, from [templates/project-CLAUDE.md](templates/project-CLAUDE.md).
 
@@ -43,6 +45,9 @@ Hyperion is **core + profiles**.
 run `python tooling/build_registry.py` after any change. CI fails if it is stale.
 
 ## Starting a new project
+
+The fastest orientation is [examples/minimal](examples/README.md): two modules, five
+requirements, two hazards, one accepted slice, every trace record filled in.
 
 1. Read [CORE-PRN-001 Principles](core/00-principles.md) and
    [CORE-LFC-001 Gate overview](core/lifecycle/00-gates-overview.md).

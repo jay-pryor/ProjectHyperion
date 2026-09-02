@@ -1,0 +1,18 @@
+- id: SL-01
+  name: Walking skeleton, a vacuum shot end to end with provenance
+  requirements: [REQ-002, REQ-004, REQ-005]
+  hazards: [HZ-002]
+  contracts: [trajectory]
+  status: accepted
+- id: SL-02
+  name: Drag and the atmosphere envelope
+  requirements: [REQ-001, REQ-003]
+  hazards: [HZ-001]
+  contracts: [atmosphere, trajectory]
+  status: in_progress
+- id: SL-03
+  name: Scenario files and a range table for the planner
+  requirements: []
+  hazards: []
+  contracts: [trajectory]
+  status: planned

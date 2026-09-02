@@ -1,0 +1,50 @@
+- id: REQ-001
+  statement: Air density shall be reported for altitudes 0 to 80 km with sea-level density 1.225 kg/m3 and strictly decreasing with altitude
+  kind: functional
+  source: STK-001
+  allocated_to: atmosphere
+  verification_method: test
+  verified_by: [modules/atmosphere/conformance/test_operations.py::test_sea_level_density_C001, modules/atmosphere/conformance/test_invariants.py::test_monotonically_decreasing_C002]
+  validation_class: expert_judgement
+  validated_by: REV-007
+  status: traced
+- id: REQ-002
+  statement: With drag disabled, ground range shall match the closed-form vacuum solution within 0.5 percent for time steps of 0.01 s or smaller
+  kind: functional
+  source: STK-001
+  allocated_to: trajectory
+  verification_method: test
+  verified_by: [modules/trajectory/conformance/test_operations.py::test_vacuum_range_matches_closed_form_C101]
+  validation_class: analytical
+  validated_by: validation/analytical/test_vacuum_range.py::test_range_matches_closed_form
+  status: verified
+- id: REQ-003
+  statement: A density request outside the validated altitude envelope shall be rejected with an error and never extrapolated
+  kind: functional
+  source: HZ-001
+  allocated_to: atmosphere
+  verification_method: test
+  verified_by: [modules/atmosphere/conformance/test_errors.py::test_above_envelope_raises_C003, modules/atmosphere/conformance/test_errors.py::test_below_envelope_raises_C003]
+  validation_class: degenerate
+  validated_by: validation/envelope/test_envelope.py::test_apex_beyond_envelope_is_rejected
+  status: traced
+- id: REQ-004
+  statement: Every result shall carry provenance sufficient to reproduce it, namely engine version, configuration hash, seed, and commit
+  kind: cross-cutting
+  source: STK-002
+  allocated_to: trajectory
+  verification_method: test
+  verified_by: [modules/trajectory/conformance/test_operations.py::test_provenance_present_C103]
+  validation_class: expert_judgement
+  validated_by: REV-006
+  status: verified
+- id: REQ-005
+  statement: Two runs with identical configuration and seed shall produce bit-identical output
+  kind: cross-cutting
+  source: STK-002
+  allocated_to: trajectory
+  verification_method: test
+  verified_by: [modules/trajectory/conformance/test_invariants.py::test_bit_identical_repeat_C102]
+  validation_class: invariant
+  validated_by: validation/invariants/test_determinism.py::test_repeat_run_identical_across_scenarios
+  status: verified

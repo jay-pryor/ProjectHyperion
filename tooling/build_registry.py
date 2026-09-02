@@ -46,7 +46,10 @@ def parse_frontmatter(text):
 def collect():
     docs, errors = [], []
     for path in sorted(ROOT.rglob("*.md")):
-        if path == REGISTRY or ".git" in path.parts:
+        # examples/ holds project files built *under* the framework, not framework
+        # documents; they carry no frontmatter and are not registered. Their body
+        # citations are still checked below.
+        if path == REGISTRY or ".git" in path.parts or "examples" in path.parts:
             continue
         fm = parse_frontmatter(path.read_text(encoding="utf-8"))
         rel = path.relative_to(ROOT).as_posix()

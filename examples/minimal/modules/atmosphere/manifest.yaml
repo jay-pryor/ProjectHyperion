@@ -1,0 +1,3 @@
+module: atmosphere
+allowed_imports:
+  - baseline/units

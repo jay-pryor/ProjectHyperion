@@ -1,0 +1,49 @@
+- id: REV-001
+  kind: gate
+  gate: G0
+  date: 2026-08-10
+  reviewer: self
+  disposition: passed
+  notes: Five questions worked for range, density, provenance; two hazards raised in local register
+- id: REV-002
+  kind: gate
+  gate: G1
+  date: 2026-08-12
+  reviewer: self
+  disposition: passed
+  notes: Five requirements, every one with a validation class; REQ-001 relies on expert judgement and is flagged as the weakest evidence
+- id: REV-003
+  kind: gate
+  gate: G2
+  date: 2026-08-14
+  reviewer: external systems engineer
+  disposition: passed
+  notes: Questioned whether atmosphere should be inside trajectory; kept separate because the envelope hazard belongs to it alone (DEC-001)
+- id: REV-004
+  kind: gate
+  gate: G3
+  date: 2026-08-16
+  reviewer: self
+  disposition: passed
+  notes: Contracts 1.0 for both modules; suites fail against empty implementations; SL-01 is the riskiest path
+- id: REV-005
+  kind: targeted-read
+  slice: SL-01
+  subject: Units and frames at the atmosphere to trajectory boundary
+  date: 2026-08-21
+  reviewer: self
+  disposition: no findings
+- id: REV-006
+  kind: inspection
+  slice: SL-01
+  subject: REQ-004 provenance fields present and correct in a produced result
+  date: 2026-08-21
+  reviewer: self
+  disposition: passed
+- id: REV-007
+  kind: targeted-read
+  slice: SL-02
+  subject: REQ-001 density profile plotted against ISA table to 80 km
+  date: 2026-08-28
+  reviewer: self
+  disposition: pending

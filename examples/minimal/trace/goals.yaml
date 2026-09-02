@@ -1,0 +1,3 @@
+# Non-verifiable intents. Judged by a human at acceptance, never tested.
+- id: GOAL-001
+  statement: A planner can read the output without training in the tool

@@ -13,7 +13,7 @@ related: [HYP-000]
 
 <!-- GENERATED FILE — do not edit. Run: python tooling/build_registry.py -->
 
-Generated 2026-08-31 · 43 documents
+Generated 2026-09-02 · 43 documents
 
 ## Standing context loadout
 
