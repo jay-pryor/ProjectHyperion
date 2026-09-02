@@ -6,6 +6,7 @@ status: active
 version: 0.3
 audience: [human, model]
 load: on-task
+sessions: [GATE]
 related: [CORE-LFC-002, CORE-TRC-001, CORE-TRC-002]
 ---
 

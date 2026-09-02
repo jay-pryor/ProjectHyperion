@@ -9,28 +9,50 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the commit checker walks the PR range
 
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
+      - run: pip install pytest pyyaml
+
       # The registry is generated, never hand-maintained. A stale index is worse
-      # than none, because it is trusted. Also validates frontmatter, duplicate
-      # IDs, dangling cross-references, and human-only docs in the model loadout.
+      # than none, because it is trusted. Also validates frontmatter (sessions,
+      # agent fields), duplicate IDs, dangling cross-references, and human-only
+      # docs in the model loadout.
       - name: Registry current and references resolve
         run: python tooling/build_registry.py --check
 
-      # CLAUDE.md imperatives derive from core documents and can go stale silently.
-      # This does not prove an imperative is still correct; it forces someone to look.
+      # Everything a session consumes is rendered from fragments, frontmatter, and
+      # the session-types block (CORE-IMP-001, M1). A stale rendering is a P3 violation
+      # that the build can see, so it fails here.
+      - name: Operating layer current
+        run: python tooling/build_layer.py --check
+
+      # Imperatives derive from sections of core and can go stale silently. Three
+      # failure modes: source section changed, table differs from the map, one side
+      # only. This does not prove an imperative is still correct; it forces a look.
       - name: Imperatives confirmed against their sources
         run: python tooling/check_imperatives.py
 
-      # The trace checker is tested against examples/minimal and against broken copies
-      # of it, one per rule it enforces. The fixture runs the example's suite itself,
-      # so this step does not depend on the example-project job.
-      - run: pip install pytest pyyaml
-      - name: Trace checker rules hold
+      # The trace checker and the commit checker are tested against examples/minimal,
+      # broken copies of it, and a throwaway git repository, one test per rule.
+      - name: Tooling rules hold
         run: pytest -q tooling/tests
+
+      # Every framework commit carries its Session trailer (CORE-SES-001). Checked on
+      # pull requests over the PR range, starting at the first commit that carried one.
+      - name: Commits carry their session trailer
+        if: github.event_name == 'pull_request'
+        env:
+          FIRST_CHECKED: 218e6f55616e780f2b3458a64f0a9f25e8a69afa
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git merge-base --is-ancestor "$FIRST_CHECKED" "$BASE" || BASE="$FIRST_CHECKED"
+          python tooling/check_commit.py --framework "$BASE..$HEAD_SHA"
 
   example-project:
     # examples/minimal is a project built under the framework. Running it here is
@@ -61,11 +83,17 @@ jobs:
           python ../../tooling/check_traces.py
           python ../../tooling/check_traces.py --report > trace/matrix.md
 
-      # Stub-as-mutant rule: a suite the null double passes checks shape, not
-      # behaviour. The suite must fail against it. Its results go elsewhere so
-      # trace/results.xml keeps the real run.
-      - name: Conformance suite fails against the null double
-        run: |
-          if ATMOSPHERE_IMPL=null pytest -q modules/atmosphere/conformance --junitxml=/tmp/null-double.xml; then
-            echo "conformance suite passed against the null double: it cannot fail"; exit 1
-          fi
+      # CORE-TST-002 rung 1: every module ships a null double and its conformance
+      # suite must fail against it in errors, invariants, and boundaries. The script
+      # writes each run's JUnit to a temp file so trace/results.xml keeps the real run.
+      - name: Conformance suites fail against their null doubles
+        run: python ../../tooling/check_null_doubles.py .
+
+      # CORE-TST-002 rung 2: the mutation score for the accepted slice, print mode,
+      # so the number and the survivors are in the log. Survivors are triaged by a
+      # human through trace/findings.yaml, not by CI; nothing is written here.
+      # mutmut runs every mutant in a subprocess; the example is tiny, but allow time.
+      - run: pip install mutmut
+      - name: Mutation score for SL-01 (informational)
+        timeout-minutes: 20
+        run: python ../../tooling/mutation_score.py --slice SL-01 .

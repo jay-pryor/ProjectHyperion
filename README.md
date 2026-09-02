@@ -33,7 +33,9 @@ Hyperion is **core + profiles**.
   A project may instantiate more than one (see [Profile composition](profiles/simulation/PROFILE.md)).
 - **`agents/`** — ready-to-use prompts for machine reviews. One file per review type.
 - **`templates/`** — scaffolds for the artifacts the gates produce.
-- **`tooling/`** — mechanical enforcement: registry generation, CI checks.
+- **`tooling/`** — mechanical enforcement: registry generation, the operating-layer
+  generator, CI checks.
+- **`imperatives/`** — the hand-written source of every imperative ([CORE-IMP-001](core/imperatives.md)).
 - **`examples/`** — a complete, tiny project built under the framework. Read it first;
   CI runs the tooling against it, so it is also the fixture.
 - **`CLAUDE.md`** — operating instructions for sessions editing *this repository*.
@@ -41,8 +43,10 @@ Hyperion is **core + profiles**.
 
 ## Navigation
 
-[REGISTRY.md](REGISTRY.md) is the index. It is **generated**, not hand-maintained —
-run `python tooling/build_registry.py` after any change. CI fails if it is stale.
+[REGISTRY.md](REGISTRY.md) is the index. It is **generated**, not hand-maintained, and so
+is everything a session consumes (imperative tables, session table, loadouts, lens
+library): run `python tooling/build_registry.py && python tooling/build_layer.py` after
+any change. CI fails if either is stale.
 
 ## Starting a new project
 
@@ -52,10 +56,20 @@ requirements, two hazards, one accepted slice, every trace record filled in.
 1. Read [CORE-PRN-001 Principles](core/00-principles.md) and
    [CORE-LFC-001 Gate overview](core/lifecycle/00-gates-overview.md).
 2. Read the relevant profile's `PROFILE.md`.
-3. Copy [templates/project-CLAUDE.md](templates/project-CLAUDE.md) to the project root as
-   `CLAUDE.md` and fill it in. Nothing else is loaded automatically; that file is the
-   entry point for every session.
+3. Run `python hyperion/tooling/init_project.py --profiles <names> .` to generate
+   `CLAUDE.md` and `.hyperion/`; fill in the `<...>` placeholders it leaves. Nothing else
+   is loaded automatically; that file is the entry point for every session.
 4. Work the gates in order. Add `modules/<name>/CLAUDE.md` per module as modules appear.
+
+## Consuming Hyperion
+
+Vendor the framework into the project as a git submodule or subtree at a tagged
+version, under `hyperion/`. Never copy loose files: a copied `CLAUDE.md` has no
+version and no drift check. `init_project.py` pins the version in `.hyperion/version`
+and writes `.hyperion/imperatives.json`, the map `check_imperatives.py` reads when run
+from the project. After moving the submodule to a new tag, run
+`python hyperion/tooling/init_project.py --upgrade .`, which re-renders the generated
+blocks of `CLAUDE.md` and `docs/module-map.md` and leaves hand-written sections alone.
 
 ## Reading order for a new person
 

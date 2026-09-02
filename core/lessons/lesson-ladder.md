@@ -6,6 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [LESSON]
 related: [CORE-REV-005, CORE-PRN-001, CORE-CHG-001]
 ---
 

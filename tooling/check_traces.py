@@ -282,6 +282,19 @@ def _check_test_ref(project, subject, node_id, must_pass, err):
     return True
 
 
+def _check_mutant_ref(project, subject, ref, err):
+    """An open mutation finding names its mutant: modules/<m>/src/<file>::<mutant id>, file exists."""
+    path = ref.split("::", 1)[0]
+    parts = path.split("/")
+    if "::" not in ref or len(parts) < 4 or parts[0] != "modules" or parts[2] != "src":
+        err(subject, f"mutation finding ref '{ref}' must be modules/<m>/src/<file>::<mutant id> while open")
+        return False
+    if not (project.root / path).is_file():
+        err(subject, f"mutation finding ref '{ref}': '{path}' does not exist")
+        return False
+    return True
+
+
 def _check_review_ref(project, subject, rev_id, must_pass, err):
     reviews = project.by_id("reviews")
     if rev_id not in reviews:
@@ -472,6 +485,16 @@ def check_slices(project, err, warn):
             err(sid, "mutation_score must be a number from 0 to 1 (killed / total)")
         if "survivors_triaged" in s and not isinstance(s["survivors_triaged"], bool):
             err(sid, "survivors_triaged must be true or false")
+        # CORE-TST-002 rung 2: triaged means no mutation finding on the slice is still open,
+        # and an accepted slice may not carry open survivors.
+        open_survivors = [f["id"] for f in project.records["findings"]
+                          if f.get("slice") == sid and f.get("source") == "mutation"
+                          and f.get("status") in ("admitted", "reopened")]
+        if s.get("survivors_triaged") is True and open_survivors:
+            err(sid, f"survivors_triaged is true but {', '.join(open_survivors)} still open (source mutation)")
+        if accepted and (s.get("survivors_triaged") is False or open_survivors):
+            err(sid, "accepted with untriaged mutation survivors; kill each with a conformance test "
+                     "or reject it as equivalent with a reason")
 
     for rid in sorted(project.ids("requirements") - claimed):
         (err if project.after_g3() else warn)(rid, "not claimed by any slice" +
@@ -502,7 +525,9 @@ def check_findings(project, err, warn):
             err(fid, f"{status} finding has no ref; a finding without its artifact is vague model output")
             continue
         ref = str(ref)
-        if form == "test":
+        if form == "test" and src == "mutation" and status in ("admitted", "reopened"):
+            _check_mutant_ref(project, fid, ref, err)          # CORE-TST-002: the mutant, until killed
+        elif form == "test":
             if sev in ("S1", "S2") and status == "fixed":
                 _check_test_ref(project, fid, ref, True, err)      # conformance/validation, passed
             elif not project.find_tests(ref):

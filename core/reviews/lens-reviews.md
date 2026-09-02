@@ -6,6 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [GATE, REVIEW]
 related: [CORE-REV-001, CORE-REV-005]
 ---
 
@@ -44,33 +45,35 @@ produces sharper output than "review our code". Stated in every agent prompt.
 
 ## The lens library
 
-Core lenses, applicable to any profile:
+Rendered by `build_layer.py` from the frontmatter of `agents/*.md` and the selection
+block below. A lens the selection names but no agent file provides is marked so; it
+cannot be planned for a slice until it is written.
 
-| Lens | Looks for | Agent |
-|---|---|---|
-| Verification | Does implementation satisfy the contract | [verification-review](../../agents/verification-review.md) |
-| Validation | Is the contract itself wrong | [validation-review](../../agents/validation-review.md) |
-| Partial failure | States left inconsistent when an operation fails midway | [lens-partial-failure](../../agents/lens-partial-failure.md) |
-| Error paths | Paths that are never exercised, swallowed errors, wrong recovery | *(to write)* |
-| Boundary & input | Empty, null, min, max, malformed, adversarial input | *(to write)* |
-| Resource exhaustion | Unbounded growth, leaks, allocation under load | *(to write)* |
-| Concurrency | Races, reentrancy, shared mutable state | *(to write)* |
-| Contract drift | Implementation has grown promises the contract does not make | *(to write)* |
-
-Profile lenses extend this. Simulation adds
-[numerical integrity](../../agents/lens-numerical-integrity.md) and
-[determinism](../../agents/lens-determinism.md).
+<!-- generated:lens-library -->
+| Lens | Looks for | Profile | Agent |
+|---|---|---|---|
+| partial-failure | Can state be left inconsistent mid-operation? | core | [lens-partial-failure](../../agents/lens-partial-failure.md) |
+| validation | Is the contract itself wrong? | core | [validation-review](../../agents/validation-review.md) |
+| verification | Does the implementation satisfy the contract? | core | [verification-review](../../agents/verification-review.md) |
+| determinism | Can two identical runs differ? | simulation | [lens-determinism](../../agents/lens-determinism.md) |
+| numerical-integrity | Are the numbers wrong in ways that still look plausible? | simulation | [lens-numerical-integrity](../../agents/lens-numerical-integrity.md) |
+| boundary-input | *(not yet written; named in the selection block)* | — | — |
+| error-paths | *(not yet written; named in the selection block)* | — | — |
+| migration | *(not yet written; named in the selection block)* | — | — |
+| resource-exhaustion | *(not yet written; named in the selection block)* | — | — |
+<!-- /generated -->
 
 ## Selecting lenses per slice
 
-Not every lens on every slice. Select by what the slice touches:
+Not every lens on every slice. Select by what the slice touches; two to four lenses per
+slice is the working range. Names are the `lens:` field of the agent files.
 
-- Touches persisted data → boundary, partial failure, migration
-- Touches numerical core → numerical integrity, determinism
-- Touches external system → partial failure, error paths, resource exhaustion
-- Any slice → verification, plus validation on the contract it implements
-
-Two to four lenses per slice is the working range.
+```yaml lens-selection
+touches persisted data: [boundary-input, partial-failure, migration]
+touches numerical core: [numerical-integrity, determinism]
+touches external system: [partial-failure, error-paths, resource-exhaustion]
+any slice: [verification, validation]   # validation on the contract the slice implements
+```
 
 ## The two passes you will forget
 

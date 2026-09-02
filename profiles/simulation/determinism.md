@@ -76,13 +76,16 @@ because tolerances are where determinism quietly erodes.
 
 ## Change tier and ownership of the regression net
 
-Rows this profile contributes to the tier table ([CORE-CHG-001](../../core/change-control/change-tiers.md)):
+Rows this profile contributes to the tier table ([CORE-CHG-001](../../core/change-control/change-tiers.md)),
+rendered from `fragment.yaml`:
 
+<!-- generated:tier-rows -->
 | Path touched | Tier |
 |---|---|
 | `fixtures/**/expected/**` | Interface |
 | `**/tolerance.yaml` | Interface |
 | `validation/**` | Interface |
+<!-- /generated -->
 
 Ownership follows the session data ([CORE-SES-001](../../core/session-protocol.md)):
 CONFORMANCE owns tolerances and validation cases, INTEGRATE owns recorded expected

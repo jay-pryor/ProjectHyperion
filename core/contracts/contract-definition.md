@@ -6,6 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [CONTRACT]
 related: [CORE-PRN-001, CORE-CON-002, CORE-CON-003, CORE-CHG-001]
 ---
 
@@ -48,6 +49,14 @@ reference frame — in the type, not in a comment. `metres_per_second`, `ecef_po
 This is not pedantry. Unit and frame confusion at interfaces is among the highest-value
 defect classes to design out, and it is invisible to a model reviewing one module in
 isolation because each side is internally consistent.
+
+## Tolerances
+
+A tolerance is a correctness claim, not a constant. Every tolerance a contract states,
+and every epsilon, threshold, or convergence criterion an implementation hard-codes,
+carries a stated justification naming its basis: an analytical bound, a reference
+dataset, a measurement, or a decision record. A number with no basis is a plausible
+guess dressed as a promise, and the review that finds it cannot tell the two apart.
 
 ## What a contract is not
 

@@ -6,24 +6,24 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
-related: [CORE-SES-001, CORE-CHG-001]
+sessions: [FRAMEWORK]
+related: [CORE-SES-001, CORE-CHG-001, CORE-IMP-001]
 ---
 
 # Template — Project CLAUDE.md
 
-Copy to the project repository root as `CLAUDE.md`. Replace every `<...>`. Keep it under
-160 lines; every line costs budget in every session. Blocks between `generated` markers
-are rendered from the `session-types` block in CORE-SES-001; until the generator exists,
-keep them identical to it by hand. Project state is never written here (records in `trace/`).
+Instantiated by `python hyperion/tooling/init_project.py --profiles <name> <root>`, which
+fills every `generated` block for the chosen profiles (this file shows the core-only
+rendering); `--upgrade` re-renders the blocks and touches nothing else. Replace every
+`<...>` by hand. Keep it under 160 lines. Project state is never written here.
 
 ---
 
 ```markdown
 # <PROJECT> — Operating Instructions
 
-This project is built under Hyperion. Framework docs are in `hyperion/`.
-Follow this file over your defaults. Where they conflict, this file wins.
-Project state lives in `trace/`; never restate it here.
+Built under Hyperion; framework docs are in `hyperion/`. Follow this file over your
+defaults; where they conflict, this file wins. Project state lives in `trace/`, never here.
 
 ## Open the session with a declaration
 
@@ -36,12 +36,13 @@ Before reading or writing anything, output exactly:
     LOADED: <doc IDs read>
 
 Then stop and wait for confirmation. Do not begin work in the same turn. REVIEW and QUERY
-have nothing to scope and do not wait. A BASELINE declaration cites its decision record.
-If the task does not fit one session type, say so and propose a split; never span two.
+do not wait. A BASELINE declaration cites its decision record. If the task does not fit
+one session type, say so and propose a split; never span two.
 
 ## Session rules
 
-A write is permitted only if its path matches "May modify" and nothing in "Must not modify".
+A write is permitted only if its path matches "May modify" and nothing in "Must not
+modify". Full definition: `hyperion/core/session-protocol.md` (CORE-SES-001).
 
 <!-- generated:session-table -->
 | Type | May modify | Must not modify |
@@ -57,79 +58,75 @@ A write is permitted only if its path matches "May modify" and nothing in "Must 
 | QUERY | nothing | everything |
 <!-- /generated -->
 
-Full definition: `hyperion/core/session-protocol.md` (CORE-SES-001).
-
 ## Imperatives
 
-Each carries the core document it derives from. Follow the imperative; open the pointer
-only when a marginal case needs the reasoning behind it.
+Each carries the core section it derives from. Follow the imperative; open the pointer
+only when a marginal case needs the reasoning behind it. An imperative with no source is
+a rule invented here rather than derived, which is a defect (CORE-IMP-001).
 
-An imperative with no source ID is a rule invented here rather than derived, which is a
-defect — find its principle in core or delete it (CORE-IMP-001).
-
+<!-- generated:imperatives -->
 | # | Imperative | Source |
 |---|---|---|
-| IMP-01 | Import only from `modules/<name>/contract.*`. Never reach into another module's internals. | CORE-CON-003 |
-| IMP-02 | Never make a failing conformance test pass by changing the test. Read the contract and decide which is wrong. | CORE-CON-002 |
-| IMP-03 | Never resolve an ambiguity silently. Stop and state both readings. | CORE-PRN-001 |
-| IMP-04 | Never loosen a tolerance, skip a test, or mark one expected-to-fail to get a green run. | CORE-REV-005 |
-| IMP-05 | Put units and reference frames in type names, not comments. | CORE-CON-001 |
-| IMP-06 | Do not add a dependency without an explicit instruction. | CORE-CHG-002 |
-| IMP-07 | Declare session type, scope, and permitted files before touching anything. | CORE-SES-001 |
-| IMP-08 | Stop if the slice cannot be built within existing contracts. | CORE-CHG-001 |
-| IMP-09 | Outside a BASELINE session, stop if a change would touch `baseline/`. | CORE-CHG-002 |
-| IMP-10 | Seed RNG per stochastic stream; iterate in order; no wall-clock time in logic. *(Simulation)* | SIM-DET-001 |
-| IMP-11 | Never silently extrapolate outside a stated validity envelope. Detect and report. *(Simulation)* | SIM-VAL-001 |
-| IMP-12 | Give every hard-coded tolerance a stated justification naming its basis. *(Simulation)* | SIM-RDS-001 |
-| IMP-13 | Update `trace/` in the same session that changes the thing being traced. Never batch trace updates. | CORE-TRC-001 |
-| IMP-14 | Never set `mitigation_status: verified` without a named test that exists and passes. | CORE-TRC-001 |
+| IMP-01 | Import only from `modules/<name>/contract.*`. Never reach into another module's internals. | CORE-CON-003#the-rule |
+| IMP-02 | Never make a failing conformance test pass by changing the test. Read the contract and decide which is wrong. | CORE-SES-001#the-load-bearing-prohibitions |
+| IMP-03 | Never resolve an ambiguity silently. Stop and state both readings. | CORE-SES-001#declaration-stop-and-escalate |
+| IMP-05 | Put units and reference frames in type names, not comments. | CORE-CON-001#units-and-frames |
+| IMP-06 | Do not add a dependency without an explicit instruction. | CORE-LFC-004#baseline-definition |
+| IMP-07 | Declare session type, scope, and permitted files before touching anything. | CORE-SES-001#declaration-stop-and-escalate |
+| IMP-08 | Stop if the slice cannot be built within existing contracts. | CORE-SES-001#the-load-bearing-prohibitions |
+| IMP-09 | Outside a BASELINE session, stop if a change would touch `baseline/`. | CORE-CHG-002#procedure |
+| IMP-13 | Update `trace/` in the same session that changes the thing being traced. Never batch trace updates. | CORE-TRC-001#discipline |
+| IMP-14 | Never set `mitigation_status: verified` without a named test that exists and passes. | CORE-TRC-001#results-not-collection |
+| IMP-15 | Never skip a test or mark one expected-to-fail to get a green run. | CORE-TRC-001#results-not-collection |
+<!-- /generated -->
 
-Two more that are conventions rather than derived rules, and are marked as such:
+Two conventions rather than derived rules, marked as such:
 
 - Do not create files I did not ask for. No README, no example, no summary document.
-- When uncertain, say so in one line and take the conservative option. Do not write
-  paragraphs of caveats, and do not silently take the ambitious one.
+- When uncertain, say so in one line and take the conservative option; no paragraphs of
+  caveats, and never the ambitious option silently.
 
 ## Keeping this file honest
 
-If you change something in `hyperion/core/` that an imperative above derives from, you
-have not finished until you have checked that imperative and updated it or confirmed it
-still holds. Run `python hyperion/tooling/check_imperatives.py`; clear it with `--accept`
-only after re-reading the source. See CORE-IMP-001.
+The table above is generated; never edit it by hand. `python hyperion/tooling/check_imperatives.py`
+fails when a source section changed, when the table differs from `.hyperion/imperatives.json`,
+or when an imperative is on one side only. After moving the vendored framework, run
+`python hyperion/tooling/init_project.py --upgrade .` and re-read what changed (CORE-IMP-001).
 
 ## STOP conditions
 
-Stop, state the condition, and end the session. Do not work around, and do not ask
-permission to work around.
+Stop, state the condition, and end the session. Do not work around it or ask permission to.
 
+<!-- generated:stop-conditions -->
 - The slice cannot be built within existing contracts.
 - You need something a contract does not expose.
 - A change would touch `baseline/` and this is not a BASELINE session.
 - An acceptance criterion is ambiguous or unfalsifiable.
 - A conformance test appears to contradict its contract.
-- A change would perturb existing RNG streams or existing persisted data.
-- You have made more than <5> edits without a passing test run.
+- A change would alter the shape of existing persisted data.
+- You have made more than five edits without a passing test run.
 - You are about to write a second implementation of something that already exists.
+<!-- /generated -->
 
 Each of these is a gate in disguise. Hitting one is a normal outcome, not a failure.
 
 ## Context loadout
 
-Load only what the session type needs, plus this file, `hyperion/core/00-principles.md`,
-`hyperion/core/change-control/change-tiers.md`, and `hyperion/core/contracts/boundary-enforcement.md`.
-Do not load the whole framework; if you need a document not listed, say which and why first.
+Load only what the session type needs, plus this file; `python hyperion/tooling/loadout.py --session <TYPE>`
+prints the paths. If you need a document not listed, say which and why first.
 
 <!-- generated:loadout -->
 | Session | Load |
 |---|---|
-| GATE | `hyperion/core/lifecycle/g<n>-*.md` |
-| CONTRACT | CORE-CON-001, CORE-CON-002, TPL-001 |
-| CONFORMANCE | CORE-CON-002, CORE-TST-001, `modules/<module>/CONTRACT.md`, `docs/slices/<slice>.md` |
-| IMPLEMENT | `modules/<module>/CONTRACT.md`, `modules/<module>/CLAUDE.md`, `docs/slices/<slice>.md` |
-| REVIEW | `hyperion/agents/<lens>.md`, plus the inputs that file permits, nothing else |
-| INTEGRATE | `modules/*/CONTRACT.md`, `docs/slices/<slice>.md` |
-| LESSON | CORE-LSN-001, TPL-003 |
-| BASELINE | CORE-CHG-002, CORE-LFC-004, `docs/decisions/<DEC-nnn>.md` |
+| every session | CORE-CHG-001, CORE-CON-003, CORE-LFC-001, CORE-LFC-006, CORE-PRN-001, CORE-SES-001 |
+| GATE | CORE-DEC-001, CORE-LFC-002, CORE-LFC-003, CORE-LFC-004, CORE-LFC-005, CORE-REV-003, CORE-TRC-001, CORE-TRC-002, TPL-002, TPL-004, TPL-005, TPL-008, `docs/decisions/**`, `trace/**` |
+| CONTRACT | CORE-CON-001, CORE-CON-002, CORE-DEC-001, CORE-TRC-002, TPL-001, TPL-002, TPL-005, `modules/<module>/CONTRACT.md`, `docs/slices/<slice>.md` |
+| CONFORMANCE | CORE-CON-002, CORE-REV-005, CORE-TRC-002, CORE-TST-001, CORE-TST-002, `modules/<module>/CONTRACT.md`, `docs/slices/<slice>.md` |
+| IMPLEMENT | CORE-TST-002, `modules/<module>/CONTRACT.md`, `modules/<module>/CLAUDE.md`, `docs/slices/<slice>.md` |
+| REVIEW | CORE-REV-001, CORE-REV-003, CORE-REV-005, CORE-TRC-003, AGT-000, AGT-LNS-001, AGT-VAL-001, AGT-VER-001, one agent file plus the inputs it permits, nothing else |
+| INTEGRATE | CORE-TRC-003, CORE-TST-002, `modules/*/CONTRACT.md`, `docs/slices/<slice>.md` |
+| LESSON | CORE-LSN-001, CORE-REV-005, CORE-TRC-003, TPL-003, TPL-007, `docs/slices/<slice>.md`, `lessons/**` |
+| BASELINE | CORE-CHG-002, CORE-DEC-001, CORE-TRC-003, TPL-002, `docs/decisions/<DEC-nnn>.md` |
 | QUERY | whatever the question needs; the only type with no ceiling |
 <!-- /generated -->
 
@@ -139,12 +136,12 @@ Do not load the whole framework; if you need a document not listed, say which an
     <conformance>       # conformance only
     <validation>        # validation suite — separate from tests
     <lint>              # includes boundary and token checks
-    <check-traces>      # python hyperion/tooling/check_traces.py — run AFTER <test>
-    <trace-matrix>      # python hyperion/tooling/check_traces.py --report > trace/matrix.md
-    <registry>          # python hyperion/tooling/build_registry.py --check
+    <check-traces>      # python hyperion/tooling/check_traces.py — run AFTER <test>; --report for the matrix
+    <check-commit>      # python hyperion/tooling/check_commit.py <base>..HEAD
 
 Run `<lint>`, `<conformance>`, and `<check-traces>` before declaring any work complete.
-`trace/results.xml` is generated by the runner and never committed or hand-edited.
+`trace/results.xml` is generated, never committed. Every commit carries a `Session: <TYPE>`
+trailer; CI rejects one whose paths fall outside that type.
 
 ## Definition of done for a slice
 
@@ -152,6 +149,9 @@ Run `<lint>`, `<conformance>`, and `<check-traces>` before declaring any work co
 - [ ] Validation suite passes, or deviations are recorded with justification
 - [ ] Lenses run: <list from the slice definition>
 - [ ] Findings dispositioned; S1 and S2 closed
+<!-- generated:targeted-reads -->
+- [ ] Targeted human reads done (CORE-REV-004)
+<!-- /generated -->
 - [ ] Lessons recorded and promoted
 - [ ] Decision records written for anything decided
 - [ ] `trace/` updated; `check_traces.py` green

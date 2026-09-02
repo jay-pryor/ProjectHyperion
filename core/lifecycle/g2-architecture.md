@@ -6,6 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [GATE]
 related: [CORE-LFC-003, CORE-LFC-005, CORE-CON-003, CORE-CHG-001]
 ---
 
@@ -59,7 +60,13 @@ expensive change in the system, so it is named explicitly at G2 and lives under
 
 Baseline typically includes: shared types, persisted data schemas, configuration schema,
 error and logging conventions, the module dependency graph itself, build and
-distribution, and — where the profile has a UI — design tokens.
+distribution, and — where the profile has a UI — design tokens. It always includes the
+fault-point harness, from `templates/baseline/faults.py`
+([CORE-TST-002](../testing/tests-are-tested.md)).
+
+**Third-party dependencies are baseline.** Every module inherits them, so the lockfile
+lives under `baseline/` and adding a dependency is a Baseline-tier change made only on an
+explicit instruction, never as a side effect of a slice.
 
 Anything in the baseline is subject to [CORE-CHG-002](../change-control/baseline-change-procedure.md).
 

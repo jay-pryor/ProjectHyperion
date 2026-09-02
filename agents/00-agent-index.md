@@ -6,6 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [REVIEW]
 related: [CORE-REV-003]
 ---
 
@@ -22,25 +23,29 @@ Governed by [CORE-REV-003](../core/reviews/lens-reviews.md). Summarised:
 3. One agent per session.
 4. Findings without a reproducing test go to the rejected list.
 
+Tables are rendered by `build_layer.py` from each agent file's frontmatter (`lens`,
+`question`, `run_when`, `model`, `profile`); edit the agent file, not the table.
+
+<!-- generated:agent-index -->
 ## Core agents
 
-| Agent | Question | Run when |
-|---|---|---|
-| [verification-review](verification-review.md) | Does the implementation satisfy the contract? | Every slice |
-| [validation-review](validation-review.md) | Is the contract itself wrong? | Every slice, and on gate artifacts |
-| [lens-partial-failure](lens-partial-failure.md) | Can state be left inconsistent mid-operation? | Slices with multi-step operations or external systems |
+| Agent | Question | Run when | Model |
+|---|---|---|---|
+| [lens-partial-failure](lens-partial-failure.md) | Can state be left inconsistent mid-operation? | Slices with multi-step operations or external systems | sonnet |
+| [validation-review](validation-review.md) | Is the contract itself wrong? | Every slice, and on gate artifacts at G2 and G3 | sonnet |
+| [verification-review](verification-review.md) | Does the implementation satisfy the contract? | Every slice | sonnet |
 
 ## Simulation profile agents
 
-| Agent | Question | Run when |
-|---|---|---|
-| [lens-numerical-integrity](lens-numerical-integrity.md) | Are the numbers wrong in ways that still look plausible? | Any slice touching the numerical core |
-| [lens-determinism](lens-determinism.md) | Can two identical runs differ? | Any slice touching state, RNG, iteration, or parallelism |
+| Agent | Question | Run when | Model |
+|---|---|---|---|
+| [lens-determinism](lens-determinism.md) | Can two identical runs differ? | Any slice touching state, RNG, iteration, or parallelism | sonnet |
+| [lens-numerical-integrity](lens-numerical-integrity.md) | Are the numbers wrong in ways that still look plausible? | Any slice touching the numerical core | sonnet |
 
-## To write
+## Not yet written
 
-Error paths · Boundary and input · Resource exhaustion · Concurrency · Contract drift ·
-Migration safety. Write these when a slice first needs them, not in advance.
+Named in the selection block of CORE-REV-003 with no agent file: boundary-input, error-paths, migration, resource-exhaustion. Write one when a slice first needs it, not in advance.
+<!-- /generated -->
 
 ## Anatomy of an agent file
 

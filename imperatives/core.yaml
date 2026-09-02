@@ -1,0 +1,62 @@
+# Framework-wide imperatives, carried by every project CLAUDE.md (CORE-IMP-001).
+# The only hand-written source: tooling/build_layer.py renders the table and the map.
+#
+# Each row: id (stable, never reused), text (the sentence a session obeys), source
+# (ID#section-slug of the section the rule derives from), anchor (words that must appear
+# in that section, so a mis-sourced row is a build error, not a discovery).
+imperatives:
+  - id: IMP-01
+    text: "Import only from `modules/<name>/contract.*`. Never reach into another module's internals."
+    source: CORE-CON-003#the-rule
+    anchor: [import, contract]
+  - id: IMP-02
+    text: "Never make a failing conformance test pass by changing the test. Read the contract and decide which is wrong."
+    source: CORE-SES-001#the-load-bearing-prohibitions
+    anchor: [which is wrong]
+  - id: IMP-03
+    text: "Never resolve an ambiguity silently. Stop and state both readings."
+    source: CORE-SES-001#declaration-stop-and-escalate
+    anchor: [ambiguity, both readings]
+  - id: IMP-05
+    text: "Put units and reference frames in type names, not comments."
+    source: CORE-CON-001#units-and-frames
+    anchor: [type, comment]
+  - id: IMP-06
+    text: "Do not add a dependency without an explicit instruction."
+    source: CORE-LFC-004#baseline-definition
+    anchor: [dependencies]
+  - id: IMP-07
+    text: "Declare session type, scope, and permitted files before touching anything."
+    source: CORE-SES-001#declaration-stop-and-escalate
+    anchor: [declaration]
+  - id: IMP-08
+    text: "Stop if the slice cannot be built within existing contracts."
+    source: CORE-SES-001#the-load-bearing-prohibitions
+    anchor: [contract change, stop]
+  - id: IMP-09
+    text: "Outside a BASELINE session, stop if a change would touch `baseline/`."
+    source: CORE-CHG-002#procedure
+    anchor: [BASELINE session, decision record]
+  - id: IMP-13
+    text: "Update `trace/` in the same session that changes the thing being traced. Never batch trace updates."
+    source: CORE-TRC-001#discipline
+    anchor: [session, batched]
+  - id: IMP-14
+    text: "Never set `mitigation_status: verified` without a named test that exists and passes."
+    source: CORE-TRC-001#results-not-collection
+    anchor: [passed]
+  - id: IMP-15
+    text: "Never skip a test or mark one expected-to-fail to get a green run."
+    source: CORE-TRC-001#results-not-collection
+    anchor: [skipped, expected to fail]
+
+# Rendered into the project CLAUDE.md STOP conditions block. Profiles add theirs.
+stop_conditions:
+  - The slice cannot be built within existing contracts.
+  - You need something a contract does not expose.
+  - A change would touch `baseline/` and this is not a BASELINE session.
+  - An acceptance criterion is ambiguous or unfalsifiable.
+  - A conformance test appears to contradict its contract.
+  - A change would alter the shape of existing persisted data.
+  - You have made more than five edits without a passing test run.
+  - You are about to write a second implementation of something that already exists.

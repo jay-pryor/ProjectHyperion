@@ -6,6 +6,7 @@ status: draft
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [GATE, CONFORMANCE]
 related: [SIM-000, CORE-LFC-003, CORE-TST-001]
 ---
 

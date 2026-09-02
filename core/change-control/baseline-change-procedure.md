@@ -6,6 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [BASELINE]
 related: [CORE-CHG-001, CORE-LFC-004, CORE-DEC-001]
 ---
 

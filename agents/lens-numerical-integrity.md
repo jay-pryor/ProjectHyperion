@@ -6,12 +6,16 @@ status: draft
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [REVIEW]
+lens: numerical-integrity
+question: "Are the numbers wrong in ways that still look plausible?"
+run_when: "Any slice touching the numerical core"
+model: sonnet
+profile: simulation
 related: [CORE-REV-003, SIM-VAL-001]
 ---
 
 # Agent — Numerical Integrity Lens
-
-**Profile:** Simulation.
 
 **Question:** are the numbers wrong in ways that still look plausible?
 
@@ -67,8 +71,18 @@ For each finding, output exactly:
   FINDING: one-line description
   MECHANISM: why the output is wrong rather than absent
   MAGNITUDE: how wrong, and under what conditions
-  SEVERITY: S1 (silently wrong output) / S2 / S3
+  SEVERITY: S1 / S2 / S3 / S4, per the scale below; silently wrong output is S1
   TEST: a specific case with an expected value derived independently of this code
+
+Severity scale (S1 blocks acceptance; use exactly these definitions):
+<!-- include: CORE-REV-005#severity -->
+| Severity | Definition | Disposition |
+|---|---|---|
+| **S1** | Violates a hazard mitigation or produces silently wrong output | Blocks slice acceptance |
+| **S2** | Violates a contract promise | Blocks slice acceptance |
+| **S3** | Defect not covered by any contract promise | Backlog; consider whether the contract is incomplete |
+| **S4** | Quality or maintainability | Backlog or reject |
+<!-- /include -->
 
 The TEST must derive its expected value analytically or from an invariant, never from
 running this implementation. If you cannot do that, put the finding under REJECTED.

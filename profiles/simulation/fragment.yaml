@@ -1,0 +1,50 @@
+# What the simulation profile contributes to a project's operating layer (F-38, M1).
+# tooling/init_project.py --profiles simulation renders these into the project CLAUDE.md;
+# nothing domain-specific lives in the core template. Row shapes: CORE-IMP-001.
+profile: simulation
+
+imperatives:
+  - id: IMP-04
+    text: "Never loosen a tolerance to get a green run."
+    source: SIM-VAL-001#validation-suite
+    anchor: [tolerance loosened]
+  - id: IMP-10
+    text: "Seed RNG per stochastic stream; iterate in order; no wall-clock time in logic."
+    source: SIM-DET-001#what-breaks-it
+    anchor: [seeded, ordered, wall-clock]
+  - id: IMP-11
+    text: "Never silently extrapolate outside a stated validity envelope. Detect and report."
+    source: SIM-VAL-001#validity-envelope
+    anchor: [extrapolation, reported]
+  - id: IMP-12
+    text: "Give every hard-coded tolerance a stated justification naming its basis."
+    source: CORE-CON-001#tolerances
+    anchor: [basis]
+
+stop_conditions:
+  - A change would perturb an existing RNG stream.
+
+# Rows this profile adds to the change-tier table (CORE-CHG-001); rendered into
+# SIM-DET-001 and read by the commit checker and the scope hook.
+tier_rows:
+  - path: fixtures/**/expected/**
+    tier: Interface
+  - path: "**/tolerance.yaml"
+    tier: Interface
+  - path: validation/**
+    tier: Interface
+
+# Project files a session loads in addition to what frontmatter selects (F-20). Keyed by
+# session type. Framework documents are never listed here; their `sessions:` field is
+# the only definition.
+loadout:
+  CONFORMANCE: ["fixtures/<scenario>/tolerance.yaml"]
+  INTEGRATE: ["fixtures/<scenario>/config.yaml", "fixtures/<scenario>/seed"]
+
+# Human-only documents whose numbered sections are the profile's targeted reads
+# (CORE-REV-004). Rendered as one checklist line in the definition of done.
+targeted_reads: [SIM-RDS-001]
+
+# Claude Code plugins the project enables (F-47). Empty until the toolchain decision in
+# SIM-000 is made; the harness binding writes this list into .claude/settings.json.
+plugins: []

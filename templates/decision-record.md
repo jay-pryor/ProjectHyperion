@@ -6,6 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [GATE, CONTRACT, BASELINE]
 related: [CORE-DEC-001]
 ---
 

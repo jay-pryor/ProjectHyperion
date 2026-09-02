@@ -1,0 +1,16 @@
+# Imperatives carried by this repository's own CLAUDE.md (HYP-002), for sessions that
+# edit the framework. Same row shape as core.yaml; rendered by tooling/build_layer.py.
+carried_in: CLAUDE.md
+imperatives:
+  - id: IMP-F1
+    text: "Regenerate the registry after any change to this repository."
+    source: TOOL-001#enforcement
+    anchor: [stale]
+  - id: IMP-F2
+    text: "Every rule added to core must trace to a principle."
+    source: CORE-PRN-001#principles
+    anchor: [traced to a principle]
+  - id: IMP-F3
+    text: "Regenerate the operating layer (`build_layer.py`) after changing any source it renders."
+    source: CORE-IMP-001#generated-blocks
+    anchor: [build_layer]

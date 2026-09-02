@@ -6,6 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [REVIEW, INTEGRATE, LESSON, BASELINE]
 related: [CORE-TRC-001, CORE-TRC-002, CORE-REV-002, CORE-REV-005, CORE-CHG-002, CORE-LFC-001]
 ---
 
@@ -28,6 +29,7 @@ row and by `tooling/check_traces.py`.
   severity: S1 | S2 | S3 | S4                         # CORE-REV-005
   status: admitted | rejected | fixed | reopened
   ref: <test id> | <contract path>::C-nnn | REQ-nnn | HZ-nnn | DEC-nnn
+                                                      # source mutation, while open: modules/<m>/src/<file>::<mutant>
   summary: <one line>
   reason: <why>                                       # required when rejected
 ```

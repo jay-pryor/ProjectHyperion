@@ -4,3 +4,7 @@ __pycache__/
 # Written by every pytest run and read by check_traces.py for outcomes; never committed.
 examples/minimal/trace/results.xml
 .pytest_cache/
+# mutmut's cache (tooling/mutation_score.py runs it in a scratch copy, but a direct run lands here)
+mutants/
+# JUnit files from check_null_doubles.py if a run is interrupted before its temp file is removed
+*.null-double.xml

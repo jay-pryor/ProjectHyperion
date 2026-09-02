@@ -6,7 +6,8 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
-related: [CORE-CON-002, CORE-PRN-001]
+sessions: [CONFORMANCE]
+related: [CORE-CON-002, CORE-TST-002, CORE-PRN-001]
 ---
 
 # Test Strategy
@@ -22,7 +23,8 @@ is what makes cheap rework safe.
 
 Both artifacts inherit the same misreading, everything passes, and you learn nothing.
 Hence [P8](../00-principles.md): contract-level tests are written from human-written
-acceptance criteria, before implementation, in a separate session.
+acceptance criteria, before implementation, in a separate session. Independence is not
+enough; whether the suite can fail at all is checked by [CORE-TST-002](tests-are-tested.md).
 
 ## Layers
 

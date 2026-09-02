@@ -1,18 +1,20 @@
 # Module map
 
-Generated from `modules/*/manifest.yaml`. Do not edit the diagram; edit a manifest.
+The diagram is generated from `modules/*/manifest.yaml`; edit a manifest, not the diagram.
 
+<!-- generated:module-map -->
 ```mermaid
 flowchart LR
     subgraph baseline
-        U[units]
-        F[faults]
+        baseline_units[units]
+        baseline_faults[faults]
     end
-    A[atmosphere] -->|units| U
-    T[trajectory] -->|units| U
-    T -->|fault points| F
-    T -->|"density(altitude)"| A
+    atmosphere[atmosphere] --> baseline_units
+    trajectory[trajectory] --> baseline_units
+    trajectory[trajectory] --> baseline_faults
+    trajectory[trajectory] --> atmosphere[atmosphere]
 ```
+<!-- /generated -->
 
 | Module | Responsibility | Requirements |
 |---|---|---|

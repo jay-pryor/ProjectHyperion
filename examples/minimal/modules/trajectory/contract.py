@@ -1,4 +1,5 @@
 """Contract: trajectory. Sole import surface. Clause IDs in CONTRACT.md."""
+import os
 from dataclasses import dataclass, fields
 
 from baseline.units import MetresPerSecond, Metres, Radians, Seconds
@@ -50,5 +51,14 @@ class Trajectory:
 
 def simulate(config: ScenarioConfig) -> Trajectory:
     """C-101 to C-107."""
-    from modules.trajectory.src import integrator
-    return integrator.simulate(config)
+    return _impl().simulate(config)
+
+
+def _impl():
+    # Selecting the implementation by environment lets the conformance suite run
+    # unchanged against the real implementation and against the null double.
+    if os.environ.get("TRAJECTORY_IMPL") == "null":
+        from modules.trajectory import null_double as m
+    else:
+        from modules.trajectory.src import integrator as m
+    return m

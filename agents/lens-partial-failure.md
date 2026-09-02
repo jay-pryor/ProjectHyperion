@@ -6,6 +6,11 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [REVIEW]
+lens: partial-failure
+question: "Can state be left inconsistent mid-operation?"
+run_when: "Slices with multi-step operations or external systems"
+model: sonnet
 related: [CORE-REV-003]
 ---
 
@@ -52,8 +57,18 @@ For each finding, output exactly:
   FINDING: one-line description
   SEQUENCE: the exact step ordering that produces it
   RESIDUE: what is left inconsistent
-  SEVERITY: S1 / S2 / S3
+  SEVERITY: S1 / S2 / S3 / S4, per the scale below
   TEST: a test that forces the failure at that step and asserts the inconsistency
+
+Severity scale (S1 blocks acceptance; use exactly these definitions):
+<!-- include: CORE-REV-005#severity -->
+| Severity | Definition | Disposition |
+|---|---|---|
+| **S1** | Violates a hazard mitigation or produces silently wrong output | Blocks slice acceptance |
+| **S2** | Violates a contract promise | Blocks slice acceptance |
+| **S3** | Defect not covered by any contract promise | Backlog; consider whether the contract is incomplete |
+| **S4** | Quality or maintainability | Backlog or reject |
+<!-- /include -->
 
 If you cannot force the failure in a test, put it under REJECTED with a reason.
 

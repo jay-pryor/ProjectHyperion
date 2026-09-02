@@ -6,6 +6,11 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [REVIEW]
+lens: validation
+question: "Is the contract itself wrong?"
+run_when: "Every slice, and on gate artifacts at G2 and G3"
+model: sonnet
 related: [CORE-REV-003, CORE-LFC-003]
 ---
 
@@ -67,7 +72,18 @@ For each finding, output exactly:
   FINDING: one-line description
   CATEGORY: ambiguity / omission / assumption / hazard / unfalsifiable / decomposition
   CONSEQUENCE: what goes wrong downstream if this is not fixed
+  SEVERITY: S1 / S2 / S3 / S4, per the scale below
   PROPOSED CLAUSE: specific wording that would resolve it
+
+Severity scale (S1 blocks acceptance; use exactly these definitions):
+<!-- include: CORE-REV-005#severity -->
+| Severity | Definition | Disposition |
+|---|---|---|
+| **S1** | Violates a hazard mitigation or produces silently wrong output | Blocks slice acceptance |
+| **S2** | Violates a contract promise | Blocks slice acceptance |
+| **S3** | Defect not covered by any contract promise | Backlog; consider whether the contract is incomplete |
+| **S4** | Quality or maintainability | Backlog or reject |
+<!-- /include -->
 
 Do not propose implementations. Do not comment on naming or style unless a name is
 actively misleading about behaviour.

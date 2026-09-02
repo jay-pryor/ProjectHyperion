@@ -6,12 +6,16 @@ status: draft
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [REVIEW]
+lens: determinism
+question: "Can two identical runs differ?"
+run_when: "Any slice touching state, RNG, iteration, or parallelism"
+model: sonnet
+profile: simulation
 related: [CORE-REV-003, SIM-DET-001]
 ---
 
 # Agent — Determinism Lens
-
-**Profile:** Simulation.
 
 **Question:** can two runs with identical config and seed differ?
 
@@ -58,9 +62,19 @@ For each finding, output exactly:
   FINDING: one-line description
   MECHANISM: how the divergence arises
   OBSERVABILITY: whether it changes output or only timing
-  SEVERITY: S1 (output differs) / S3 (timing only)
+  SEVERITY: S1 if output differs; S4 with a note if only timing differs. Scale below.
   TEST: a test that runs the same configuration twice and asserts bit-identical output
         for the affected path
+
+Severity scale (S1 blocks acceptance; use exactly these definitions):
+<!-- include: CORE-REV-005#severity -->
+| Severity | Definition | Disposition |
+|---|---|---|
+| **S1** | Violates a hazard mitigation or produces silently wrong output | Blocks slice acceptance |
+| **S2** | Violates a contract promise | Blocks slice acceptance |
+| **S3** | Defect not covered by any contract promise | Backlog; consider whether the contract is incomplete |
+| **S4** | Quality or maintainability | Backlog or reject |
+<!-- /include -->
 
 Report only mechanisms that can affect output, or that affect the sequence of RNG draws.
 State plainly if there are none.

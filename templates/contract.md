@@ -6,6 +6,7 @@ status: active
 version: 0.2
 audience: [human, model]
 load: on-task
+sessions: [CONTRACT]
 related: [CORE-CON-001, CORE-TRC-001]
 ---
 

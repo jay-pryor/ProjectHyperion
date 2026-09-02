@@ -6,6 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [REVIEW]
 related: [CORE-REV-002, CORE-REV-003, CORE-REV-004, CORE-REV-005]
 ---
 

@@ -269,6 +269,43 @@ def test_unarmed_fault_point(broken):
     assert_error(broken, 'fault_point("trajectory.integrate") is armed by no test')
 
 
+# ------------------------------------------------------------------ mutation survivors (CORE-TST-002)
+
+MUTATION_ROW = ("- id: FND-004\n  date: 2026-09-02\n  slice: SL-02\n  source: mutation\n  form: test\n"
+                "  severity: S1\n  status: admitted\n  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_3\n"
+                "  summary: Survived mutant\n")
+
+
+def test_open_mutation_finding_names_its_mutant(broken):
+    path = broken / "trace" / "findings.yaml"
+    path.write_text(path.read_text(encoding="utf-8") + MUTATION_ROW, encoding="utf-8")
+    assert errors(broken) == []                                   # SL-02 is in_progress: allowed
+    edit(broken, "trace/findings.yaml", "ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_3",
+         "ref: modules/trajectory/src/integrater.py::x_simulate__mutmut_3")
+    assert_error(broken, "FND-004", "does not exist")
+    edit(broken, "trace/findings.yaml", "ref: modules/trajectory/src/integrater.py::x_simulate__mutmut_3",
+         "ref: x_simulate__mutmut_3")
+    assert_error(broken, "FND-004", "must be modules/<m>/src/<file>::<mutant id> while open")
+
+
+def test_accepted_slice_may_not_carry_open_survivors(broken):
+    path = broken / "trace" / "findings.yaml"
+    path.write_text(path.read_text(encoding="utf-8") + MUTATION_ROW.replace("slice: SL-02", "slice: SL-01"), encoding="utf-8")
+    assert_error(broken, "SL-01: accepted with untriaged mutation survivors")
+    edit(broken, "trace/slices.yaml", "  contracts: [trajectory]\n  status: accepted\n",
+         "  contracts: [trajectory]\n  status: accepted\n  mutation_score: 0.6\n  survivors_triaged: true\n")
+    assert_error(broken, "SL-01: survivors_triaged is true but FND-004 still open")
+    edit(broken, "trace/findings.yaml", "  status: admitted\n  ref: modules/trajectory/src",
+         "  status: rejected\n  reason: equivalent\n  ref: modules/trajectory/src")
+    assert errors(broken) == []
+
+
+def test_accepted_slice_with_survivors_triaged_false_is_an_error(broken):
+    edit(broken, "trace/slices.yaml", "  contracts: [trajectory]\n  status: accepted\n",
+         "  contracts: [trajectory]\n  status: accepted\n  mutation_score: 0.6\n  survivors_triaged: false\n")
+    assert_error(broken, "SL-01: accepted with untriaged mutation survivors")
+
+
 # ------------------------------------------------------------------ report (F-14)
 
 def test_report_exits_nonzero_and_banners_errors_on_broken_chain(broken):

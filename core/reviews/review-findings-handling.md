@@ -6,6 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [REVIEW, CONFORMANCE, LESSON]
 related: [CORE-REV-001, CORE-LSN-001, CORE-SES-001, CORE-CHG-001]
 ---
 
@@ -37,16 +38,19 @@ be real is a calibration signal about the reviewing agent's prompt.
 
 ## Severity
 
-This table is the only definition. Agent prompts carry it verbatim as a generated include
-and map lens-specific distinctions onto it rather than redefining it: output that differs
-between identical runs is S1; timing-only divergence is S4 with a note.
-
 | Severity | Definition | Disposition |
 |---|---|---|
 | **S1** | Violates a hazard mitigation or produces silently wrong output | Blocks slice acceptance |
 | **S2** | Violates a contract promise | Blocks slice acceptance |
 | **S3** | Defect not covered by any contract promise | Backlog; consider whether the contract is incomplete |
 | **S4** | Quality or maintainability | Backlog or reject |
+
+## Applying the scale
+
+The table above is the only definition. Agent prompts carry it verbatim as a generated
+include (`<!-- include: CORE-REV-005#severity -->`, filled by `build_layer.py`) and map
+lens-specific distinctions onto it rather than redefining it: output that differs between
+identical runs is S1; timing-only divergence is S4 with a note.
 
 An S3 finding should always trigger the question: *should the contract have promised
 this?* If yes, it is really a validation finding: record it in `clause` form and run the

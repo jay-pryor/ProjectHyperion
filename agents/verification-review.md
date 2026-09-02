@@ -6,6 +6,11 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [REVIEW]
+lens: verification
+question: "Does the implementation satisfy the contract?"
+run_when: "Every slice"
+model: sonnet
 related: [CORE-REV-003, CORE-CON-001]
 ---
 
@@ -59,11 +64,19 @@ mention. Consumers may come to depend on it, and it is not promised.
 For each finding, output exactly:
   FINDING: one-line description
   CLAUSE: the contract clause violated, quoted
-  SEVERITY: S1 (violates a hazard mitigation or produces silently wrong output) /
-            S2 (violates a contract promise) /
-            S3 (defect not covered by any promise)
+  SEVERITY: S1 / S2 / S3 / S4, per the scale below
   TEST: a concrete test case, with inputs and expected vs actual, that fails on the
         current implementation
+
+Severity scale (S1 blocks acceptance; use exactly these definitions):
+<!-- include: CORE-REV-005#severity -->
+| Severity | Definition | Disposition |
+|---|---|---|
+| **S1** | Violates a hazard mitigation or produces silently wrong output | Blocks slice acceptance |
+| **S2** | Violates a contract promise | Blocks slice acceptance |
+| **S3** | Defect not covered by any contract promise | Backlog; consider whether the contract is incomplete |
+| **S4** | Quality or maintainability | Backlog or reject |
+<!-- /include -->
 
 If you cannot construct a failing test for a finding, place it under REJECTED with a
 one-line reason instead. Do not report it as a finding.

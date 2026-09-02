@@ -6,7 +6,8 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
-related: [CORE-LFC-004, CORE-LFC-006, CORE-CON-001, CORE-CON-002, CORE-TST-001, CORE-CHG-001]
+sessions: [GATE]
+related: [CORE-LFC-004, CORE-LFC-006, CORE-CON-001, CORE-CON-002, CORE-TST-001, CORE-TST-002, CORE-CHG-001]
 ---
 
 # G3 — Contracts & Slice Plan
@@ -56,7 +57,7 @@ Order the remainder by risk, not by convenience.
 Modules not yet built are stubbed at their contract, returning fixed valid data. A
 stand-in stub is introduced in the slice loop when a slice needs an unbuilt module, and it
 **must pass** the suite: a stub cannot silently violate the contract it stands in for. The
-null double ([CORE-TST-001](../testing/test-strategy.md)) is the opposite instrument, a
+null double ([CORE-TST-002](../testing/tests-are-tested.md)) is the opposite instrument, a
 trivial implementation the suite **must fail** against. Passing a stub proves the stub
 honest; failing the null double proves the suite discriminates. A suite that a fixed-data
 stub passes in full checks shape, not behaviour.

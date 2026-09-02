@@ -6,6 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
+sessions: [CONTRACT, CONFORMANCE]
 related: [CORE-CON-001, CORE-TST-001, CORE-CHG-001]
 ---
 
@@ -16,7 +17,8 @@ error conditions, or tolerance; the conformance suite can, and it runs.
 
 ## Role
 
-1. **Encodes behavioural promises** (contract parts 4–6) so they are checked, not hoped for.
+1. **Encodes error conditions and behavioural promises** (contract parts 4 and 5,
+   [CORE-CON-001](contract-definition.md)) so they are checked, not hoped for.
 2. **Closes the change-tier loophole** — altering promised behaviour fails conformance,
    forcing the diff into `conformance/`, which classifies it as an Interface change
    ([CORE-CHG-001](../change-control/change-tiers.md)).
