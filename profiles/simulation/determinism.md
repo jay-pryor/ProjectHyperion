@@ -6,7 +6,7 @@ status: draft
 version: 0.1
 audience: [human, model]
 load: always
-related: [SIM-000, SIM-VAL-001]
+related: [SIM-000, SIM-VAL-001, CORE-CHG-001, CORE-SES-001]
 ---
 
 # Determinism — Simulation
@@ -73,6 +73,23 @@ fixtures/
 
 Exact-match by default. Any tolerance is a documented exception with a stated reason,
 because tolerances are where determinism quietly erodes.
+
+## Change tier and ownership of the regression net
+
+Rows this profile contributes to the tier table ([CORE-CHG-001](../../core/change-control/change-tiers.md)):
+
+| Path touched | Tier |
+|---|---|
+| `fixtures/**/expected/**` | Interface |
+| `**/tolerance.yaml` | Interface |
+| `validation/**` | Interface |
+
+Ownership follows the session data ([CORE-SES-001](../../core/session-protocol.md)):
+CONFORMANCE owns tolerances and validation cases, INTEGRATE owns recorded expected
+output, IMPLEMENT touches none of them. A commit touching `expected/` or a tolerance file
+carries a `Fixture-change: DEC-nnn | FND-nnn` trailer that resolves; the commit checker
+rejects one without it (mechanically checked). Every such diff is a targeted human read
+([SIM-RDS-001](targeted-reads.md)).
 
 ## Cross-platform
 

@@ -12,7 +12,9 @@ related: [CORE-SES-001, CORE-CHG-001]
 # Template — Project CLAUDE.md
 
 Copy to the project repository root as `CLAUDE.md`. Replace every `<...>`. Keep it under
-150 lines; it is loaded into every session and every line costs budget.
+160 lines; every line costs budget in every session. Blocks between `generated` markers
+are rendered from the `session-types` block in CORE-SES-001; until the generator exists,
+keep them identical to it by hand. Project state is never written here (records in `trace/`).
 
 ---
 
@@ -21,42 +23,39 @@ Copy to the project repository root as `CLAUDE.md`. Replace every `<...>`. Keep 
 
 This project is built under Hyperion. Framework docs are in `hyperion/`.
 Follow this file over your defaults. Where they conflict, this file wins.
-
-## Current state
-
-- Gate reached: <G0 | G1 | G2 | G3 | slice loop>
-- Active slice: <SL-nn, or none>
-- Profile(s): <Simulation | Web | ...>
-- Language / stack: <...>
-- Baseline version: <...>
+Project state lives in `trace/`; never restate it here.
 
 ## Open the session with a declaration
 
 Before reading or writing anything, output exactly:
 
-    SESSION: <GATE | CONTRACT | CONFORMANCE | IMPLEMENT | REVIEW | INTEGRATE | LESSON | QUERY>
+    SESSION: <GATE | CONTRACT | CONFORMANCE | IMPLEMENT | REVIEW | INTEGRATE | LESSON | BASELINE | QUERY>
     SLICE: <SL-nn or n/a>
     SCOPE: <the one thing this session will produce>
-    MAY MODIFY: <explicit file globs>
+    MAY MODIFY: <explicit file globs from the session table>
     LOADED: <doc IDs read>
 
-Then stop and wait for confirmation. Do not begin work in the same turn.
-
-If the task I gave you does not fit one session type, say so and propose a split. Do not
-silently span two.
+Then stop and wait for confirmation. Do not begin work in the same turn. REVIEW and QUERY
+have nothing to scope and do not wait. A BASELINE declaration cites its decision record.
+If the task does not fit one session type, say so and propose a split; never span two.
 
 ## Session rules
 
+A write is permitted only if its path matches "May modify" and nothing in "Must not modify".
+
+<!-- generated:session-table -->
 | Type | May modify | Must not modify |
 |---|---|---|
-| GATE | gate artifacts, decision records | any code |
-| CONTRACT | `contract.*` | `src/`, `conformance/` |
-| CONFORMANCE | `conformance/` | `src/`, `contract.*` |
-| IMPLEMENT | `src/`, `tests/` | `contract.*`, `conformance/`, `baseline/` |
-| REVIEW | nothing | everything |
-| INTEGRATE | integration code, fixtures | `contract.*`, `conformance/` |
-| LESSON | lessons, lint rules, conformance | `src/` |
+| GATE | `docs/**`, `trace/**` | `modules/**`, `baseline/**`, `validation/**` |
+| CONTRACT | `modules/*/contract.*`, `modules/*/CONTRACT.md`, `docs/slices/**`, `docs/decisions/**`, `trace/**` | `modules/*/src/**`, `modules/*/conformance/**`, `modules/*/tests/**`, `baseline/**`, `validation/**` |
+| CONFORMANCE | `modules/*/conformance/**`, `validation/**`, `**/tolerance.yaml`, `trace/**` | `modules/*/src/**`, `modules/*/contract.*`, `modules/*/CONTRACT.md`, `modules/*/tests/**`, `baseline/**` |
+| IMPLEMENT | `modules/*/src/**`, `modules/*/tests/**`, `trace/**` | `modules/*/contract.*`, `modules/*/CONTRACT.md`, `modules/*/conformance/**`, `baseline/**`, `validation/**`, `fixtures/**` |
+| REVIEW | `trace/findings.yaml` (append only) | `modules/**`, `baseline/**`, `validation/**`, `docs/**` |
+| INTEGRATE | `integration/**`, `fixtures/**`, `trace/**` | `modules/*/contract.*`, `modules/*/CONTRACT.md`, `modules/*/conformance/**`, `**/tolerance.yaml`, `baseline/**`, `validation/**` |
+| LESSON | `lessons/**`, `lint/**`, `modules/*/CLAUDE.md`, `docs/slices/**`, `trace/**` | `modules/*/src/**`, `modules/*/contract.*`, `modules/*/conformance/**`, `baseline/**` |
+| BASELINE | `baseline/**`, `docs/decisions/**`, `trace/**` | `modules/**`, `validation/**` |
 | QUERY | nothing | everything |
+<!-- /generated -->
 
 Full definition: `hyperion/core/session-protocol.md` (CORE-SES-001).
 
@@ -78,7 +77,7 @@ defect — find its principle in core or delete it (CORE-IMP-001).
 | IMP-06 | Do not add a dependency without an explicit instruction. | CORE-CHG-002 |
 | IMP-07 | Declare session type, scope, and permitted files before touching anything. | CORE-SES-001 |
 | IMP-08 | Stop if the slice cannot be built within existing contracts. | CORE-CHG-001 |
-| IMP-09 | Stop if a change would touch `baseline/`. | CORE-CHG-002 |
+| IMP-09 | Outside a BASELINE session, stop if a change would touch `baseline/`. | CORE-CHG-002 |
 | IMP-10 | Seed RNG per stochastic stream; iterate in order; no wall-clock time in logic. *(Simulation)* | SIM-DET-001 |
 | IMP-11 | Never silently extrapolate outside a stated validity envelope. Detect and report. *(Simulation)* | SIM-VAL-001 |
 | IMP-12 | Give every hard-coded tolerance a stated justification naming its basis. *(Simulation)* | SIM-RDS-001 |
@@ -93,14 +92,10 @@ Two more that are conventions rather than derived rules, and are marked as such:
 
 ## Keeping this file honest
 
-> If you change something in `hyperion/core/` that an imperative above derives from, you
-> have not finished until you have checked that imperative and updated it or confirmed it
-> still holds. The same applies in reverse: an imperative you edit must still trace to its
-> source.
-
-Run `python hyperion/tooling/check_imperatives.py` — it fails when a source document has
-changed since its imperatives were last confirmed. Clear it with `--accept` after
-re-reading the source, not before. See CORE-IMP-001.
+If you change something in `hyperion/core/` that an imperative above derives from, you
+have not finished until you have checked that imperative and updated it or confirmed it
+still holds. Run `python hyperion/tooling/check_imperatives.py`; clear it with `--accept`
+only after re-reading the source. See CORE-IMP-001.
 
 ## STOP conditions
 
@@ -109,7 +104,7 @@ permission to work around.
 
 - The slice cannot be built within existing contracts.
 - You need something a contract does not expose.
-- A change would touch `baseline/`.
+- A change would touch `baseline/` and this is not a BASELINE session.
 - An acceptance criterion is ambiguous or unfalsifiable.
 - A conformance test appears to contradict its contract.
 - A change would perturb existing RNG streams or existing persisted data.
@@ -120,36 +115,36 @@ Each of these is a gate in disguise. Hitting one is a normal outcome, not a fail
 
 ## Context loadout
 
-Load only what the session type needs.
+Load only what the session type needs, plus this file, `hyperion/core/00-principles.md`,
+`hyperion/core/change-control/change-tiers.md`, and `hyperion/core/contracts/boundary-enforcement.md`.
+Do not load the whole framework; if you need a document not listed, say which and why first.
 
+<!-- generated:loadout -->
 | Session | Load |
 |---|---|
-| Always | this file, `hyperion/core/00-principles.md`, `hyperion/core/change-control/change-tiers.md`, `hyperion/core/contracts/boundary-enforcement.md` |
-| GATE | the relevant `hyperion/core/lifecycle/g*.md` |
-| CONTRACT | CORE-CON-001, CORE-CON-002, `templates/contract.md` |
-| CONFORMANCE | CORE-CON-002, CORE-TST-001, the contract, the acceptance criteria |
-| IMPLEMENT | the contract, the slice definition, the module `CLAUDE.md` |
-| REVIEW | one agent file from `hyperion/agents/` and nothing else |
-| LESSON | CORE-LSN-001, `templates/lesson.md` |
+| GATE | `hyperion/core/lifecycle/g<n>-*.md` |
+| CONTRACT | CORE-CON-001, CORE-CON-002, TPL-001 |
+| CONFORMANCE | CORE-CON-002, CORE-TST-001, `modules/<module>/CONTRACT.md`, `docs/slices/<slice>.md` |
+| IMPLEMENT | `modules/<module>/CONTRACT.md`, `modules/<module>/CLAUDE.md`, `docs/slices/<slice>.md` |
+| REVIEW | `hyperion/agents/<lens>.md`, plus the inputs that file permits, nothing else |
+| INTEGRATE | `modules/*/CONTRACT.md`, `docs/slices/<slice>.md` |
+| LESSON | CORE-LSN-001, TPL-003 |
+| BASELINE | CORE-CHG-002, CORE-LFC-004, `docs/decisions/<DEC-nnn>.md` |
 | QUERY | whatever the question needs; the only type with no ceiling |
-
-Do not load the whole framework. If you think you need a document not listed, say which
-and why before loading it.
+<!-- /generated -->
 
 ## Commands
 
-    <test>              # full suite
+    <test>              # full suite; writes trace/results.xml, which check-traces reads
     <conformance>       # conformance only
     <validation>        # validation suite — separate from tests
     <lint>              # includes boundary and token checks
-    <collect-tests>     # regenerate trace/tests.txt — run BEFORE check-traces
-    <check-traces>      # python hyperion/tooling/check_traces.py
+    <check-traces>      # python hyperion/tooling/check_traces.py — run AFTER <test>
     <trace-matrix>      # python hyperion/tooling/check_traces.py --report > trace/matrix.md
     <registry>          # python hyperion/tooling/build_registry.py --check
 
 Run `<lint>`, `<conformance>`, and `<check-traces>` before declaring any work complete.
-`trace/tests.txt` is generated, never hand-edited — a hand-maintained manifest makes the
-trace check meaningless.
+`trace/results.xml` is generated by the runner and never committed or hand-edited.
 
 ## Definition of done for a slice
 

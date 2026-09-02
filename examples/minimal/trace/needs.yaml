@@ -5,3 +5,6 @@
 - id: STK-002
   statement: Any result shown in a planning brief must be reproducible on request
   owner: exercise planning lead
+- id: STK-003
+  statement: Scenarios and results are exchanged in SI units; a unit mix-up at a module boundary must be impossible, not merely unlikely
+  owner: exercise planning lead

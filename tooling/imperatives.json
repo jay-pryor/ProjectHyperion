@@ -22,7 +22,7 @@
       "text": "Never resolve an ambiguity silently; stop and state both readings",
       "source_id": "CORE-PRN-001",
       "source_path": "core/00-principles.md",
-      "source_hash": "ea8c7fa9af1127e4",
+      "source_hash": "51964b730d9e4dff",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
@@ -30,7 +30,7 @@
       "text": "Never loosen a tolerance or skip a test to get a green run",
       "source_id": "CORE-REV-005",
       "source_path": "core/reviews/review-findings-handling.md",
-      "source_hash": "7a5d5a41a08829e8",
+      "source_hash": "94eacff05dfa6d0f",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
@@ -46,7 +46,7 @@
       "text": "Do not add dependencies without explicit instruction",
       "source_id": "CORE-CHG-002",
       "source_path": "core/change-control/baseline-change-procedure.md",
-      "source_hash": "c839f9211614dcbd",
+      "source_hash": "59ce54ad361f4c5d",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
@@ -54,7 +54,7 @@
       "text": "Declare session type and permitted files before touching anything",
       "source_id": "CORE-SES-001",
       "source_path": "core/session-protocol.md",
-      "source_hash": "e066ac23f34eded7",
+      "source_hash": "b515dda63fb82e0f",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
@@ -62,15 +62,15 @@
       "text": "Stop if the slice cannot be built within existing contracts",
       "source_id": "CORE-CHG-001",
       "source_path": "core/change-control/change-tiers.md",
-      "source_hash": "60f54a353565fa18",
+      "source_hash": "cd02bbca00a53a31",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
       "id": "IMP-09",
-      "text": "Stop if a change would touch baseline/",
+      "text": "Outside a BASELINE session, stop if a change would touch baseline/",
       "source_id": "CORE-CHG-002",
       "source_path": "core/change-control/baseline-change-procedure.md",
-      "source_hash": "c839f9211614dcbd",
+      "source_hash": "59ce54ad361f4c5d",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
@@ -78,7 +78,7 @@
       "text": "Determinism is a contract requirement: seeded RNG per stream, ordered iteration, no wall-clock in logic",
       "source_id": "SIM-DET-001",
       "source_path": "profiles/simulation/determinism.md",
-      "source_hash": "8c47bb0ad825c88b",
+      "source_hash": "0912e41e024902ff",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
@@ -94,7 +94,7 @@
       "text": "Every hard-coded tolerance needs a stated justification",
       "source_id": "SIM-RDS-001",
       "source_path": "profiles/simulation/targeted-reads.md",
-      "source_hash": "c086f85c89f23444",
+      "source_hash": "e648d3b4d1c8e77c",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
@@ -110,23 +110,23 @@
       "text": "Every rule added to core must trace to a principle",
       "source_id": "CORE-PRN-001",
       "source_path": "core/00-principles.md",
-      "source_hash": "ea8c7fa9af1127e4",
+      "source_hash": "51964b730d9e4dff",
       "carried_in": "CLAUDE.md"
     },
     {
       "id": "IMP-13",
       "text": "Update trace/ in the same session that changes the thing being traced",
       "source_id": "CORE-TRC-001",
-      "source_path": "core/traceability.md",
-      "source_hash": "ffa79e50de047cea",
+      "source_path": "core/traceability/traceability.md",
+      "source_hash": "1d84bef02a2318d6",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
       "id": "IMP-14",
       "text": "Never set mitigation_status verified without a named test that exists and passes",
       "source_id": "CORE-TRC-001",
-      "source_path": "core/traceability.md",
-      "source_hash": "ffa79e50de047cea",
+      "source_path": "core/traceability/traceability.md",
+      "source_hash": "1d84bef02a2318d6",
       "carried_in": "templates/project-CLAUDE.md"
     }
   ]

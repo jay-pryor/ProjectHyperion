@@ -37,6 +37,10 @@ flowchart TD
 
 **A gate is passed when its artifacts exist and are reviewed, not when they are perfect.**
 The purpose is to stop code depending on undecided things, not to achieve completeness.
+Passage is a row in `trace/reviews.yaml` (`kind: gate`, `disposition: passed`; schema
+CORE-TRC-002): the trace checker and the change tiers
+([CORE-CHG-001](../change-control/change-tiers.md)) read gate state from that row, never
+from `CLAUDE.md`.
 
 **Every gate has a named human reviewer or an explicit note that it was self-reviewed.**
 Self-review is permitted and normal for a single-operator project. Record it as such so

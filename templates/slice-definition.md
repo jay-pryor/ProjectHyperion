@@ -3,10 +3,10 @@ id: TPL-005
 title: "Template — Slice Definition"
 tier: templates
 status: active
-version: 0.2
+version: 0.3
 audience: [human, model]
 load: on-task
-related: [CORE-LFC-005, CORE-LFC-006, CORE-TRC-001]
+related: [CORE-LFC-005, CORE-LFC-006, CORE-TRC-001, CORE-TRC-002]
 ---
 
 # Template — Slice Definition
@@ -25,16 +25,9 @@ every conformance test inherits its reading.>
 2.
 
 ## Satisfies
-<Mirror this into `trace/slices.yaml`, which is the authoritative record and is checked.
-The checker fails if a slice claims a requirement or hazard that does not exist.>
-
-```yaml
-- id: SL-nn
-  name: <name>
-  requirements: [REQ-nnn]
-  hazards: [HZ-nnn]
-  status: planned | in_progress | accepted
-```
+<Mirror this into `trace/slices.yaml`, the authoritative record. Its schema is the Slice
+section of CORE-TRC-002; the checker fails if a slice claims a requirement or hazard
+that does not exist, and an accepted slice may claim only verified ones.>
 
 ## Contracts touched
 <If any need to change, run the Interface or Baseline gate BEFORE starting.>
@@ -52,6 +45,7 @@ reviewable in one sitting.>
 - Lessons promoted:
 - Decision records created:
 - Hands-on use completed: yes/no
+- Mutation score and survivors triaged: mirrored to `trace/slices.yaml` (CORE-TRC-002)
 - Traces updated and `check_traces.py` green: yes/no
 ```
 

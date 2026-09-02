@@ -6,7 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: always
-related: [CORE-PRN-001, CORE-CON-001, CORE-CHG-002]
+related: [CORE-PRN-001, CORE-CON-001, CORE-CHG-002, CORE-SES-001]
 ---
 
 # Change Tiers
@@ -31,7 +31,13 @@ There is no argument about which tier you are in.
 | `modules/<name>/conformance/**` | Interface |
 | anything else under `modules/<name>/` | Internal |
 
-If a diff spans tiers, the highest tier applies to the whole change.
+Profiles contribute rows; the simulation profile adds fixture and validation paths
+([SIM-DET-001](../../profiles/simulation/determinism.md)). If a diff spans tiers, the
+highest tier applies to the whole change.
+
+Classification applies only after G3 is recorded as passed in `trace/reviews.yaml`
+(CORE-TRC-002). Before that row exists, contracts and their initial suites are gate work
+([CORE-LFC-005](../lifecycle/g3-contracts.md)), not Interface changes.
 
 ## The behavioural loophole, and how it is closed
 
@@ -51,13 +57,21 @@ implementation freely — that is the point of having a contract.
 
 ## Interface change
 
-1. Update `contract.*` and its documented behavioural promises.
-2. Update the conformance suite to match.
-3. Identify consumers (the dependency manifest tells you who imports this module).
-4. Update consumers, or version the interface if that is cheaper.
-5. Write a decision record if an alternative was seriously considered.
+A fixed sequence of three sessions ([CORE-SES-001](../session-protocol.md)), never one,
+because no single session may touch contract, suite, and implementation together:
 
-Minutes, not hours. The gate exists to make you look at consumers, nothing more.
+1. **CONTRACT** — increment the contract version, revise the acceptance criteria the
+   change affects in the slice definition, and write a decision record if an alternative
+   was seriously considered.
+2. **CONFORMANCE** — bring the suite to the revised criteria. Written from the criteria,
+   never from the diff ([P8](../00-principles.md)).
+3. **IMPLEMENT** — the provider, then each consumer the dependency manifest names, one
+   commit per module. Version the interface instead where two consumers cannot migrate
+   together ([CORE-CON-001](../contracts/contract-definition.md)).
+
+The gate is light because the sequence is short, not because it is one session. A diff
+to `contract.*` must change the contract's version line; the commit checker rejects one
+that does not (mechanically checked).
 
 ## Baseline change
 

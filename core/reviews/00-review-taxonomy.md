@@ -56,5 +56,5 @@ One lens per session. The lens library is in [`agents/`](../../agents/00-agent-i
 
 ## Findings
 
-All three classes feed one pipeline: [CORE-REV-005](review-findings-handling.md).
-Every finding must be expressible as a failing test or it goes on the rejected list.
+All three classes feed one pipeline: [CORE-REV-005](review-findings-handling.md), which
+defines admission — a failing test or a proposed clause — and the rejected list.

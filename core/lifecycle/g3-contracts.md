@@ -6,7 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
-related: [CORE-LFC-004, CORE-LFC-006, CORE-CON-001, CORE-CON-002]
+related: [CORE-LFC-004, CORE-LFC-006, CORE-CON-001, CORE-CON-002, CORE-TST-001, CORE-CHG-001]
 ---
 
 # G3 — Contracts & Slice Plan
@@ -30,7 +30,10 @@ produces tests that confirm its own misreading, and everything passes.
 
 The tests may be model-written. The **acceptance criteria they are written from** are
 human-written, and reviewing those criteria is the highest-value hour you will spend on
-the project.
+the project. Writing the initial suites is gate work, not an Interface change: tier
+classification starts when this gate is recorded as passed
+([CORE-CHG-001](../change-control/change-tiers.md)). A conformance test added later needs
+a contract clause to cite first ([CORE-LSN-001](../lessons/lesson-ladder.md)).
 
 ## Slice plan
 
@@ -50,9 +53,13 @@ Order the remainder by risk, not by convenience.
 
 ## Stub policy
 
-Modules not yet built are stubbed at their contract, returning fixed valid data. Stubs
-are conformance-tested like real implementations, which means a stub cannot silently
-violate the contract it stands in for.
+Modules not yet built are stubbed at their contract, returning fixed valid data. A
+stand-in stub is introduced in the slice loop when a slice needs an unbuilt module, and it
+**must pass** the suite: a stub cannot silently violate the contract it stands in for. The
+null double ([CORE-TST-001](../testing/test-strategy.md)) is the opposite instrument, a
+trivial implementation the suite **must fail** against. Passing a stub proves the stub
+honest; failing the null double proves the suite discriminates. A suite that a fixed-data
+stub passes in full checks shape, not behaviour.
 
 ## Outputs
 
@@ -69,7 +76,7 @@ Use [templates/contract.md](../../templates/contract.md) and
 ## Exit criteria
 
 - [ ] Every module has a contract
-- [ ] Every contract has a conformance suite that currently fails (nothing implemented)
+- [ ] Every conformance suite runs against an empty implementation and fails
 - [ ] Slice 1 is the riskiest path
 - [ ] Every hazard mitigation traced to a contract clause and a named test
 - [ ] Acceptance criteria human-written and human-reviewed

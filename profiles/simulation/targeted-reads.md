@@ -61,6 +61,12 @@ correctness claim.
 Per [SIM-DET-001](determinism.md). Check that a newly added stochastic process does not
 perturb existing streams.
 
+## 8. Every diff to recorded expected output or a tolerance file
+
+Read the whole diff, every time. The `Fixture-change:` trailer names the decision or
+finding that justified it ([SIM-DET-001](determinism.md)); check that the diff is what
+that record says and nothing more. A loosened tolerance with no basis is an S1 finding.
+
 ## Then: look at the output
 
 Plot something. Run a scenario whose answer you know and look at the curve. This catches a

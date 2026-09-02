@@ -6,7 +6,7 @@ status: active
 version: 0.1
 audience: [human, model]
 load: on-task
-related: [CORE-REV-005, CORE-PRN-001]
+related: [CORE-REV-005, CORE-PRN-001, CORE-CHG-001]
 ---
 
 # Lesson Ladder
@@ -30,7 +30,10 @@ the prose entry is the last resort rather than the default ([P9](../00-principle
 | 6 | **Global lessons file** | Read by everything, costs context every session | Last resort |
 
 Always ask: *can this go one rung higher?* Most lessons that feel like rung 6 are
-actually rung 2.
+actually rung 2. A rung-2 conformance test needs a contract clause to cite first: a
+CONTRACT session adds the under-specified promise and a CONFORMANCE session encodes it,
+in the Interface sequence ([CORE-CHG-001](../change-control/change-tiers.md)), so the
+test derives from the clause rather than from the defect ([P8](../00-principles.md)).
 
 > If a lesson cannot be converted into any check at all, it is usually a war story rather
 > than a lesson. It belongs in your head, not in the model's context.

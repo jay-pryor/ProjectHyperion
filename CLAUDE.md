@@ -17,14 +17,15 @@ process documents. For sessions building software under Hyperion, see
 
 ## Open every session with
 
-    SESSION: <FRAMEWORK | QUERY>
+    SESSION: <FRAMEWORK | REVIEW | QUERY>
     SCOPE: <the one document or change this session will produce, or the question>
     MAY MODIFY: <explicit paths, or nothing>
     PRINCIPLE: <which of P1-P10 this change serves>
 
-Then stop and wait. Do not begin in the same turn. Both types are defined in
-`core/session-protocol.md` (CORE-SES-001). A QUERY session modifies nothing and ends by
-naming the session that should make any change it uncovers.
+Then stop and wait. Do not begin in the same turn. All three types are defined in
+`core/session-protocol.md` (CORE-SES-001). REVIEW and QUERY have no scope to confirm and
+do not wait: REVIEW appends findings and modifies nothing else; QUERY modifies nothing and
+ends by naming the session that should make any change it uncovers.
 
 ## Rules for editing this repository
 

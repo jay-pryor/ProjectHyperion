@@ -21,19 +21,22 @@ in twenty minutes; complete enough to exercise every mechanism the framework nam
 ### Run it
 
     cd examples/minimal
-    pip install pytest
-    pytest -q                                                  # 27 passed
-    pytest --collect-only -q | grep '::' > trace/tests.txt     # generated, never committed
-    python ../../tooling/check_traces.py --strict              # chain intact
-    python ../../tooling/check_traces.py --report              # the matrix
-    ATMOSPHERE_IMPL=null pytest -q modules/atmosphere/conformance   # 4 failed, 4 passed
+    pip install pytest pyyaml
+    pytest -q                                      # 27 passed; writes trace/results.xml
+    python ../../tooling/check_traces.py           # chain intact, every record validated
+    python ../../tooling/check_traces.py --report  # the matrix; exits 1 over a broken chain
+    ATMOSPHERE_IMPL=null pytest -q modules/atmosphere/conformance --junitxml=/tmp/nd.xml   # 4 failed, 4 passed
+
+The checker runs the whole suite's results, so run `pytest -q` again after the null
+double run if you did not redirect its results file.
 
 ### What is ahead of the tooling
 
-The current `check_traces.py` validates `requirements.yaml`, `hazards.yaml`, and
-`slices.yaml`, and only the fields it knows. The example also carries fields and files
-the checker does not yet read: `kind`, `verification_method`, `validation_class`,
-`validated_by`, `status` on requirements; `register`, `failure_mode`, `likelihood` on
-hazards; `contracts` on slices; and the `findings`, `reviews`, `needs`, `assumptions`,
-`goals`, and `changes` records. They are the proposed record schema, written here first
-so the checker has something real to grow into. Nothing in them is validated until it is.
+Nothing in `trace/`. Every record and every field here is validated by
+`check_traces.py` against CORE-TRC-002 and CORE-TRC-003, including the results file,
+the contract clauses, the fault point, and the gate-derived strictness. What the example
+carries that no tool yet reads: the placeholder generated blocks in `CLAUDE.md` (the
+operating-layer generator, M1), the acceptance-record fields `mutation_score` and
+`survivors_triaged` on a slice (the mutation run, M7, which no slice here has had), and
+`docs/module-map.md`, whose diagram is hand-drawn from the manifests until the console
+draws it (M8).

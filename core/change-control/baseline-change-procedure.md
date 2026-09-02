@@ -36,7 +36,8 @@ Enumerated per project at [G2](../lifecycle/g2-architecture.md). Typically:
 3. **Migration plan.** Explicitly including existing data. Models write clean forward
    migrations and forget that records already exist in the old shape; this is a named
    [targeted human read](../reviews/targeted-human-reads.md).
-4. **Decision record**, with rejected alternatives.
+4. **Decision record**, with rejected alternatives. It is what the BASELINE session that
+   makes the change cites in its declaration ([CORE-SES-001](../session-protocol.md)).
 5. **Re-enter at G2** with scoped re-review — only the affected part of the module map,
    not the whole architecture.
 6. **Update the hazard trace** if any mitigation was allocated to a changed contract.

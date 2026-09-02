@@ -27,23 +27,25 @@
   disposition: passed
   notes: Contracts 1.0 for both modules; suites fail against empty implementations; SL-01 is the riskiest path
 - id: REV-005
-  kind: targeted-read
+  kind: targeted_read
   slice: SL-01
   subject: Units and frames at the atmosphere to trajectory boundary
   date: 2026-08-21
   reviewer: self
-  disposition: no findings
+  disposition: no_findings
 - id: REV-006
   kind: inspection
   slice: SL-01
-  subject: REQ-004 provenance fields present and correct in a produced result
+  ref: REQ-004
+  subject: Provenance fields present and correct in a produced result
   date: 2026-08-21
   reviewer: self
   disposition: passed
 - id: REV-007
-  kind: targeted-read
+  kind: targeted_read
   slice: SL-02
-  subject: REQ-001 density profile plotted against ISA table to 80 km
+  ref: REQ-001
+  subject: Density profile plotted against ISA table to 80 km
   date: 2026-08-28
   reviewer: self
   disposition: pending

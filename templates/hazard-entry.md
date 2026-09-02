@@ -3,48 +3,33 @@ id: TPL-004
 title: "Template — Hazard Trace Entry"
 tier: templates
 status: active
-version: 0.2
+version: 0.3
 audience: [human, model]
 load: on-task
-related: [CORE-LFC-002, CORE-TRC-001]
+related: [CORE-LFC-002, CORE-TRC-001, CORE-TRC-002]
 ---
 
 # Template — Hazard Trace Entry
 
-Hyperion holds the **trace**, not the hazard assessment. The hazard is raised, assessed,
-and tracked in the organisation's existing hazard management system; this record links it
-to code, and is checked by `tooling/check_traces.py`.
+Hyperion holds the **trace**, not the hazard assessment. With `register: org` the hazard
+is raised, assessed, and tracked in the organisation's hazard management system and
+this record links it to code; with `register: local` the record carries a small
+assessment itself. Either way it is checked by `tooling/check_traces.py`.
 
-Records are **flat** — scalar and inline-list values only. Nested structures are rejected
-by the parser rather than silently mis-parsed.
+The record schema, its field values, and every rule the checker enforces on it live in
+one place: the Hazard section of [CORE-TRC-002](../core/traceability/trace-records.md).
+Append the record to `trace/hazards.yaml`.
 
-Append to `trace/hazards.yaml`:
+## Writing the entry
 
-```yaml
-- id: HZ-nnn
-  org_hazard_id: <ID in the organisational register>
-  org_system: <which register>
-  never_statement: <plain language, checkable by a non-programmer>
-  failure_mode: not_performed | performed_incorrectly | performed_wrong_time | performed_uncommanded | failed_silently
-  severity: <per organisational scale>
-  mitigation_contract: modules/<name>/contract.<ext>::<clause>
-  mitigation_test: <test id, or TBD while status is proposed>
-  mitigation_status: proposed | traced | verified
-  requirement: REQ-nnn
-```
-
-## Rules the checker enforces
-
-- `mitigation_contract` and `mitigation_test` are mandatory. A mitigation with no control
-  is a statement of intent.
-- `mitigation_test: TBD` is permitted **only** while `mitigation_status: proposed`, which
-  makes TBD self-expiring at G3 rather than quietly permanent.
-- A named test must appear in `trace/tests.txt`, so renaming a test breaks the build
-  instead of breaking the trace silently.
-- `requirement` must resolve to a record in `trace/requirements.yaml`.
-
-## Rule the checker cannot enforce
-
-`never_statement` is written for the G0 reviewer who does not read code. If it cannot be
-written in plain language, the hazard is not yet understood — and no tool can tell you
-that.
+- `never_statement` first. It is written for the G0 reviewer who does not read code; if
+  it cannot be written in plain language, the hazard is not yet understood, and no tool
+  can tell you that.
+- `failure_mode` is the [G0](../core/lifecycle/g0-hazard-context.md) question that
+  raised it. A function whose hazards all sit under one question is a gap for the
+  reviewer.
+- `mitigation_contract` and `mitigation_test` may be `TBD` only while the mitigation is
+  `proposed`, which makes TBD self-expiring at G3. The contract half names a marked
+  clause `C-nnn` in the module's `CONTRACT.md` ([TPL-001](contract.md)), so a clause
+  finding, a conformance test, and this trace all cite the same anchor.
+- `requirement` may be a list. One hazard commonly drives several safety requirements.

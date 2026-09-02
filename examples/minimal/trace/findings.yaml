@@ -19,7 +19,7 @@
 - id: FND-003
   date: 2026-08-19
   slice: SL-01
-  source: review:specification
+  source: specification
   form: clause
   severity: S2
   status: fixed

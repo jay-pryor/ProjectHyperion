@@ -1,6 +1,6 @@
 - id: SL-01
   name: Walking skeleton, a vacuum shot end to end with provenance
-  requirements: [REQ-002, REQ-004, REQ-005]
+  requirements: [REQ-002, REQ-004, REQ-005, REQ-006]
   hazards: [HZ-002]
   contracts: [trajectory]
   status: accepted

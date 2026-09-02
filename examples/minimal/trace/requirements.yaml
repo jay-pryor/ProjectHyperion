@@ -42,9 +42,19 @@
   statement: Two runs with identical configuration and seed shall produce bit-identical output
   kind: cross-cutting
   source: STK-002
-  allocated_to: trajectory
+  allocated_to: [trajectory, atmosphere]
   verification_method: test
-  verified_by: [modules/trajectory/conformance/test_invariants.py::test_bit_identical_repeat_C102]
+  verified_by: [modules/trajectory/conformance/test_invariants.py::test_bit_identical_repeat_C102, modules/atmosphere/conformance/test_invariants.py::test_deterministic_C004]
   validation_class: invariant
   validated_by: validation/invariants/test_determinism.py::test_repeat_run_identical_across_scenarios
+  status: verified
+- id: REQ-006
+  statement: Every physical quantity crossing a module boundary shall carry its unit in its type name
+  kind: cross-cutting
+  source: STK-003
+  allocated_to: baseline
+  verification_method: inspection
+  verified_by: REV-005
+  validation_class: expert_judgement
+  validated_by: REV-002
   status: verified

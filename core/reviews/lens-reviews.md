@@ -23,13 +23,21 @@ give it your suspicion, your reasoning, or where you think the bug is. A primed 
 finds what you told it to find and reports it as an independent discovery, which is worse
 than no review because it manufactures false confidence.
 
+What a reviewer inevitably carries: the project `CLAUDE.md` loads into every session, so
+a REVIEW session sees its imperatives and stop conditions. Those are rules about conduct,
+not suspicions about the code, and are acceptable residue. Nothing else is: project state
+is never restated in `CLAUDE.md` (gate and slice are records, rendered by the console),
+and each lens runs as a generated read-only agent definition whose prompt is
+self-contained and instructs it to disregard project operating instructions other than
+the read-only restriction. The definitions are generated from `agents/` by the harness
+binding, which is not yet written.
+
 **3. One lens per session.** Named failure mode, nothing else. General review returns
 generic advice.
 
-**4. Every finding carries a reproducing test.** Severity plus a test that fails on
-current code. A finding that cannot be expressed as a failing test goes to the
-*considered and rejected* list rather than the backlog. This filters aggressively and it
-is what stops the review pipeline filling with plausible-sounding noise.
+**4. Every finding carries a reproducing test or a proposed clause.** Severity plus the
+artifact; a finding with neither is rejected with a reason. Admission forms and the
+rejected list: [CORE-REV-005](review-findings-handling.md).
 
 **5. Adversarial framing.** "Review code from a contractor whose competence is unknown"
 produces sharper output than "review our code". Stated in every agent prompt.
