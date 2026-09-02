@@ -3,10 +3,11 @@ id: CORE-REV-005
 title: Review Findings Handling
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [REVIEW, CONFORMANCE, LESSON]
+prevents: A backlog of plausible model output nobody can act on, and a failing test written by the session that then fixes it
+reader: REVIEW sessions recording findings, CONFORMANCE and LESSON sessions acting on them, and whoever dispositions them
 related: [CORE-REV-001, CORE-LSN-001, CORE-SES-001, CORE-CHG-001]
 ---
 
@@ -27,7 +28,7 @@ dispositions them.
 | `test` | A test that fails on current code | The test passes |
 | `clause` | A specific proposed change to a contract clause, requirement, hazard, or decision record | The named record changes; `ref` resolves to a version newer than the finding |
 
-`clause` exists because validation and gate reviews run before there is code to fail
+`clause` exists because specification and gate reviews run before there is code to fail
 against; with a single form the framework's most valuable findings would be rejected by
 rule. Both forms demand something a session can act on, which is what the filter is for.
 
@@ -53,7 +54,7 @@ lens-specific distinctions onto it rather than redefining it: output that differ
 identical runs is S1; timing-only divergence is S4 with a note.
 
 An S3 finding should always trigger the question: *should the contract have promised
-this?* If yes, it is really a validation finding: record it in `clause` form and run the
+this?* If yes, it is really a specification finding: record it in `clause` form and run the
 Interface sequence ([CORE-CHG-001](../change-control/change-tiers.md)).
 
 ## Who writes the failing test

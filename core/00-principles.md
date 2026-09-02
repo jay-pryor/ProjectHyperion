@@ -3,9 +3,10 @@ id: CORE-PRN-001
 title: Principles
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: always
+prevents: Rules accumulating with no anchor, so that no one can say why a rule exists or when it should go
+reader: Every session, standing; a FRAMEWORK session before adding any rule
 related: [HYP-000]
 ---
 
@@ -61,11 +62,12 @@ Before creating any document, state which failure it prevents and who or what re
 it. An artifact that fails both tests is ceremony. An artifact read only once is a
 liability, because it will drift from the code and then mislead.
 
-## P7 — Verification and validation are different activities
+## P7 — Verification, specification review, and validation are different activities
 
-Verification: does the implementation satisfy the contract. Validation: is the contract
-the right one. A model asked to do both at once does neither. They are separate gates,
-separate reviews, and separate agents.
+Verification: does the implementation satisfy the contract. Specification review: is the
+contract the right one. Validation: is the answer right, against the G1 basis and
+reference truth. A model asked two of these at once does neither. They are separate
+gates, separate reviews, and separate agents.
 
 ## P8 — Tests are written against requirements, not against implementations
 

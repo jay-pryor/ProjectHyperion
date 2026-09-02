@@ -3,9 +3,10 @@ id: CORE-LFC-006
 title: Slice Loop
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: always
+prevents: Not knowing what to do next after G3, and a contract quietly widened mid-slice
+reader: Every session, standing; the human at every step of a slice
 related: [CORE-LFC-005, CORE-REV-001, CORE-LSN-001]
 ---
 

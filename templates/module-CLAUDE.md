@@ -3,10 +3,11 @@ id: TPL-007
 title: "Template — Module CLAUDE.md"
 tier: templates
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [LESSON]
+prevents: Module-specific detail loaded into every session, or a module file growing into a second contract
+reader: An IMPLEMENT session inside that module, and the LESSON session adding a rung-5 note
 related: [TPL-006, CORE-LSN-001]
 ---
 

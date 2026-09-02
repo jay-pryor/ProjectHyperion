@@ -38,7 +38,7 @@
       "text": "Do not add a dependency without an explicit instruction.",
       "source": "CORE-LFC-004#baseline-definition",
       "source_path": "core/lifecycle/g2-architecture.md",
-      "section_hash": "edaa73dd1c432f7d",
+      "section_hash": "50adbb0efdd8d7da",
       "carried_in": "CLAUDE.md"
     },
     {

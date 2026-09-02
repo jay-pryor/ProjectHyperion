@@ -3,10 +3,11 @@ id: TPL-004
 title: "Template — Hazard Trace Entry"
 tier: templates
 status: active
-version: 0.3
 audience: [human, model]
 load: on-task
 sessions: [GATE]
+prevents: A hazard record whose never-statement a non-programmer cannot check, or whose mitigation points at nothing
+reader: The human and a GATE session appending to trace/hazards.yaml at G0
 related: [CORE-LFC-002, CORE-TRC-001, CORE-TRC-002]
 ---
 

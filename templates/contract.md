@@ -3,10 +3,11 @@ id: TPL-001
 title: "Template — Module Contract"
 tier: templates
 status: active
-version: 0.2
 audience: [human, model]
 load: on-task
 sessions: [CONTRACT]
+prevents: A contract that states signatures and omits the error conditions, promises, and tolerances people forget
+reader: A CONTRACT session writing modules/<name>/CONTRACT.md
 related: [CORE-CON-001, CORE-TRC-001]
 ---
 

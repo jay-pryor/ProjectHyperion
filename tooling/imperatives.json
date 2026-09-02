@@ -6,7 +6,7 @@
       "text": "Regenerate the registry after any change to this repository.",
       "source": "TOOL-001#enforcement",
       "source_path": "tooling/doc-frontmatter-schema.md",
-      "section_hash": "8dbac3e98eee14fd",
+      "section_hash": "5e1d7e26f405eca1",
       "carried_in": "CLAUDE.md"
     },
     {
@@ -62,7 +62,7 @@
       "text": "Do not add a dependency without an explicit instruction.",
       "source": "CORE-LFC-004#baseline-definition",
       "source_path": "core/lifecycle/g2-architecture.md",
-      "section_hash": "edaa73dd1c432f7d",
+      "section_hash": "50adbb0efdd8d7da",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {

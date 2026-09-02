@@ -3,10 +3,11 @@ id: CORE-CHG-002
 title: Baseline Change Procedure
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [BASELINE]
+prevents: A change every module inherits being made with less ceremony than a slice, or without a migration for data already in the old shape
+reader: The human before a BASELINE session, and the BASELINE session citing its decision record
 related: [CORE-CHG-001, CORE-LFC-004, CORE-DEC-001]
 ---
 
@@ -27,6 +28,9 @@ Enumerated per project at [G2](../lifecycle/g2-architecture.md). Typically:
 - Build and distribution mechanism
 - Design tokens, where the profile has a UI
 - Authentication and authorisation model, where the profile has one
+- Third-party dependencies: the lockfile ([CORE-LFC-004](../lifecycle/g2-architecture.md))
+- Always: the fault-point harness, `templates/baseline/faults.py`
+  ([CORE-TST-002](../testing/tests-are-tested.md))
 
 ## Procedure
 

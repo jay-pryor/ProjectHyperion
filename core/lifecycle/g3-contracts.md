@@ -3,10 +3,11 @@ id: CORE-LFC-005
 title: "G3 — Contracts & Slice Plan"
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [GATE]
+prevents: Code written before its contract and suite exist, and a first slice that validates nothing about the architecture
+reader: The human and a GATE session working G3; the CONTRACT and CONFORMANCE sessions it commissions
 related: [CORE-LFC-004, CORE-LFC-006, CORE-CON-001, CORE-CON-002, CORE-TST-001, CORE-TST-002, CORE-CHG-001]
 ---
 

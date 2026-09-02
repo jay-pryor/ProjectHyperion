@@ -3,10 +3,11 @@ id: CORE-CON-002
 title: Conformance Suites
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [CONTRACT, CONFORMANCE]
+prevents: Behavioural promises a signature cannot express going unchecked, and a stub silently violating the contract it stands in for
+reader: CONTRACT and CONFORMANCE sessions at G3 and in the Interface sequence
 related: [CORE-CON-001, CORE-TST-001, CORE-CHG-001]
 ---
 
@@ -57,12 +58,8 @@ modules/<name>/
 
 ## Property-based testing
 
-Anything with an invariant gets property tests rather than examples: round-trips,
-ordering, idempotency, conservation, monotonicity, dimensional consistency. Models
-generate these well, and they find the boundary cases example-based tests miss.
-
-Fix the seed and record it. A property test that fails intermittently and cannot be
-reproduced is worse than no test.
+`invariants.*` is property-based; where invariants belong and the fixed-seed rule are in
+[CORE-TST-001](../testing/test-strategy.md#property-based-testing).
 
 ## Reading policy
 

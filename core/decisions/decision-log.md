@@ -3,10 +3,11 @@ id: CORE-DEC-001
 title: Decision Log
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [GATE, CONTRACT, BASELINE]
+prevents: Relitigating a settled decision because the rejected alternatives and the reversal cost were never written down
+reader: GATE, CONTRACT, and BASELINE sessions recording a decision; the reviewer who was not there
 related: [CORE-CHG-002, CORE-LFC-004]
 ---
 

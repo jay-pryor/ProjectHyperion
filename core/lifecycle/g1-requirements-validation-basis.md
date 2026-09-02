@@ -3,10 +3,11 @@ id: CORE-LFC-003
 title: "G1 — Requirements & Validation Basis"
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [GATE]
+prevents: Requirements that pass every test and are wrong, because no one wrote down how correctness would be known
+reader: The human and a GATE session working G1
 related: [CORE-LFC-002, CORE-LFC-004, CORE-TST-001]
 ---
 
@@ -18,7 +19,7 @@ know the answer is right?**
 ## Why these are one gate
 
 Requirements written without a validation basis produce software that passes its tests
-and is wrong. This is the dominant failure mode in simulation and analysis software,
+and is wrong: verification without validation ([P7](../00-principles.md)). This is the dominant failure mode in simulation and analysis software,
 where output is plausible-looking numbers rather than a crash.
 
 Writing "how would I know this is correct?" next to every requirement, before any
@@ -62,7 +63,7 @@ Profile-specific expansion: [SIM-VAL-001](../../profiles/simulation/validation-b
 | Artifact | Consumed by |
 |---|---|
 | Requirements register (IDs, statements, traces) | G2, G3, conformance suites |
-| Validation basis table (requirement → evidence class → specific case) | Validation reviews, slice acceptance |
+| Validation basis table (requirement → evidence class → specific case) | Validation cases, slice acceptance |
 | Assumptions register | Lens reviews, later re-validation |
 | Goals list (non-verifiable intents) | Human judgement at acceptance |
 

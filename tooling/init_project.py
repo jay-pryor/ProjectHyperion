@@ -3,8 +3,7 @@
 
 A copied CLAUDE.md has no version and no drift check (F-17). This script instantiates
 the project template with every generated block filled for the chosen profiles, and
-writes .hyperion/: `version` (the framework's VERSION file, else `git describe`),
-`profiles` (so --upgrade knows what to render), and `imperatives.json` (the map
+writes .hyperion/: `version` (the framework's `VERSION` file, F-22), `profiles` (so --upgrade knows what to render), and `imperatives.json` (the map
 check_imperatives.py reads when run from the project). Derives from CORE-IMP-001.
 
 Usage:
@@ -19,22 +18,11 @@ script refuses to overwrite an existing CLAUDE.md.
 """
 
 import argparse
-import re
-import subprocess
 import sys
 from pathlib import Path
 
 import build_layer
 import framework_docs as fd
-
-
-def framework_version(root=fd.FRAMEWORK_ROOT):
-    version = root / "VERSION"
-    if version.exists():
-        return version.read_text(encoding="utf-8").strip()
-    out = subprocess.run(["git", "describe", "--tags", "--always"], cwd=root,
-                         capture_output=True, text=True)
-    return out.stdout.strip() or "unknown"
 
 
 def template_body(root=fd.FRAMEWORK_ROOT):
@@ -97,12 +85,11 @@ def main(argv=None):
         for b in missing:
             print(f"WARNING {claude.name} has no <!-- generated:{b} --> block; add the markers to receive it")
 
-    write(hyp / "version", framework_version() + "\n")
     write(hyp / "profiles", "\n".join(profiles) + ("\n" if profiles else ""))
-    for path in build_layer.apply(outputs, check=False):
+    for path in build_layer.apply(outputs, check=False):      # includes .hyperion/version
         print(f"Wrote {Path(path).relative_to(project)}")
     print(f"OK {project.name}: profiles [{', '.join(profiles) or 'none'}], "
-          f"framework {framework_version()} pinned in .hyperion/version")
+          f"framework {fd.framework_version()} pinned in .hyperion/version")
     return 0
 
 

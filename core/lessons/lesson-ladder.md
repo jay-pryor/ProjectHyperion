@@ -3,10 +3,11 @@ id: CORE-LSN-001
 title: Lesson Ladder
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [LESSON]
+prevents: Lessons recorded as prose that nothing retrieves, so the same defect recurs with a longer lessons file
+reader: A LESSON session promoting a finding, and the human pruning lessons each quarter
 related: [CORE-REV-005, CORE-PRN-001, CORE-CHG-001]
 ---
 

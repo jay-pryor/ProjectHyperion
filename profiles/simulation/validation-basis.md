@@ -3,18 +3,19 @@ id: SIM-VAL-001
 title: Validation Basis
 tier: profile
 status: draft
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [GATE, CONFORMANCE]
+prevents: A simulation result presented with more confidence than its evidence supports, or run outside the envelope it was validated for
+reader: GATE sessions at G1 naming evidence classes, and CONFORMANCE sessions writing validation cases
 related: [SIM-000, CORE-LFC-003, CORE-TST-001]
 ---
 
 # Validation Basis — Simulation
 
 Verification asks *does the code match the contract*. Validation asks *is the answer
-right*. In simulation these diverge sharply, and only the second one matters to the
-person using the output.
+right* ([P7](../../core/00-principles.md)). In simulation these diverge sharply, and only
+the second one matters to the person using the output.
 
 Defined at [G1](../../core/lifecycle/g1-requirements-validation-basis.md), before
 architecture.

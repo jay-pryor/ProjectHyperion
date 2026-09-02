@@ -3,9 +3,10 @@ id: CORE-CON-003
 title: Boundary Enforcement
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: always
+prevents: A module reaching past another's contract because it is faster, after which the contract no longer describes what consumers depend on
+reader: Every session, standing; whoever configures the import lint for a profile's language
 related: [CORE-CON-001, CORE-PRN-001]
 ---
 

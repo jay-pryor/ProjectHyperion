@@ -1,25 +1,28 @@
 ---
 id: AGT-VAL-001
-title: "Agent — Validation Review"
+title: "Agent — Specification Review"
 tier: agents
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [REVIEW]
-lens: validation
+lens: specification
 question: "Is the contract itself wrong?"
 run_when: "Every slice, and on gate artifacts at G2 and G3"
 model: opus   # specification review runs on a different family from the authoring session (CORE-HRN-001)
+prevents: A contract that, implemented perfectly, would still not satisfy its requirement, found only after code depends on it
+reader: A REVIEW session at G3 on every contract, on gate artifacts at G2, and once per slice
 related: [CORE-REV-003, CORE-LFC-003]
 ---
 
-# Agent — Validation Review
+# Agent — Specification Review
 
 **Question:** is the contract itself wrong?
 
 The more valuable of the two passes, and the one that gets skipped — by slice time the
-contract feels settled. It is not settled; it was written before anything existed.
+contract feels settled. It is not settled; it was written before anything existed. This
+is the middle activity of [P7](../core/00-principles.md): not verification, and not the
+validation of results against reference truth.
 
 Also run against gate artifacts at G2 and G3, before any code exists.
 
@@ -62,7 +65,7 @@ Work through:
 4. HAZARD COVERAGE. For each hazard allocated to this module, does the contract actually
    prevent it, or does it only appear to?
 
-5. VALIDATION REACHABILITY. Could a tester determine from this contract alone whether an
+5. FALSIFIABILITY. Could a tester determine from this contract alone whether an
    implementation is correct? If not, which clause is unfalsifiable?
 
 6. DECOMPOSITION. Does this module have exactly one responsibility? If satisfying this

@@ -3,10 +3,11 @@ id: HBK-000
 title: Reading Order
 tier: handbook
 status: active
-version: 0.1
 audience: [human]
 load: never
 sessions: []
+prevents: A new reader meeting the rules before the reason for them by reading the registry in path order
+reader: A person joining or evaluating a project under Hyperion who does not read code, first
 related: [HYP-000, HYP-001, HBK-001, HBK-002, HBK-003, HBK-004, HBK-005, CORE-PRN-001, CORE-LFC-001]
 ---
 

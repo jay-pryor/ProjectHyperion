@@ -3,10 +3,11 @@ id: CORE-HRN-001
 title: Harness Binding
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [GATE, CONTRACT, CONFORMANCE, IMPLEMENT, REVIEW, INTEGRATE, LESSON, BASELINE, QUERY, FRAMEWORK]
+prevents: Session rules staying honour-based when the runtime could deny the write, pin the model, and withhold the tool
+reader: A session wondering why a write was denied, and a FRAMEWORK session changing the binding
 related: [CORE-SES-001, CORE-REV-001, CORE-REV-003, CORE-TRC-002, CORE-TRC-003, CORE-IMP-001, CORE-PRN-001, AGT-000, TOOL-001]
 ---
 

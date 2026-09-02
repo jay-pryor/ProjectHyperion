@@ -3,9 +3,10 @@ id: HYP-000
 title: Hyperion
 tier: root
 status: active
-version: 0.1
 audience: [human, model]
 load: always
+prevents: A new reader or project starting without knowing what the framework is for, how it is laid out, or how to consume it at a pinned version
+reader: A person meeting Hyperion for the first time, and a project team vendoring it
 related: [CORE-PRN-001, CORE-LFC-001]
 ---
 
@@ -70,7 +71,7 @@ requirements, two hazards, one accepted slice, every trace record filled in.
 ## Consuming Hyperion
 
 Vendor the framework into the project as a git submodule or subtree at a tagged
-version, under `hyperion/`. Never copy loose files: a copied `CLAUDE.md` has no
+version (`v$(cat VERSION)`), under `hyperion/`. Never copy loose files: a copied `CLAUDE.md` has no
 version and no drift check. `init_project.py` pins the version in `.hyperion/version`
 and writes `.hyperion/imperatives.json`, the map `check_imperatives.py` reads when run
 from the project. After moving the submodule to a new tag, run
@@ -86,7 +87,11 @@ the profile documents assume the core vocabulary.
 
 ## Status
 
-Version 0.1. Core is drafted, including the [session protocol](core/session-protocol.md)
-and the CLAUDE.md operating layer. The simulation profile is partial and contains open
-decisions marked `OPEN:`. Web, Embedded, and Mobile profiles are not written, by design —
-profiles are written when a real project needs one.
+<!-- generated:version -->
+Version 0.6.0, from `VERSION`; the history is in `CHANGELOG.md`, and a release tag must equal `v$(cat VERSION)`.
+<!-- /generated -->
+
+Core is drafted, including the [session protocol](core/session-protocol.md) and the
+generated operating layer. The simulation profile is partial and contains open decisions
+marked `OPEN:`. Web, Embedded, and Mobile profiles are not written, by design; profiles
+are written when a real project needs one.

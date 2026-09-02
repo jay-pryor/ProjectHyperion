@@ -3,7 +3,6 @@ id: AGT-LNS-001
 title: "Agent — Partial Failure Lens"
 tier: agents
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [REVIEW]
@@ -11,6 +10,8 @@ lens: partial-failure
 question: "Can state be left inconsistent mid-operation?"
 run_when: "Slices with multi-step operations or external systems"
 model: sonnet   # lenses run on a different family from the authoring session (CORE-HRN-001)
+prevents: State left inconsistent when an operation fails partway, in code written for the case where everything works
+reader: A REVIEW session on a slice with multi-step operations or external systems
 related: [CORE-REV-003]
 ---
 

@@ -3,10 +3,11 @@ id: CORE-REV-003
 title: Lens Reviews
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [GATE, REVIEW]
+prevents: A primed or general-purpose model review that manufactures confidence instead of findings
+reader: GATE and REVIEW sessions, and the human selecting two to four lenses for a slice
 related: [CORE-REV-001, CORE-REV-005]
 ---
 
@@ -53,7 +54,7 @@ cannot be planned for a slice until it is written.
 | Lens | Looks for | Profile | Agent |
 |---|---|---|---|
 | partial-failure | Can state be left inconsistent mid-operation? | core | [lens-partial-failure](../../agents/lens-partial-failure.md) |
-| validation | Is the contract itself wrong? | core | [validation-review](../../agents/validation-review.md) |
+| specification | Is the contract itself wrong? | core | [specification-review](../../agents/specification-review.md) |
 | verification | Does the implementation satisfy the contract? | core | [verification-review](../../agents/verification-review.md) |
 | determinism | Can two identical runs differ? | simulation | [lens-determinism](../../agents/lens-determinism.md) |
 | numerical-integrity | Are the numbers wrong in ways that still look plausible? | simulation | [lens-numerical-integrity](../../agents/lens-numerical-integrity.md) |
@@ -72,15 +73,15 @@ slice is the working range. Names are the `lens:` field of the agent files.
 touches persisted data: [boundary-input, partial-failure, migration]
 touches numerical core: [numerical-integrity, determinism]
 touches external system: [partial-failure, error-paths, resource-exhaustion]
-any slice: [verification, validation]   # validation on the contract the slice implements
+any slice: [verification, specification]   # specification review of the contract the slice implements
 ```
 
 ## The two passes you will forget
 
-Run **verification** and **validation** as separate sessions. Validation — *is the
-contract wrong* — is the more valuable of the two and the one that gets skipped, because
-by slice time the contract feels settled. It is not settled; it was written before
-anything was built.
+Run **verification** and **specification review** as separate sessions. Specification
+review — *is the contract wrong* — is the more valuable of the two and the one that gets
+skipped, because by slice time the contract feels settled. It is not settled; it was
+written before anything was built.
 
 ## Known limitation
 

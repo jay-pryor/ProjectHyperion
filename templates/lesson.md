@@ -3,10 +3,11 @@ id: TPL-003
 title: "Template — Lesson"
 tier: templates
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [LESSON]
+prevents: A lesson with no check, scored by how memorable it was rather than by what it caught
+reader: A LESSON session writing to lessons/
 related: [CORE-LSN-001]
 ---
 

@@ -34,7 +34,7 @@ reported and skipped. Two to four is the working range (CORE-REV-003).
 | Lens | Agent | Run when | May receive |
 |---|---|---|---|
 | partial-failure | `lens-partial-failure` | Slices with multi-step operations or external systems | Contract, implementation, and the module's dependency list. |
-| validation | `validation-review` | Every slice, and on gate artifacts at G2 and G3 | The requirement(s) and their acceptance criteria The contract The hazard entries allocated to this module The validation basis entries from G1 Deliberately **not** the implementation. Including it anchors the model to what was built. |
+| specification | `specification-review` | Every slice, and on gate artifacts at G2 and G3 | The requirement(s) and their acceptance criteria The contract The hazard entries allocated to this module The validation basis entries from G1 Deliberately **not** the implementation. Including it anchors the model to what was built. |
 | verification | `verification-review` | Every slice | The contract file The conformance suite The implementation The acceptance criteria for the slice |
 | determinism | `lens-determinism` | Any slice touching state, RNG, iteration, or parallelism | Implementation, the module's RNG policy, and the project determinism boundary from G2. |
 | numerical-integrity | `lens-numerical-integrity` | Any slice touching the numerical core | Contract (including stated units, frames, tolerances), implementation, and the relevant validation basis entries. |

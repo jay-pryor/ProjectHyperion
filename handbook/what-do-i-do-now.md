@@ -3,10 +3,11 @@ id: HBK-003
 title: What Do I Do Now
 tier: handbook
 status: active
-version: 0.1
 audience: [human]
 load: never
 sessions: []
+prevents: A person who has just watched a test fail not knowing which session type comes next
+reader: The human at the moment something has happened and the next step is not obvious
 related: [HBK-000, CORE-LFC-006, CORE-SES-001, CORE-CHG-001, CORE-CHG-002, CORE-REV-005]
 ---
 

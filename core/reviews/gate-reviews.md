@@ -3,10 +3,11 @@ id: CORE-REV-002
 title: Gate Reviews
 tier: core
 status: active
-version: 0.1
 audience: [human]
 load: on-task
 sessions: []
+prevents: Self-review degrading into rubber-stamping, and a gate passed with no record of who reviewed it and how
+reader: The human reviewing gate artifacts, alone or with a systems engineer who does not read code
 related: [CORE-REV-001, CORE-LFC-001, CORE-CHG-001]
 ---
 
@@ -54,8 +55,8 @@ self-review reproduces the same reasoning.
 - Which interface would be most expensive to change in three months?
 
 **Then run the machine gate reviews** as a supplement:
-[validation-review](../../agents/validation-review.md) pointed at the artifacts rather
-than at code. Fresh instance, no priming.
+[specification-review](../../agents/specification-review.md) pointed at the artifacts
+rather than at code. Fresh instance, no priming.
 
 ## Recording
 

@@ -127,7 +127,7 @@
       ],
       "must_not_modify": []
     },
-    "validation-review": {
+    "specification-review": {
       "may_modify": [
         "trace/findings.yaml"
       ],

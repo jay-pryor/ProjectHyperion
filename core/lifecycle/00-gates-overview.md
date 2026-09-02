@@ -3,9 +3,10 @@ id: CORE-LFC-001
 title: Gate Overview
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: always
+prevents: Code depending on things not yet decided, and gate state living in a human's head or a stale CLAUDE.md line
+reader: Every session, standing; the human deciding whether a gate has passed
 related: [CORE-PRN-001, CORE-LFC-006]
 ---
 
@@ -42,9 +43,8 @@ CORE-TRC-002): the trace checker and the change tiers
 ([CORE-CHG-001](../change-control/change-tiers.md)) read gate state from that row, never
 from `CLAUDE.md`.
 
-**Every gate has a named human reviewer or an explicit note that it was self-reviewed.**
-Self-review is permitted and normal for a single-operator project. Record it as such so
-the confidence level is visible later.
+**Every gate has a named reviewer, `self` included.** Self-review is normal for a
+single-operator project and is recorded as such ([CORE-REV-002](../reviews/gate-reviews.md#recording)).
 
 **Gate artifacts are written for the reviewer you can actually get.** For G0–G2 that is
 often a systems engineer who does not read code. One page, a Mermaid diagram, a hazard

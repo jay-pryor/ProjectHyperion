@@ -3,10 +3,11 @@ id: CORE-LFC-004
 title: "G2 — Architecture"
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [GATE]
+prevents: A decomposition where one requirement change touches three modules, and a dependency diagram that no longer matches the code
+reader: The human and a GATE session working G2, and the systems engineer reviewing it
 related: [CORE-LFC-003, CORE-LFC-005, CORE-CON-003, CORE-CHG-001]
 ---
 
@@ -56,13 +57,8 @@ flowchart LR
 
 The **baseline** is shared substrate every module inherits. Changing it is the most
 expensive change in the system, so it is named explicitly at G2 and lives under
-`baseline/`.
-
-Baseline typically includes: shared types, persisted data schemas, configuration schema,
-error and logging conventions, the module dependency graph itself, build and
-distribution, and — where the profile has a UI — design tokens. It always includes the
-fault-point harness, from `templates/baseline/faults.py`
-([CORE-TST-002](../testing/tests-are-tested.md)).
+`baseline/`. What it typically contains, and the one thing it always contains, is the list
+in [CORE-CHG-002](../change-control/baseline-change-procedure.md#what-is-baseline).
 
 **Third-party dependencies are baseline.** Every module inherits them, so the lockfile
 lives under `baseline/` and adding a dependency is a Baseline-tier change made only on an

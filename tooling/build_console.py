@@ -199,6 +199,7 @@ def gather(root, framework):
         "name": project.root.name,
         "commit": git_commit(project.root),
         "framework_version": version_file.read_text(encoding="utf-8").strip() if version_file.exists() else "unpinned",
+        "docs_version": fd.framework_version(framework) if (framework / fd.VERSION_FILE).exists() else "unknown",
         "framework_dir": framework.relative_to(project.root).as_posix() if framework.is_relative_to(project.root) else framework.name,
         "errors": [str(i) for i in issues if i.level == "error"],
         "warnings": [str(i) for i in issues if i.level == "warning"],
@@ -624,8 +625,9 @@ def doc_link_resolver(data, doc_path):
 
 def render_handbook(data):
     out = [section(data, "handbook", "Handbook"),
-           f"<p>The framework documents at version <code>{esc(data['framework_version'])}</code>, read from "
-           f"<code>{esc(data['framework_dir'])}</code>, in registry order with the handbook tier first. "
+           f"<p>Hyperion <code>{esc(data['docs_version'])}</code> (the <code>VERSION</code> file of "
+           f"<code>{esc(data['framework_dir'])}</code>; the project pins <code>{esc(data['framework_version'])}</code> "
+           "in <code>.hyperion/version</code>), in registry order with the handbook tier first. "
            "Every other view's headers link here.</p>"]
     order = ["handbook"] + [t for t in TIER_ORDER if t != "handbook"]
     nav = []
@@ -636,10 +638,12 @@ def render_handbook(data):
     out.append(f'<nav class="docnav"><ul>{"".join(nav)}</ul></nav>')
     for d in data["docs"]:
         fm = d["fm"]
-        meta = f"{fm['tier']} · {fm['status']} · v{fm['version']} · load {fm['load']}"
+        meta = f"{fm['tier']} · {fm['status']} · load {fm['load']}"
         if fm.get("sessions"):
             meta += f" · sessions {', '.join(fm['sessions'])}"
         meta += f" · audience {', '.join(fm.get('audience') or [])} · <code>{esc(d['path'])}</code>"
+        if fm.get("prevents"):
+            meta += f"<br><b>Prevents</b> {esc(fm['prevents'])} · <b>Reader</b> {esc(fm.get('reader', ''))}"
         body = md.render(d["body"], heading_prefix=f"doc-{fm['id']}-", resolve_link=doc_link_resolver(data, d["path"]))
         out.append(f'<article class="doc" id="doc-{esc(fm["id"])}"><div class="docmeta"><b>{esc(fm["id"])}</b> {meta}</div>{body}</article>')
     return "\n".join(out)

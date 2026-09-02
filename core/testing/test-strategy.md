@@ -3,10 +3,11 @@ id: CORE-TST-001
 title: Test Strategy
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [CONFORMANCE]
+prevents: Tests that agree with the implementation's misreading, and coverage chased as a percentage instead of by clause
+reader: A CONFORMANCE session choosing what to write, and the human deciding which tests to read
 related: [CORE-CON-002, CORE-TST-002, CORE-PRN-001]
 ---
 
@@ -66,6 +67,6 @@ test*. Not useful: a percentage. Chase the first, ignore the second.
 
 ## Test maintenance
 
-When a test fails after a legitimate change, the question is always *which is wrong, the
-test or the code?* — resolved by reading the **contract**, not by making the test pass.
-Models default to making tests pass. Say so explicitly in implementation prompts.
+A failing conformance test is resolved by reading the contract, never by making the test
+pass; the rule and the session that may not touch the test are in
+[CORE-SES-001](../session-protocol.md#the-load-bearing-prohibitions).

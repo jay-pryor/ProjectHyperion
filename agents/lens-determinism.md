@@ -3,7 +3,6 @@ id: AGT-LNS-003
 title: "Agent — Determinism Lens"
 tier: agents
 status: draft
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [REVIEW]
@@ -12,6 +11,8 @@ question: "Can two identical runs differ?"
 run_when: "Any slice touching state, RNG, iteration, or parallelism"
 model: sonnet   # lenses run on a different family from the authoring session (CORE-HRN-001)
 profile: simulation
+prevents: Two runs with identical config and seed differing, undetected until a regression diff cannot be trusted
+reader: A REVIEW session on a simulation slice touching state, RNG, iteration, or parallelism
 related: [CORE-REV-003, SIM-DET-001]
 ---
 

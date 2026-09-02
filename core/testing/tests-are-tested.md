@@ -3,10 +3,11 @@ id: CORE-TST-002
 title: Tests Are Tested
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [CONFORMANCE, IMPLEMENT, INTEGRATE]
+prevents: A conformance suite that checks shape, not behaviour, and so passes a wrong implementation as readily as a right one
+reader: The CONFORMANCE session writing a suite, the INTEGRATE session accepting a slice, and CI
 related: [CORE-TST-001, CORE-CON-002, CORE-LFC-005, CORE-LSN-001, CORE-TRC-003]
 ---
 

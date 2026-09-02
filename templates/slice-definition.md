@@ -3,10 +3,11 @@ id: TPL-005
 title: "Template — Slice Definition"
 tier: templates
 status: active
-version: 0.3
 audience: [human, model]
 load: on-task
 sessions: [GATE, CONTRACT]
+prevents: A slice without observable acceptance criteria, or one that grows past what can be reviewed in one sitting
+reader: GATE and CONTRACT sessions writing docs/slices/SL-nn.md, and the human writing the criteria
 related: [CORE-LFC-005, CORE-LFC-006, CORE-TRC-001, CORE-TRC-002]
 ---
 
@@ -52,6 +53,5 @@ reviewable in one sitting.>
 
 ## Ordering rule
 
-Slice 1 is the **walking skeleton: the riskiest end-to-end path**. Its purpose is to
-validate the architecture while the Baseline Change gate is still cheap. An easy first
-slice validates nothing you needed to know.
+Slice 1 is the walking skeleton and the rest are ordered by risk:
+[CORE-LFC-005](../core/lifecycle/g3-contracts.md#slice-plan).

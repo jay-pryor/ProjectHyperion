@@ -3,9 +3,10 @@ id: SIM-DET-001
 title: Determinism
 tier: profile
 status: draft
-version: 0.1
 audience: [human, model]
 load: always
+prevents: A regression diff that cannot distinguish a real change from run-to-run variation
+reader: Every session on a simulation project, standing; the human declaring the RNG policy at G2
 related: [SIM-000, SIM-VAL-001, CORE-CHG-001, CORE-SES-001]
 ---
 

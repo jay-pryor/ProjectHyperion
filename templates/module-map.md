@@ -3,10 +3,11 @@ id: TPL-008
 title: "Template — Module Map"
 tier: templates
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [GATE]
+prevents: A dependency diagram that drifts from the manifests it is supposed to depict
+reader: GATE sessions at G2 and G3, and whoever plans a slice
 related: [CORE-LFC-004, CORE-CON-003]
 ---
 

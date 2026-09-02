@@ -55,7 +55,7 @@ naming the session type that makes any change it uncovers (CORE-SES-001).
 - `hyperion/agents/lens-partial-failure.md` (AGT-LNS-001)
 - `hyperion/agents/lens-numerical-integrity.md` (AGT-LNS-002)
 - `hyperion/agents/lens-determinism.md` (AGT-LNS-003)
-- `hyperion/agents/validation-review.md` (AGT-VAL-001)
+- `hyperion/agents/specification-review.md` (AGT-VAL-001)
 - `hyperion/agents/verification-review.md` (AGT-VER-001)
 - `hyperion/templates/contract.md` (TPL-001)
 - `hyperion/templates/decision-record.md` (TPL-002)

@@ -3,10 +3,11 @@ id: CORE-IMP-001
 title: Imperatives
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [FRAMEWORK]
+prevents: A CLAUDE.md that summarises core instead of directing it, and an imperative whose source section moved on without it
+reader: A FRAMEWORK session touching a fragment or a sourced section
 related: [CORE-SES-001, CORE-PRN-001, HYP-002, TOOL-001]
 ---
 

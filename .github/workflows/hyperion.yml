@@ -20,8 +20,9 @@ jobs:
 
       # The registry is generated, never hand-maintained. A stale index is worse
       # than none, because it is trusted. Also validates frontmatter (sessions,
-      # agent fields), duplicate IDs, dangling cross-references, and human-only
-      # docs in the model loadout.
+      # agent fields, prevents and reader), duplicate IDs, dangling cross-references,
+      # human-only docs in the model loadout, and the three prose rules that used to
+      # be CLAUDE.md text: line limits, principle trace, no duplicate sentences (F-21).
       - name: Registry current and references resolve
         run: python tooling/build_registry.py --check
 
@@ -108,3 +109,25 @@ jobs:
       - name: Mutation score for SL-01 (informational)
         timeout-minutes: 20
         run: python ../../tooling/mutation_score.py --slice SL-01 .
+
+  release-tag:
+    # One version, one place (F-22): a release tag must equal `v$(cat VERSION)` and
+    # CHANGELOG.md must have a heading for it. Runs only when a tag is pushed, so the
+    # version cannot move without the changelog and the tag moving with it.
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tag equals VERSION and CHANGELOG.md has its heading
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          VERSION="$(tr -d '[:space:]' < VERSION)"
+          if [ "$TAG" != "v$VERSION" ]; then
+            echo "ERROR tag $TAG does not equal v$VERSION (VERSION file)"; exit 1
+          fi
+          if ! grep -Eq "^## $VERSION( |$)" CHANGELOG.md; then
+            echo "ERROR CHANGELOG.md has no '## $VERSION' heading"; exit 1
+          fi
+          echo "OK tag $TAG matches VERSION and CHANGELOG.md"

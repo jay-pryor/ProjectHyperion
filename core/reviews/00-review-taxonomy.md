@@ -3,10 +3,11 @@ id: CORE-REV-001
 title: Review Taxonomy
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [REVIEW]
+prevents: One review asked to do two jobs answering neither, and lens reviews mistaken for a substitute for the human read
+reader: A REVIEW session, and the human choosing which review class a question needs
 related: [CORE-REV-002, CORE-REV-003, CORE-REV-004, CORE-REV-005]
 ---
 
@@ -35,11 +36,12 @@ flowchart TD
 
 Every review sits on both:
 
-**Verification or validation** ([P7](../00-principles.md)). Does the implementation
-satisfy the contract, or is the contract itself wrong? A single review that tries to
-answer both answers neither. Two separate agents:
+**Verification or specification review** ([P7](../00-principles.md)). Does the
+implementation satisfy the contract, or is the contract itself wrong? A single review that
+tries to answer both answers neither. Two separate agents:
 [verification-review](../../agents/verification-review.md) and
-[validation-review](../../agents/validation-review.md).
+[specification-review](../../agents/specification-review.md). Validation, the third
+activity of P7, is not a review class: it is a case under `validation/` against the G1 basis.
 
 **Correlated or independent.** A model reviewing model-written code shares blind spots
 with the author, particularly on domain assumptions and requirement interpretation.

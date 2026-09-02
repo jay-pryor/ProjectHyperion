@@ -11,6 +11,7 @@ Sources this module reads:
     fragments            CORE-IMP-001        imperatives/*.yaml, profiles/*/fragment.yaml
     generated blocks     CORE-IMP-001        <!-- generated:name --> ... <!-- /generated -->
     include blocks       CORE-IMP-001        <!-- include: ID#slug --> ... <!-- /include -->
+    VERSION              HYP-000             the framework's one version string
 
 Requires PyYAML.
 """
@@ -24,6 +25,7 @@ import yaml
 FRAMEWORK_ROOT = Path(__file__).resolve().parent.parent
 SESSION_DOC = "core/session-protocol.md"
 REGISTRY = "REGISTRY.md"
+VERSION_FILE = "VERSION"
 MODEL_ALIASES = ("sonnet", "opus", "haiku")
 
 FM_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*\n", re.DOTALL)
@@ -40,9 +42,16 @@ def read(path):
     return Path(path).read_text(encoding="utf-8")
 
 
+def framework_version(root=FRAMEWORK_ROOT):
+    """The one version string (F-22). Every rendering of the framework version, the
+    registry header, the README status line, the console header, a project's
+    .hyperion/version, reads this file; nothing else states it."""
+    return (Path(root) / VERSION_FILE).read_text(encoding="utf-8").strip()
+
+
 def split_frontmatter(text):
-    """(frontmatter dict or None, body). Scalars are kept as strings so `version: 0.1`
-    does not become a float."""
+    """(frontmatter dict or None, body). Scalars are kept as strings so a numeric
+    field does not become a float."""
     m = FM_RE.match(text)
     if not m:
         return None, text

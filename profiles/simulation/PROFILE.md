@@ -3,9 +3,10 @@ id: SIM-000
 title: Simulation Profile
 tier: profile
 status: draft
-version: 0.1
 audience: [human, model]
 load: always
+prevents: Simulation software that produces plausible wrong numbers being treated as correct because it runs and its tests pass
+reader: Every session on a simulation project, standing; the human at G2 choosing the toolchain
 related: [SIM-VAL-001, SIM-DET-001, SIM-RDS-001]
 ---
 
@@ -90,6 +91,14 @@ and in this domain you will be asked to.
 The G0 addition matters. A simulation whose output informs a procurement decision, an
 engagement plan, or a safety case has a hazard profile; one used for a rough sanity check
 does not. The mitigations differ accordingly.
+
+## Local hazard scale
+
+For `register: local` hazards ([CORE-LFC-002](../../core/lifecycle/g0-hazard-context.md)),
+`severity` and `likelihood` are integers 1 to 3. Severity: 1, a wrong number a reader
+would notice; 2, a wrong number that would survive to a brief; 3, a wrong number that
+informs a decision named in the G0 addition above. Likelihood: 1, needs an unusual
+scenario; 2, an ordinary scenario near the validity envelope; 3, any ordinary run.
 
 ## Targeted human reads
 

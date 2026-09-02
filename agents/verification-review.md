@@ -3,7 +3,6 @@ id: AGT-VER-001
 title: "Agent — Verification Review"
 tier: agents
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [REVIEW]
@@ -11,6 +10,8 @@ lens: verification
 question: "Does the implementation satisfy the contract?"
 run_when: "Every slice"
 model: sonnet   # verification runs on a different family from the authoring session (CORE-HRN-001)
+prevents: An implementation that does not satisfy a contract clause passing because the suite did not cover the clause
+reader: A REVIEW session on every slice after conformance passes
 related: [CORE-REV-003, CORE-CON-001]
 ---
 
@@ -18,7 +19,7 @@ related: [CORE-REV-003, CORE-CON-001]
 
 **Question:** does the implementation satisfy the contract?
 
-Not whether the contract is right — that is [validation-review](validation-review.md).
+Not whether the contract is right — that is [specification-review](specification-review.md).
 Keep them separate; a session asked both answers neither.
 
 ## Permitted inputs
@@ -91,4 +92,4 @@ Findings in the stated format, plus a REJECTED list. Anything else is discarded.
 ## Known weaknesses
 Shares blind spots with the authoring model on requirement interpretation and domain
 assumptions. It will verify faithfully against a contract that is itself wrong — which is
-precisely why validation-review is a separate pass.
+precisely why specification-review is a separate pass.

@@ -3,10 +3,11 @@ id: CORE-TRC-001
 title: Traceability
 tier: core
 status: active
-version: 0.2
 audience: [human, model]
 load: on-task
 sessions: [GATE]
+prevents: Trace tables written as intentions that nothing checks, so a renamed test or a deleted requirement stays invisible
+reader: Anyone maintaining trace/, and the reviewer who receives the matrix
 related: [CORE-TRC-002, CORE-TRC-003, CORE-LFC-002, CORE-LFC-003, CORE-PRN-001]
 ---
 

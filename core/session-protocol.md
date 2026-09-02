@@ -3,9 +3,10 @@ id: CORE-SES-001
 title: Session Protocol
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: always
+prevents: A test, contract, or baseline written in a context that had already seen the thing it was meant to constrain
+reader: Every session at declaration, and the tooling that enforces scope
 related: [CORE-PRN-001, CORE-LFC-006, CORE-REV-001, CORE-CHG-001]
 ---
 

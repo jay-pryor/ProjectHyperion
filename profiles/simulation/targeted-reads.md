@@ -3,10 +3,11 @@ id: SIM-RDS-001
 title: Targeted Human Reads — Simulation
 tier: profile
 status: draft
-version: 0.1
 audience: [human]
 load: on-task
 sessions: []
+prevents: Unit, frame, initialisation, and tolerance defects that are consistent on each side of a boundary and invisible to a model reviewing one module
+reader: The human after each simulation slice is built, before acceptance
 related: [CORE-REV-004, SIM-000]
 ---
 

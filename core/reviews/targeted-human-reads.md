@@ -3,10 +3,11 @@ id: CORE-REV-004
 title: Targeted Human Reads
 tier: core
 status: active
-version: 0.1
 audience: [human]
 load: on-task
 sessions: []
+prevents: Human attention spread evenly over implementation code instead of concentrated where models are predictably weak
+reader: The human before build (criteria and contracts) and after build (the profile's list), per slice
 related: [CORE-REV-001, CORE-REV-003, CORE-PRN-001]
 ---
 
@@ -58,8 +59,7 @@ to review by a model that has never seen the errata.
 
 ## Then: use it
 
-Ten minutes of hands-on use per slice. You are the only available judge of whether the
-thing is usable, and no test covers that.
+Hands-on time, per slice, before acceptance: [CORE-LFC-006](../lifecycle/slice-loop.md#hands-on-time).
 
 ## Time budget
 

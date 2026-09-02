@@ -3,10 +3,11 @@ id: HBK-002
 title: Who Does What
 tier: handbook
 status: active
-version: 0.1
 audience: [human]
 load: never
 sessions: []
+prevents: The human-model line moving toward whoever is faster under time pressure
+reader: The human running a project, at each step of the lifecycle
 related: [HBK-000, CORE-PRN-001, CORE-SES-001, CORE-LFC-006, CORE-REV-001, CORE-CHG-001]
 ---
 

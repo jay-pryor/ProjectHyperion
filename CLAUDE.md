@@ -3,9 +3,10 @@ id: HYP-002
 title: Framework Operating Instructions
 tier: root
 status: active
-version: 0.1
 audience: [human, model]
 load: always
+prevents: A framework session that edits process documents without tracing, deduplicating, or regenerating what depends on them
+reader: Every FRAMEWORK, REVIEW, and QUERY session in this repository, at declaration
 related: [HYP-000, CORE-SES-001, CORE-PRN-001]
 ---
 
@@ -35,11 +36,9 @@ Then stop and wait; do not begin in the same turn. The types are defined in
    lives. Link by ID rather than restating. The single most likely way this framework
    degrades is the same rule appearing in three documents and drifting.
 
-3. **Documents stay short.** Target under 120 lines. A document that needs more is usually
-   two documents. Splitting is cheap because references are by ID.
+3. **Documents stay short**: 120 lines (160 for templates), checked by `build_registry.py --check`. Split rather than exceed.
 
-4. **Every document declares its failure and its reader** (P6). If you cannot name the
-   failure a document prevents, do not write it.
+4. **Every document declares its failure and its reader** (P6): the `prevents:` and `reader:` fields, checked by the same script.
 
 5. **Prefer a mechanical check to a written rule** (P2). When adding process, first ask
    whether `tooling/` could enforce it instead. A rule that CI can check should be a check

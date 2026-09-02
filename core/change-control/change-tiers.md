@@ -3,9 +3,10 @@ id: CORE-CHG-001
 title: Change Tiers
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: always
+prevents: A behavioural interface change passing as an internal one, or a tier argued rather than classified by path
+reader: Every session, standing, when a change touches a contract, a suite, or baseline/
 related: [CORE-PRN-001, CORE-CON-001, CORE-CHG-002, CORE-SES-001]
 ---
 

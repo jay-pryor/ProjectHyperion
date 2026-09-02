@@ -3,10 +3,11 @@ id: TPL-006
 title: "Template — Project CLAUDE.md"
 tier: templates
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [FRAMEWORK]
+prevents: A project operating layer that restates core in its own words and drifts from it
+reader: FRAMEWORK sessions changing the template; init_project.py instantiates it for every project
 related: [CORE-SES-001, CORE-CHG-001, CORE-IMP-001]
 ---
 

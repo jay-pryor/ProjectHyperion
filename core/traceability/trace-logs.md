@@ -3,10 +3,11 @@ id: CORE-TRC-003
 title: Trace Records — Logs and Results
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [REVIEW, INTEGRATE, LESSON, BASELINE]
+prevents: Findings, reviews, and changes living in prose where they cannot be counted, filtered, or checked, so gate state ends up in a human's head
+reader: The session appending a finding, review, or change row, and tooling/check_traces.py
 related: [CORE-TRC-001, CORE-TRC-002, CORE-REV-002, CORE-REV-005, CORE-CHG-002, CORE-LFC-001]
 ---
 
@@ -24,7 +25,7 @@ row and by `tooling/check_traces.py`.
 - id: FND-nnn
   date: YYYY-MM-DD
   slice: SL-nn
-  source: lens:<name> | validation | specification | gate | mutation | human | hands-on
+  source: lens:<name> | specification | gate | mutation | human | hands-on   # specification: is the contract right (P7)
   form: test | clause
   severity: S1 | S2 | S3 | S4                         # CORE-REV-005
   status: admitted | rejected | fixed | reopened

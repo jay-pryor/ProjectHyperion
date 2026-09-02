@@ -3,10 +3,11 @@ id: TPL-002
 title: "Template — Decision Record"
 tier: templates
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [GATE, CONTRACT, BASELINE]
+prevents: A decision recorded without its rejected alternatives or its reversal cost
+reader: GATE, CONTRACT, and BASELINE sessions writing docs/decisions/DEC-nnn.md
 related: [CORE-DEC-001]
 ---
 

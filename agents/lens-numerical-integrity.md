@@ -3,7 +3,6 @@ id: AGT-LNS-002
 title: "Agent — Numerical Integrity Lens"
 tier: agents
 status: draft
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [REVIEW]
@@ -12,6 +11,8 @@ question: "Are the numbers wrong in ways that still look plausible?"
 run_when: "Any slice touching the numerical core"
 model: sonnet   # lenses run on a different family from the authoring session (CORE-HRN-001)
 profile: simulation
+prevents: Plausible-looking wrong numbers from unit, frame, initialisation, integration, or floating-point defects passing review
+reader: A REVIEW session on any slice touching the numerical core
 related: [CORE-REV-003, SIM-VAL-001]
 ---
 

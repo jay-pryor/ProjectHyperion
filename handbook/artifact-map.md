@@ -3,10 +3,11 @@ id: HBK-001
 title: The Artifact Map
 tier: handbook
 status: active
-version: 0.1
 audience: [human]
 load: never
 sessions: []
+prevents: A reader unable to tell whether an artifact is a record, prose, or ceremony because the whole picture exists only in pieces
+reader: A person orienting in a project, in the console's handbook tab
 related: [HBK-000, CORE-LFC-001, CORE-TRC-001, CORE-TRC-002, CORE-TRC-003, CORE-CON-003, CORE-TST-002]
 ---
 

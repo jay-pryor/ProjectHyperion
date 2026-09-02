@@ -116,8 +116,8 @@ def test_tbd_after_g3_is_a_warning_before_g3(broken):
     edit(broken, "trace/requirements.yaml",
          "  validated_by: validation/envelope/test_envelope.py::test_apex_beyond_envelope_is_rejected\n  status: traced\n",
          "  validated_by: TBD\n  status: proposed\n")
-    edit(broken, "trace/reviews.yaml", "  gate: G3\n  date: 2026-08-16\n  reviewer: self; validation-review on opus\n  disposition: passed\n",
-         "  gate: G3\n  date: 2026-08-16\n  reviewer: self; validation-review on opus\n  disposition: pending\n")
+    edit(broken, "trace/reviews.yaml", "  gate: G3\n  date: 2026-08-16\n  reviewer: self; specification-review on opus\n  disposition: passed\n",
+         "  gate: G3\n  date: 2026-08-16\n  reviewer: self; specification-review on opus\n  disposition: pending\n")
     # SL-02 is in_progress, so REQ-003 proposed is fine before G3; but SL-01 is accepted
     # and its claims are all verified, so the only errors must be none.
     issues = check_traces.check(check_traces.load(broken))
@@ -246,14 +246,14 @@ def test_rejected_finding_needs_a_reason(broken):
 
 
 def test_gate_state_is_derived_and_ordered(broken):
-    edit(broken, "trace/reviews.yaml", "  gate: G2\n  date: 2026-08-14\n  reviewer: external systems engineer; validation-review on opus\n  disposition: passed",
-         "  gate: G2\n  date: 2026-08-14\n  reviewer: external systems engineer; validation-review on opus\n  disposition: pending")
+    edit(broken, "trace/reviews.yaml", "  gate: G2\n  date: 2026-08-14\n  reviewer: external systems engineer; specification-review on opus\n  disposition: passed",
+         "  gate: G2\n  date: 2026-08-14\n  reviewer: external systems engineer; specification-review on opus\n  disposition: pending")
     assert_error(broken, "REV-004: G3 passed but G2 has no passed gate row")
 
 
 def test_review_kind_and_reviewer_validated(broken):
     edit(broken, "trace/reviews.yaml", "kind: targeted_read\n  slice: SL-01", "kind: targeted-read\n  slice: SL-01")
-    edit(broken, "trace/reviews.yaml", "reviewer: external systems engineer; validation-review on opus", "reviewer: ''")
+    edit(broken, "trace/reviews.yaml", "reviewer: external systems engineer; specification-review on opus", "reviewer: ''")
     assert_error(broken, "REV-005: kind 'targeted-read' invalid", "REV-003: reviewer must name a person and/or a model")
 
 
@@ -267,8 +267,8 @@ def test_gate_review_naming_no_model_is_a_warning(green):
 
 def test_review_on_the_authoring_model_is_an_error(broken):
     edit(broken, "trace/reviews.yaml",
-         "  reviewer: self; validation-review on opus\n  disposition: passed\n  notes: Contracts 1.0",
-         "  slice: SL-01\n  reviewer: self; validation-review on claude-sonnet-4-5\n  disposition: passed\n  notes: Contracts 1.0")
+         "  reviewer: self; specification-review on opus\n  disposition: passed\n  notes: Contracts 1.0",
+         "  slice: SL-01\n  reviewer: self; specification-review on claude-sonnet-4-5\n  disposition: passed\n  notes: Contracts 1.0")
     assert_error(broken, "REV-004: gate review ran on the model that authored SL-01 (authored_by: sonnet)")
 
 

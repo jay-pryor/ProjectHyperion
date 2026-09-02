@@ -3,10 +3,11 @@ id: AGT-000
 title: Agent Index
 tier: agents
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [REVIEW]
+prevents: A lens run with the wrong inputs, on the wrong slice, or with a primed prompt because no one place lists the lenses and their rules
+reader: The human choosing lenses for a slice, and the REVIEW session or /review skill selecting an agent
 related: [CORE-REV-003, CORE-HRN-001]
 ---
 
@@ -33,7 +34,7 @@ files render the read-only subagents `/review` runs ([CORE-HRN-001](../core/harn
 | Agent | Question | Run when | Model |
 |---|---|---|---|
 | [lens-partial-failure](lens-partial-failure.md) | Can state be left inconsistent mid-operation? | Slices with multi-step operations or external systems | sonnet |
-| [validation-review](validation-review.md) | Is the contract itself wrong? | Every slice, and on gate artifacts at G2 and G3 | opus |
+| [specification-review](specification-review.md) | Is the contract itself wrong? | Every slice, and on gate artifacts at G2 and G3 | opus |
 | [verification-review](verification-review.md) | Does the implementation satisfy the contract? | Every slice | sonnet |
 
 ## Simulation profile agents

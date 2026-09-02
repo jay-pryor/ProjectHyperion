@@ -33,7 +33,7 @@ Output exactly:
 - `agents/lens-determinism.md` (AGT-LNS-003)
 - `agents/lens-numerical-integrity.md` (AGT-LNS-002)
 - `agents/lens-partial-failure.md` (AGT-LNS-001)
-- `agents/validation-review.md` (AGT-VAL-001)
+- `agents/specification-review.md` (AGT-VAL-001)
 - `agents/verification-review.md` (AGT-VER-001)
 - `core/harness.md` (CORE-HRN-001)
 - `core/reviews/00-review-taxonomy.md` (CORE-REV-001)

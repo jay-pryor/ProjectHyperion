@@ -3,10 +3,11 @@ id: CORE-CON-001
 title: Contract Definition
 tier: core
 status: active
-version: 0.1
 audience: [human, model]
 load: on-task
 sessions: [CONTRACT]
+prevents: Consumers depending on behaviour that was never promised, which makes every internal change an interface change
+reader: A CONTRACT session writing or changing a contract, and the human reviewing it at G3
 related: [CORE-PRN-001, CORE-CON-002, CORE-CON-003, CORE-CHG-001]
 ---
 

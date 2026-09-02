@@ -3,10 +3,11 @@ id: HBK-004
 title: One Slice, Session by Session
 tier: handbook
 status: active
-version: 0.1
 audience: [human]
 load: never
 sessions: []
+prevents: A reader who has only the session table being unable to tell a stop from a failure
+reader: A person about to run their first slice
 related: [HBK-000, HBK-002, CORE-SES-001, CORE-LFC-006, CORE-CHG-001, CORE-REV-005, CORE-TST-002, CORE-TRC-002]
 ---
 
