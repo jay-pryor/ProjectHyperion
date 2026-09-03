@@ -42,21 +42,29 @@ produces untestable specifications.
 
 ## Validation basis
 
-For each requirement, name the evidence that would establish correctness:
+For each requirement, name the evidence that would establish correctness. These seven
+classes are the whole list:
 
-| Evidence class | Example |
+| Class | Example |
 |---|---|
-| Analytical | Closed-form solution the output must match within tolerance |
-| Conservation | Energy, momentum, mass, count balance across the run |
-| Invariant | Round-trip identity, ordering, monotonicity, dimensional consistency |
-| Degenerate case | Known answer at a limit (zero input, infinite range, stationary target) |
-| Reference data | Trusted external dataset, prior tool, published result |
-| Expert judgement | A named human inspects a named output |
+| `analytical` | Closed-form solution the output must match within tolerance |
+| `conservation` | Energy, momentum, mass, count balance across the run |
+| `invariant` | Round-trip identity, ordering, monotonicity, dimensional consistency |
+| `degenerate` | Known answer at a limit (zero input, infinite range, stationary target) |
+| `reference` | Trusted external dataset, prior tool, published result |
+| `convergence` | Refining the step or the mesh moves the answer less, not more |
+| `expert_judgement` | A named human inspects a named output |
+
+The names are the values `validation_class` takes in a requirement record
+([CORE-TRC-002](../traceability/trace-records.md)); `tooling/check_traces.py` rejects
+anything else, and a test holds its enum equal to this table. Adding or renaming a class
+therefore changes what the checker accepts on every existing project.
 
 Expert judgement is a legitimate entry and should be used where nothing better exists —
 but it is recorded as such, so the confidence level of the whole system is visible.
 
-Profile-specific expansion: [SIM-VAL-001](../../profiles/simulation/validation-basis.md).
+What each class means in simulation, strongest first:
+[SIM-VAL-001](../../profiles/simulation/validation-basis.md).
 
 ## Outputs
 

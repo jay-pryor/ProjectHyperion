@@ -8,7 +8,7 @@ load: on-task
 sessions: []
 prevents: Human attention spread evenly over implementation code instead of concentrated where models are predictably weak
 reader: The human before build (criteria and contracts) and after build (the profile's list), per slice
-related: [CORE-REV-001, CORE-REV-003, CORE-PRN-001]
+related: [CORE-REV-001, CORE-REV-003, CORE-REV-005, CORE-PRN-001, CORE-TRC-003]
 ---
 
 # Targeted Human Reads
@@ -60,6 +60,23 @@ to review by a model that has never seen the errata.
 ## Then: use it
 
 Hands-on time, per slice, before acceptance: [CORE-LFC-006](../lifecycle/slice-loop.md#hands-on-time).
+
+## Recording
+
+A read that leaves no record is, in the words of [CORE-LFC-002](../lifecycle/g0-hazard-context.md#the-trace-is-the-deliverable),
+a statement of intent and not a control. So each read is a row in `trace/reviews.yaml`
+with `kind: targeted_read` and the slice in its `slice` field
+([CORE-TRC-003](../traceability/trace-logs.md#review)), and a slice is not accepted until
+at least one such row names it with a disposition other than `pending`;
+`tooling/check_traces.py` fails the slice otherwise. What is required is the artifact of
+having read, on the same footing as every other acceptance condition. Whether the reading
+was any good is not mechanically knowable and is not what is being checked.
+
+`findings_raised` satisfies it — the read happened, and what it found is dispositioned
+under [CORE-REV-005](review-findings-handling.md) and gated by the definition of done, not
+here. `failed` is not a meaningful outcome for a read: a read does not fail, only the
+thing being read does. `pending` is the normal state mid-slice and stays legal until the
+slice is accepted.
 
 ## Time budget
 

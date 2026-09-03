@@ -86,13 +86,12 @@ the model is refused: an imperative cannot derive from a document its reader nev
 `tooling/build_layer.py` renders everything a session consumes from these sources: the
 imperative, session, stop-condition, loadout, and targeted-read blocks of the project
 template; the lens library and agent index from agent frontmatter; the severity include in
-every agent prompt; a project's module map from its manifests; and `imperatives.json`.
+every agent prompt; the command blocks of [HYP-000](../README.md) and the template from
+`tooling/commands.yaml`; a project's module map from its manifests; and `imperatives.json`.
 Rendered text sits between `<!-- generated:name -->` markers and is never edited by hand.
 `build_layer.py --check` fails CI when any block is stale, which turns
-[P3](00-principles.md) from a rule into a property of the build. Run it, with the registry,
-after any change:
-
-    python tooling/build_registry.py && python tooling/build_layer.py
+[P3](00-principles.md) from a rule into a property of the build. Run it with the registry
+after any change; both command lines are in the Commands section of HYP-000.
 
 ## Keeping the layers in sync
 

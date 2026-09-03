@@ -8,7 +8,7 @@ load: on-task
 sessions: [GATE, CONTRACT, CONFORMANCE]
 prevents: A requirement, hazard, or slice record validated by whoever last edited it, and a named artifact with no home
 reader: The session writing a register record, and tooling/check_traces.py
-related: [CORE-TRC-001, CORE-TRC-003, CORE-LFC-002, CORE-LFC-003, CORE-LFC-005, CORE-CON-001, TPL-004, TPL-005]
+related: [CORE-TRC-001, CORE-TRC-003, CORE-LFC-002, CORE-LFC-003, CORE-LFC-005, CORE-CON-001, CORE-REV-004, TPL-004, TPL-005]
 ---
 
 # Trace Records — Registers
@@ -49,7 +49,7 @@ An artifact the framework names must have a row here ([P6](../00-principles.md))
   verification_method: test | analysis | inspection | demonstration
   verified_by: [<test id>]                            # test: full ids under conformance/
                                                       # otherwise: REV-nnn
-  validation_class: analytical | conservation | invariant | degenerate | reference | convergence | expert_judgement
+  validation_class: <one of the seven classes of CORE-LFC-003>
   validated_by: <test id under validation/> | REV-nnn # REV only for expert_judgement
   status: proposed | traced | verified
 ```
@@ -58,8 +58,9 @@ Modules are discovered from `modules/*/contract.*` plus `baseline`; there is no 
 maintain. `verified` requires every verifying and validating reference to have passed
 (a test in `results.xml`; a review with disposition `passed` or `no_findings`).
 `TBD` is allowed only while `proposed`; once G3 has passed, `proposed` is an error, as is
-a requirement no slice claims. Test-id rules are in [CORE-TRC-003](trace-logs.md).
-Validation classes are those of [G1](../lifecycle/g1-requirements-validation-basis.md).
+a requirement no slice claims. Test-id rules are in [CORE-TRC-003](trace-logs.md). The
+validation classes are the table in [G1](../lifecycle/g1-requirements-validation-basis.md)
+and nothing else; the checker's enum is held equal to it by test.
 
 ## Hazard
 
@@ -101,5 +102,7 @@ clause is a marked `C-nnn` in its `CONTRACT.md` ([CORE-CON-001](../contracts/con
 ```
 
 An `accepted` slice may claim only `verified` requirements and hazards, whatever the
-gate state. The last two fields are optional until acceptance; they are the
-mechanical half of the acceptance record in [TPL-005](../../templates/slice-definition.md).
+gate state, and must carry a completed targeted read naming it
+([CORE-REV-004](../reviews/targeted-human-reads.md#recording)). The last two fields are
+optional until acceptance; they are the mechanical half of the acceptance record in
+[TPL-005](../../templates/slice-definition.md).

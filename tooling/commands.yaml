@@ -1,0 +1,74 @@
+# Every command a human runs, in one place (P3). build_layer.py renders the
+# `commands` and `commands-project` generated blocks of README.md and
+# templates/project-CLAUDE.md from this file; no document states these lines by hand.
+# tooling/tests/test_commands.py fails when a script in tooling/ grows a CLI and no row
+# here describes it, so a tool cannot ship without a human-facing command line.
+#
+# context: framework = run in this repository
+#          project   = run in a project that vendors Hyperion under `hyperion/`
+#          both      = the same invocation in either
+# script:  a file in tooling/, prefixed per context by the renderer. Omit it and give
+#          `run` for a command that is not one of ours.
+# args:    appended after the script path; `<...>` is filled in by hand.
+# does:    one line, no trailing period, rendered as the trailing comment.
+
+commands:
+  - run: pytest -q
+    context: framework
+    does: this repository's own suite (tooling/tests)
+
+  - script: build_registry.py
+    context: framework
+    does: regenerate REGISTRY.md; --check fails when stale
+
+  - script: build_layer.py
+    context: framework
+    does: render the operating layer; --check fails when stale
+
+  - script: check_traces.py
+    context: project
+    does: every trace/ record; --report prints the matrix
+
+  - script: build_console.py
+    args: "."
+    context: project
+    does: render console/index.html, the reviewer's artifact
+
+  - script: check_null_doubles.py
+    args: "."
+    context: project
+    does: every suite must FAIL against its null double
+
+  - script: mutation_score.py
+    args: "--slice SL-nn ."
+    context: project
+    does: at acceptance; --write records the survivors
+
+  - script: check_imperatives.py
+    context: both
+    does: imperatives drifted from their source sections
+
+  - script: loadout.py
+    args: "--session <TYPE>"
+    context: both
+    does: the documents that session type loads
+
+  - script: init_project.py
+    args: "--profiles <names> <root>"
+    context: framework
+    does: scaffold a project at this framework version
+
+  - script: init_project.py
+    args: "--upgrade ."
+    context: project
+    does: re-render generated blocks after a version bump
+
+  - script: check_commit.py
+    args: "<base>..HEAD --framework"
+    context: framework
+    does: paths must match the Session trailer
+
+  - script: check_commit.py
+    args: "<base>..HEAD"
+    context: project
+    does: paths must match the Session trailer

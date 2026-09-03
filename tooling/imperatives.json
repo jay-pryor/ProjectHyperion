@@ -22,7 +22,7 @@
       "text": "Regenerate the operating layer (`build_layer.py`) after changing any source it renders.",
       "source": "CORE-IMP-001#generated-blocks",
       "source_path": "core/imperatives.md",
-      "section_hash": "cac5acd723fac2cb",
+      "section_hash": "18e913260ceb7383",
       "carried_in": "CLAUDE.md"
     },
     {
@@ -118,7 +118,7 @@
       "text": "Never loosen a tolerance to get a green run.",
       "source": "SIM-VAL-001#validation-suite",
       "source_path": "profiles/simulation/validation-basis.md",
-      "section_hash": "f63af8bac1a7c56f",
+      "section_hash": "8cba59d11ad81346",
       "carried_in": "/workspaces/ProjectHyperion/profiles/simulation/fragment.yaml"
     },
     {

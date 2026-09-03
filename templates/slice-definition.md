@@ -8,7 +8,7 @@ load: on-task
 sessions: [GATE, CONTRACT]
 prevents: A slice without observable acceptance criteria, or one that grows past what can be reviewed in one sitting
 reader: GATE and CONTRACT sessions writing docs/slices/SL-nn.md, and the human writing the criteria
-related: [CORE-LFC-005, CORE-LFC-006, CORE-TRC-001, CORE-TRC-002]
+related: [CORE-LFC-005, CORE-LFC-006, CORE-REV-004, CORE-TRC-001, CORE-TRC-002]
 ---
 
 # Template — Slice Definition
@@ -46,6 +46,7 @@ reviewable in one sitting.>
 - Findings raised / disposition:
 - Lessons promoted:
 - Decision records created:
+- Targeted reads completed: REV-nnn (rows in `trace/reviews.yaml`; CORE-REV-004)
 - Hands-on use completed: yes/no
 - Mutation score and survivors triaged: mirrored to `trace/slices.yaml` (CORE-TRC-002)
 - Traces updated and `check_traces.py` green: yes/no

@@ -16,7 +16,7 @@ related: [HYP-000]
 
 Hyperion 0.6.0 (from `VERSION`; history in `CHANGELOG.md`)
 
-Generated 2026-09-02 · 56 documents
+Generated 2026-09-03 · 56 documents
 
 ## Standing context loadout
 

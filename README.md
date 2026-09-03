@@ -52,8 +52,38 @@ Hyperion is **core + profiles**.
 
 [REGISTRY.md](REGISTRY.md) is the index. It is **generated**, not hand-maintained, and so
 is everything a session consumes (imperative tables, session table, loadouts, lens
-library): run `python tooling/build_registry.py && python tooling/build_layer.py` after
-any change. CI fails if either is stale.
+library): regenerate with the commands below after any change. CI fails if either is stale.
+
+## Commands
+
+Every command a human runs, rendered from `tooling/commands.yaml` so this list cannot
+drift from the scripts. In this repository:
+
+<!-- generated:commands -->
+    pytest -q                                                 # this repository's own suite (tooling/tests)
+    python tooling/build_registry.py                          # regenerate REGISTRY.md; --check fails when stale
+    python tooling/build_layer.py                             # render the operating layer; --check fails when stale
+    python tooling/check_imperatives.py                       # imperatives drifted from their source sections
+    python tooling/loadout.py --session <TYPE>                # the documents that session type loads
+    python tooling/init_project.py --profiles <names> <root>  # scaffold a project at this framework version
+    python tooling/check_commit.py <base>..HEAD --framework   # paths must match the Session trailer
+<!-- /generated -->
+
+Inside a project, which vendors the framework at `hyperion/`. This repository is not one;
+to run them against the example it ships, `cd examples/minimal` first:
+
+<!-- generated:commands-project -->
+    # not from this repository: cd examples/minimal, then ../../tooling/ for hyperion/tooling/
+
+    python hyperion/tooling/check_traces.py                    # every trace/ record; --report prints the matrix
+    python hyperion/tooling/build_console.py .                 # render console/index.html, the reviewer's artifact
+    python hyperion/tooling/check_null_doubles.py .            # every suite must FAIL against its null double
+    python hyperion/tooling/mutation_score.py --slice SL-nn .  # at acceptance; --write records the survivors
+    python hyperion/tooling/check_imperatives.py               # imperatives drifted from their source sections
+    python hyperion/tooling/loadout.py --session <TYPE>        # the documents that session type loads
+    python hyperion/tooling/init_project.py --upgrade .        # re-render generated blocks after a version bump
+    python hyperion/tooling/check_commit.py <base>..HEAD       # paths must match the Session trailer
+<!-- /generated -->
 
 ## Starting a new project
 
@@ -63,9 +93,9 @@ requirements, two hazards, one accepted slice, every trace record filled in.
 1. Read [CORE-PRN-001 Principles](core/00-principles.md) and
    [CORE-LFC-001 Gate overview](core/lifecycle/00-gates-overview.md).
 2. Read the relevant profile's `PROFILE.md`.
-3. Run `python hyperion/tooling/init_project.py --profiles <names> .` to generate
-   `CLAUDE.md` and `.hyperion/`; fill in the `<...>` placeholders it leaves. Nothing else
-   is loaded automatically; that file is the entry point for every session.
+3. Run `init_project.py` (Commands above) to generate `CLAUDE.md` and `.hyperion/`; fill
+   in the `<...>` placeholders it leaves. Nothing else is loaded automatically; that file
+   is the entry point for every session.
 4. Work the gates in order. Add `modules/<name>/CLAUDE.md` per module as modules appear.
 
 ## Consuming Hyperion
@@ -74,9 +104,9 @@ Vendor the framework into the project as a git submodule or subtree at a tagged
 version (`v$(cat VERSION)`), under `hyperion/`. Never copy loose files: a copied `CLAUDE.md` has no
 version and no drift check. `init_project.py` pins the version in `.hyperion/version`
 and writes `.hyperion/imperatives.json`, the map `check_imperatives.py` reads when run
-from the project. After moving the submodule to a new tag, run
-`python hyperion/tooling/init_project.py --upgrade .`, which re-renders the generated
-blocks of `CLAUDE.md` and `docs/module-map.md` and leaves hand-written sections alone.
+from the project. After moving the submodule to a new tag, the `--upgrade` run above
+re-renders the generated blocks of `CLAUDE.md` and `docs/module-map.md` and leaves
+hand-written sections alone.
 The same run renders the project's `.claude/` and `.devcontainer/`, so a Codespace opened
 on the project boots the pinned toolchain with the session skills and hooks in place.
 

@@ -34,6 +34,14 @@ def template_body(root=fd.FRAMEWORK_ROOT):
     return fd.GENERATED_RE.sub(lambda m: f"<!-- generated:{m.group(1)} -->\n<!-- /generated -->", inner)
 
 
+def template_blocks(root=fd.FRAMEWORK_ROOT):
+    """The generated blocks a project's CLAUDE.md is expected to carry, taken from the
+    template that declares them (P3). A second list here falls behind the template, and
+    a renderer with no marker to render into is otherwise silent: the block simply never
+    appears in the project and nothing says so."""
+    return fd.block_names(template_body(root))
+
+
 def module_map_body(root=fd.FRAMEWORK_ROOT):
     _, body = fd.split_frontmatter(fd.read(root / "templates" / "module-map.md"))
     return fd.fenced_block(body, "markdown")
@@ -80,8 +88,8 @@ def main(argv=None):
             print(f"ERROR {e}", file=sys.stderr)
         return 1
     if claude.exists():
-        missing = [b for b in ("session-table", "imperatives", "stop-conditions", "loadout", "targeted-reads")
-                   if b not in fd.block_names(fd.read(claude))]
+        present = fd.block_names(fd.read(claude))
+        missing = [b for b in template_blocks() if b not in present]
         for b in missing:
             print(f"WARNING {claude.name} has no <!-- generated:{b} --> block; add the markers to receive it")
 

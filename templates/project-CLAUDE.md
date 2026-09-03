@@ -13,10 +13,9 @@ related: [CORE-SES-001, CORE-CHG-001, CORE-IMP-001]
 
 # Template — Project CLAUDE.md
 
-Instantiated by `python hyperion/tooling/init_project.py --profiles <name> <root>`, which
-fills every `generated` block for the chosen profiles (this file shows the core-only
-rendering); `--upgrade` re-renders the blocks and touches nothing else. Replace every
-`<...>` by hand. Keep it under 160 lines. Project state is never written here.
+Instantiated by `init_project.py`, which fills every `generated` block for the chosen
+profiles (this file shows the core-only rendering); `--upgrade` re-renders them and touches
+nothing else. Replace every `<...>` by hand, keep it under 160 lines, write no state here.
 
 ---
 
@@ -63,7 +62,9 @@ modify". Full definition: `hyperion/core/session-protocol.md` (CORE-SES-001).
 ## Imperatives
 
 Each carries the core section it derives from; open the pointer only when a marginal case
-needs the reasoning. An imperative with no source is invented here, not derived: a defect (CORE-IMP-001).
+needs the reasoning. An imperative with no source is invented here, not derived: a defect.
+Never edit the table by hand; `check_imperatives.py` fails when a source section changed or the
+table and `.hyperion/imperatives.json` disagree, and an `--upgrade` needs a re-read (CORE-IMP-001).
 
 <!-- generated:imperatives -->
 | # | Imperative | Source |
@@ -87,13 +88,6 @@ Two conventions rather than derived rules, marked as such:
 - When uncertain, say so in one line and take the conservative option; no paragraphs of
   caveats, and never the ambitious option silently.
 
-## Keeping this file honest
-
-The table above is generated; never edit it by hand. `python hyperion/tooling/check_imperatives.py`
-fails when a source section changed, the table differs from `.hyperion/imperatives.json`, or an
-imperative is on one side only. After moving the vendored framework, run
-`python hyperion/tooling/init_project.py --upgrade .` and re-read what changed (CORE-IMP-001).
-
 ## STOP conditions
 
 Stop, state the condition, and end the session. Do not work around it or ask permission to.
@@ -112,7 +106,7 @@ Stop, state the condition, and end the session. Do not work around it or ask per
 ## Context loadout
 
 Load only what the session type needs, plus this file; the skill lists the paths, as does
-`python hyperion/tooling/loadout.py --session <TYPE>`. Need more? Say which and why first.
+`loadout.py`. Need more? Say which and why first.
 
 <!-- generated:loadout -->
 | Session | Load |
@@ -131,18 +125,24 @@ Load only what the session type needs, plus this file; the skill lists the paths
 
 ## Commands
 
-    <test>              # full suite; writes trace/results.xml, which check-traces reads
+    <test>              # full suite; writes trace/results.xml, which check_traces.py reads
     <conformance>       # conformance only
     <validation>        # validation suite — separate from tests
     <lint>              # includes boundary and token checks
-    <check-traces>      # python hyperion/tooling/check_traces.py — run AFTER <test>; --report for the matrix
-    <null-doubles>      # python hyperion/tooling/check_null_doubles.py . — every suite must FAIL its null double
-    <mutation>          # python hyperion/tooling/mutation_score.py --slice SL-nn . — at acceptance; --write to record
-    <check-commit>      # python hyperion/tooling/check_commit.py <base>..HEAD
 
-Run `<lint>`, `<conformance>`, and `<check-traces>` before declaring any work complete;
-`trace/results.xml` is generated, never committed. Every commit carries a `Session: <TYPE>`
-trailer; CI rejects one whose paths fall outside that type.
+<!-- generated:commands-project -->
+    python hyperion/tooling/check_traces.py                    # every trace/ record; --report prints the matrix
+    python hyperion/tooling/build_console.py .                 # render console/index.html, the reviewer's artifact
+    python hyperion/tooling/check_null_doubles.py .            # every suite must FAIL against its null double
+    python hyperion/tooling/mutation_score.py --slice SL-nn .  # at acceptance; --write records the survivors
+    python hyperion/tooling/check_imperatives.py               # imperatives drifted from their source sections
+    python hyperion/tooling/loadout.py --session <TYPE>        # the documents that session type loads
+    python hyperion/tooling/init_project.py --upgrade .        # re-render generated blocks after a version bump
+    python hyperion/tooling/check_commit.py <base>..HEAD       # paths must match the Session trailer
+<!-- /generated -->
+
+Run `<lint>`, `<conformance>`, and `check_traces.py` before declaring any work complete;
+`trace/results.xml` is generated, never committed. Every commit carries a `Session: <TYPE>` trailer.
 
 ## Definition of done for a slice
 

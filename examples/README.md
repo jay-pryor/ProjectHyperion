@@ -14,7 +14,7 @@ in twenty minutes; complete enough to exercise every mechanism the framework nam
 | `modules/atmosphere/`, `modules/trajectory/` | A contract with numbered clauses (`CONTRACT.md`), the code surface (`contract.py`), a conformance suite whose tests name their clauses, a private implementation, and a model-owned unit test that is never traced |
 | `modules/*/null_double.py` | One per module: a deliberately trivial implementation the conformance suite **must fail against** (CORE-TST-002). Run the check and watch both fail |
 | `baseline/` | Unit-carrying types, and a fault-point harness that lets a conformance test force a mid-operation failure |
-| `validation/` | Analytical, convergence, envelope, and determinism cases, separate from the test suite |
+| `validation/` | Analytical, determinism, and envelope cases, grouped by validation class and separate from the test suite |
 | `trace/` | Every record the framework names: requirements, hazards, slices, findings (admitted and rejected), reviews (gates, targeted reads, an inspection), needs, assumptions, goals, changes |
 | `docs/` | A slice definition with its acceptance record, a decision record with rejected alternatives, a module map |
 | `.claude/`, `.devcontainer/` | The generated Claude Code binding (CORE-HRN-001): one skill per session type, the read-only lens agents, the scope hook, the plugin list, the container |

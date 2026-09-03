@@ -6,7 +6,8 @@ a mitigation pointing at nothing stays invisible until it matters. This script m
 whole record store checkable. Rationale: CORE-TRC-001. Schema it enforces: CORE-TRC-002
 (registers: requirements, hazards, slices) and CORE-TRC-003 (logs: findings, reviews,
 needs, assumptions, goals, changes, and the generated results.xml), plus the model
-independence rule of CORE-HRN-001 over reviews and a slice's authored_by.
+independence rule of CORE-HRN-001 over reviews and a slice's authored_by, and the
+targeted-read condition on slice acceptance from CORE-REV-004.
 
 Usage (run from the project root, or pass --root):
     python tooling/check_traces.py                 # CI: exit 1 on any break
@@ -56,7 +57,7 @@ RECORD_FILES = {           # file stem -> (id prefix, required fields)
 REQ_KIND = {"functional", "cross-cutting"}
 VERIFICATION_METHOD = {"test", "analysis", "inspection", "demonstration"}
 VALIDATION_CLASS = {"analytical", "conservation", "invariant", "degenerate", "reference",
-                    "convergence", "expert_judgement"}
+                    "convergence", "expert_judgement"}   # the CORE-LFC-003 table; test_check_traces holds them equal
 LIFECYCLE = {"proposed", "traced", "verified"}
 REGISTER = {"org", "local"}
 FAILURE_MODE = {"not_performed", "performed_incorrectly", "performed_wrong_time",
@@ -502,6 +503,18 @@ def check_slices(project, err, warn):
         if accepted and (s.get("survivors_triaged") is False or open_survivors):
             err(sid, "accepted with untriaged mutation survivors; kill each with a conformance test "
                      "or reject it as equivalent with a reason")
+        # CORE-REV-004: acceptance requires the artifact of a targeted read, on the same footing
+        # as verified requirements and triaged survivors. Pending does not count; every other
+        # disposition does, findings_raised included -- those findings are dispositioned under
+        # CORE-REV-005, and the only question here is whether the read happened.
+        if accepted:
+            reads = [r for r in project.records["reviews"]
+                     if r.get("kind") == "targeted_read" and r.get("slice") == sid]
+            if not any(r.get("disposition") != "pending" for r in reads):
+                pending = ", ".join(sorted(str(r["id"]) for r in reads))
+                err(sid, "accepted with no completed targeted read" +
+                         (f"; {pending} still pending" if pending else "") +
+                         "; record a targeted_read review row naming the slice (CORE-REV-004)")
 
     for rid in sorted(project.ids("requirements") - claimed):
         (err if project.after_g3() else warn)(rid, "not claimed by any slice" +

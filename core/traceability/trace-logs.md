@@ -8,7 +8,7 @@ load: on-task
 sessions: [REVIEW, INTEGRATE, LESSON, BASELINE]
 prevents: Findings, reviews, and changes living in prose where they cannot be counted, filtered, or checked, so gate state ends up in a human's head
 reader: The session appending a finding, review, or change row, and tooling/check_traces.py
-related: [CORE-TRC-001, CORE-TRC-002, CORE-REV-002, CORE-REV-005, CORE-CHG-002, CORE-LFC-001]
+related: [CORE-TRC-001, CORE-TRC-002, CORE-REV-002, CORE-REV-004, CORE-REV-005, CORE-CHG-002, CORE-LFC-001]
 ---
 
 # Trace Records — Logs and Results
@@ -64,7 +64,9 @@ that row is the evidence the contract changed.
 ([CORE-LFC-001](../lifecycle/00-gates-overview.md)). The checker switches from warnings to
 errors on TBDs and unclaimed requirements when G3 has passed, and nothing else grants that
 state. A requirement verified by analysis, inspection, or demonstration, or validated by
-expert judgement, points at one of these rows, so a review is as traceable as a test.
+expert judgement, points at one of these rows, so a review is as traceable as a test. A
+`targeted_read` row naming a slice is also a condition of that slice's acceptance
+([CORE-REV-004](../reviews/targeted-human-reads.md#recording)).
 
 ## Needs, assumptions, goals, changes
 

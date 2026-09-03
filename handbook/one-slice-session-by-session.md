@@ -100,7 +100,7 @@ The simulation profile's list, not the whole code. Units at the atmosphere-to-tr
 boundary: both sides use `Metres` from baseline; REV-005, no findings, which also verifies
 REQ-006 by inspection. Provenance fields present in a real result: REV-006, an inspection
 row, which validates REQ-004's expert-judgement class. Then the validation check against
-the G1 basis: the analytical and convergence cases in `validation/analytical/`, written in
+the G1 basis: the analytical, determinism, and envelope cases under `validation/`, written in
 a CONFORMANCE session from the human's specification. Finally the human plots two shots.
 
 ## Model: LESSON session and acceptance

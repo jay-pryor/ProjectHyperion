@@ -221,6 +221,32 @@ def test_acceptance_record_fields_are_typed(broken):
     assert not any("survivors_triaged" in e for e in errs)     # yaml `yes` is a bool
 
 
+# ------------------------------------------------------------------ targeted reads (CORE-REV-004)
+
+# REV-005 is SL-01's targeted read: kind targeted_read, slice SL-01, disposition no_findings.
+# SL-02 is in_progress and its read (REV-007) sits at pending, which is legal and stays so.
+
+def test_accepted_slice_with_no_targeted_read(broken):
+    edit(broken, "trace/reviews.yaml", "  kind: targeted_read\n  slice: SL-01\n", "  kind: targeted_read\n")
+    assert_error(broken, "SL-01: accepted with no completed targeted read",
+                 "record a targeted_read review row naming the slice (CORE-REV-004)")
+
+
+def test_accepted_slice_whose_targeted_read_is_still_pending(broken):
+    edit(broken, "trace/reviews.yaml",
+         "  subject: Units and frames at the atmosphere to trajectory boundary\n"
+         "  date: 2026-08-21\n  reviewer: self\n  disposition: no_findings\n",
+         "  subject: Units and frames at the atmosphere to trajectory boundary\n"
+         "  date: 2026-08-21\n  reviewer: self\n  disposition: pending\n")
+    assert_error(broken, "SL-01: accepted with no completed targeted read; REV-005 still pending")
+    assert not any(e.startswith("SL-02") for e in errors(broken))     # in_progress, unaffected
+
+
+def test_findings_raised_targeted_read_satisfies_acceptance(broken):
+    edit(broken, "trace/reviews.yaml", "  disposition: no_findings\n", "  disposition: findings_raised\n")
+    assert not any("targeted read" in e for e in errors(broken))
+
+
 # ------------------------------------------------------------------ findings and reviews (F-03, F-06)
 
 def test_fixed_s1_must_name_a_conformance_test(broken):
@@ -336,3 +362,13 @@ def test_report_exits_nonzero_and_banners_errors_on_broken_chain(broken):
     assert "**BROKEN: 1 error(s). Do not review this matrix as evidence.**" in head
     assert any("HZ-001: missing required field 'requirement'" in line for line in head)
     assert "## Requirements" in run.stdout      # the matrix still renders, under the banner
+
+
+# ------------------------------------------------------------------ vocabulary against core (P3)
+
+def test_validation_class_enum_matches_the_g1_table():
+    """The class list lives in CORE-LFC-003; the checker's enum may not drift from it."""
+    g1 = (ROOT / "core" / "lifecycle" / "g1-requirements-validation-basis.md").read_text(encoding="utf-8")
+    table = re.findall(r"^\| `([a-z_]+)` \|", g1, re.M)
+    assert len(table) == len(set(table)), f"duplicate class in the G1 table: {table}"
+    assert set(table) == check_traces.VALIDATION_CLASS

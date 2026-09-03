@@ -4,14 +4,14 @@
 Everything a session consumes is derived text: the imperative table, the session table,
 the stop conditions, the loadout table, the lens library, the agent index, the severity
 scale inside every agent prompt, a project's module-map diagram, the imperatives map
-with its section hashes, the README status line and a project's `.hyperion/version`
+with its section hashes, the human command lines, the README status line and a project's `.hyperion/version`
 (both from `VERSION`, F-22), and the Claude Code binding (.claude/, .hyperion/session-types.json,
 .devcontainer/; rendered by harness.py, CORE-HRN-001). Hand-copied derived text drifts
 (P3); this script renders it and --check fails CI when any rendering is stale.
 
 Sources: imperatives/*.yaml and profiles/*/fragment.yaml (CORE-IMP-001), the
 session-types block (CORE-SES-001), document frontmatter (TOOL-001), the lens-selection
-block (CORE-REV-003), and a project's modules/*/manifest.yaml (CORE-LFC-004).
+block (CORE-REV-003), tooling/commands.yaml, and a project's modules/*/manifest.yaml (CORE-LFC-004).
 
 Usage:
     python tooling/build_layer.py                 # render framework outputs and examples/*
@@ -40,6 +40,7 @@ README = "README.md"
 LENS_DOC = "core/reviews/lens-reviews.md"
 AGENT_INDEX = "agents/00-agent-index.md"
 MAP = "tooling/imperatives.json"
+COMMANDS = "tooling/commands.yaml"
 
 
 # ------------------------------------------------------------------ sources
@@ -60,6 +61,23 @@ class Sources:
              if d["fm"] and d["fm"].get("tier") == "agents" and "lens" in d["fm"]),
             key=lambda d: (d["fm"].get("profile") or "", d["fm"]["lens"]))
         self.errors = []
+        self.commands = self._commands()
+
+    def _commands(self):
+        """The command rows (P3). A row names a script that must exist, or a literal `run`."""
+        data = yaml.safe_load((self.root / COMMANDS).read_text(encoding="utf-8")) or {}
+        rows = data.get("commands") or []
+        for r in rows:
+            if r.get("context") not in ("framework", "project", "both"):
+                self.errors.append(f"{COMMANDS}: {r.get('script') or r.get('run')}: context must be "
+                                   "framework, project, or both")
+            if not r.get("does"):
+                self.errors.append(f"{COMMANDS}: {r.get('script') or r.get('run')}: no 'does'")
+            if r.get("script") and not (self.root / "tooling" / r["script"]).exists():
+                self.errors.append(f"{COMMANDS}: no such script tooling/{r['script']}")
+            if not r.get("script") and not r.get("run"):
+                self.errors.append(f"{COMMANDS}: a row needs 'script' or 'run'")
+        return rows
 
     def profile_fragments(self, names):
         for n in names:
@@ -263,6 +281,23 @@ def render_module_map(project_root):
     return "\n".join(out)
 
 
+def render_commands(commands, context, prefix, header=None):
+    """The human command lines for one context, as an indented code block (P3). `prefix`
+    is where the scripts sit from where the command is run: `tooling/` in this repository,
+    `hyperion/tooling/` in a project that vendored the framework. `header` is a comment
+    line inside the block, for a reader who copies a line out of its section."""
+    lines = []
+    for c in commands:
+        if c["context"] not in (context, "both"):
+            continue
+        run = c["run"] if c.get("run") else " ".join(
+            x for x in (f"python {prefix}{c['script']}", c.get("args")) if x)
+        lines.append((run, c["does"]))
+    width = max((len(run) for run, _ in lines), default=0)
+    out = [f"    {run.ljust(width)}  # {does}" for run, does in lines]
+    return "\n".join([f"    # {header}", ""] + out if header else out)
+
+
 def render_version_status(root):
     """The README status line (F-22): the one place outside VERSION that states the
     version, and it is rendered."""
@@ -298,6 +333,21 @@ def _filled(path, renders, src):
     return new
 
 
+def claude_renders(src, rows, profiles, fragments):
+    """The generated blocks of a CLAUDE.md written under this framework, in one place
+    (P3): the template's own core-only rendering and every project's are the same set.
+    A block named here and nowhere else renders into nothing; init_project.py takes the
+    names a project is expected to carry from the template, which this fills."""
+    return {
+        "session-table": render_session_table(src.types),
+        "imperatives": render_imperatives(rows),
+        "stop-conditions": render_stop_conditions(src.core, fragments),
+        "loadout": render_loadout(src, profiles, fragments),
+        "targeted-reads": render_targeted_reads(src, fragments),
+        "commands-project": render_commands(src.commands, "project", "hyperion/tooling/"),
+    }
+
+
 def framework_outputs(src):
     """{path: rendered text} for every generated output in the framework repository."""
     core_rows = src.imperative_rows(src.core, TEMPLATE)
@@ -307,15 +357,15 @@ def framework_outputs(src):
         profile_rows += src.imperative_rows(frag, frag["_path"])
     out = {}
     root = src.root
-    out[TEMPLATE] = _filled(root / TEMPLATE, {
-        "session-table": render_session_table(src.types),
-        "imperatives": render_imperatives(core_rows),
-        "stop-conditions": render_stop_conditions(src.core, []),
-        "loadout": render_loadout(src, [], []),
-        "targeted-reads": render_targeted_reads(src, []),
-    }, src)
+    out[TEMPLATE] = _filled(root / TEMPLATE, claude_renders(src, core_rows, [], []), src)
     out[FRAMEWORK_CLAUDE] = _filled(root / FRAMEWORK_CLAUDE, {"imperatives": render_imperatives(fw_rows)}, src)
-    out[README] = _filled(root / README, {"version": render_version_status(root)}, src)
+    out[README] = _filled(root / README, {
+        "version": render_version_status(root),
+        "commands": render_commands(src.commands, "framework", "tooling/"),
+        "commands-project": render_commands(
+            src.commands, "project", "hyperion/tooling/",
+            header="not from this repository: cd examples/minimal, then ../../tooling/ for hyperion/tooling/"),
+    }, src)
     out[LENS_DOC] = _filled(root / LENS_DOC, {"lens-library": render_lens_library(src)}, src)
     out[AGENT_INDEX] = _filled(root / AGENT_INDEX, {"agent-index": render_agent_index(src)}, src)
     for name, frag in src.profiles.items():
@@ -358,13 +408,7 @@ def project_outputs(src, project, profiles):
     out = {}
     claude = project / "CLAUDE.md"
     if claude.exists():
-        out[claude] = _filled(claude, {
-            "session-table": render_session_table(src.types),
-            "imperatives": render_imperatives(rows),
-            "stop-conditions": render_stop_conditions(src.core, fragments),
-            "loadout": render_loadout(src, profiles, fragments),
-            "targeted-reads": render_targeted_reads(src, fragments),
-        }, src)
+        out[claude] = _filled(claude, claude_renders(src, rows, profiles, fragments), src)
     module_map = project / "docs" / "module-map.md"
     if module_map.exists():
         out[module_map] = _filled(module_map, {"module-map": render_module_map(project)}, src)

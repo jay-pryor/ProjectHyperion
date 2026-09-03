@@ -82,9 +82,14 @@ Project state lives in `trace/`; never restate it here.
 - [ ] `trace/` updated; `check_traces.py` green; acceptance record completed
 
 ## Commands
-    pytest -q                                    # full suite, writes trace/results.xml
-    python hyperion/tooling/check_null_doubles.py .              # every suite must FAIL its null double
-    python hyperion/tooling/mutation_score.py --slice SL-nn .    # at acceptance; --write to record
-    python hyperion/tooling/check_traces.py
-    python hyperion/tooling/check_traces.py --report     # plain-text matrix on stdout
-    python hyperion/tooling/build_console.py .           # console/index.html, the reviewer's artifact
+    pytest -q  # full suite, writes trace/results.xml
+<!-- generated:commands-project -->
+    python hyperion/tooling/check_traces.py                    # every trace/ record; --report prints the matrix
+    python hyperion/tooling/build_console.py .                 # render console/index.html, the reviewer's artifact
+    python hyperion/tooling/check_null_doubles.py .            # every suite must FAIL against its null double
+    python hyperion/tooling/mutation_score.py --slice SL-nn .  # at acceptance; --write records the survivors
+    python hyperion/tooling/check_imperatives.py               # imperatives drifted from their source sections
+    python hyperion/tooling/loadout.py --session <TYPE>        # the documents that session type loads
+    python hyperion/tooling/init_project.py --upgrade .        # re-render generated blocks after a version bump
+    python hyperion/tooling/check_commit.py <base>..HEAD       # paths must match the Session trailer
+<!-- /generated -->
