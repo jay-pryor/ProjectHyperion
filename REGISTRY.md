@@ -14,7 +14,7 @@ related: [HYP-000]
 
 <!-- GENERATED FILE — do not edit. Run: python tooling/build_registry.py -->
 
-Hyperion 0.7.0 (from `VERSION`; history in `CHANGELOG.md`)
+Hyperion 0.8.0 (from `VERSION`; history in `CHANGELOG.md`)
 
 Generated 2026-09-03 · 57 documents
 

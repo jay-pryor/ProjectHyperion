@@ -15,6 +15,36 @@ related: [HYP-000]
 One heading per release, newest first. The heading equals the content of `VERSION`, and CI
 refuses a `v*` tag whose version has no heading here. Per-document history is `git log`.
 
+## 0.8.0 — 2026-09-03
+
+Four assertions the framework made but nothing verified become checks, and a session's
+declared scope is bound to the session rather than to the working tree.
+
+- `check_boundaries.py` validates the real import graph against `modules/*/manifest.yaml`
+  in four fatal rules — surface, declared, drawn, acyclic (CORE-CON-003). *Drawn* is new:
+  a manifest entry nothing imports is an edge on the G2 diagram that is not in the code,
+  and `build_layer.py` draws that diagram from the manifest. IMP-01 gains its one real
+  exception — a module's conformance suite is importable from test code.
+- `check_units.py` runs the project's type check and then proves that run rejects a
+  deliberate unit confusion built from the unit definitions themselves (CORE-CON-001).
+  A checker that matched no files passes the first half and fails the second.
+- `mutation_score` is a score per module, required at acceptance and ratcheted against the
+  highest that module has reached in an accepted slice (CORE-TST-002, CORE-TRC-002). A run
+  finding no mutants is an error, not a zero; an unread toolchain major version is refused.
+  Survivor severity comes from the hazard register — S2 where a `mitigation_contract` rides
+  on the module, S3 elsewhere, which is also when `survivors_triaged` is required.
+- The scope hook binds a declaration to the runtime session id under `.hyperion/sessions/`,
+  written by the hook and never by the session — a session that could restate its type
+  could widen it. Keying it to the working tree failed in the permissive direction two ways
+  (CORE-HRN-001). The hook no longer parses paths out of shell commands, which no parse
+  makes sound, and denies `Bash` whenever it can write; `check_commit.py` over each commit's
+  real paths is the layer that sees the rest, and runs on pushes, not only pull requests.
+- HBK-006 *Starting a Project*: the stages of a beginning in plain language, for the person
+  who has decided to use Hyperion and has not been told what the first days ask of them.
+
+Upgrading: `mutation_score` on an accepted slice must become a per-module map, so a
+`trace/slices.yaml` written under 0.7.0 needs editing before `check_traces.py` passes.
+
 ## 0.7.0 — 2026-09-03
 
 Single sources for the last two restated facts, and the release itself becomes a session.

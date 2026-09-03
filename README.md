@@ -120,7 +120,7 @@ the profile documents assume the core vocabulary.
 ## Status
 
 <!-- generated:version -->
-Version 0.7.0, from `VERSION`; the history is in `CHANGELOG.md`, and a release tag must equal `v$(cat VERSION)`.
+Version 0.8.0, from `VERSION`; the history is in `CHANGELOG.md`, and a release tag must equal `v$(cat VERSION)`.
 <!-- /generated -->
 
 Core is drafted, including the [session protocol](core/session-protocol.md) and the
