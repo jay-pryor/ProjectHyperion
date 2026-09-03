@@ -215,10 +215,54 @@ def test_accepted_slice_may_claim_only_verified(broken):
 
 
 def test_acceptance_record_fields_are_typed(broken):
-    edit(broken, "trace/slices.yaml", "  status: accepted\n", "  status: accepted\n  mutation_score: 87\n  survivors_triaged: yes\n")
+    edit(broken, "trace/slices.yaml", "  mutation_score: {trajectory: 0.762}\n  survivors_triaged: true\n",
+         "  mutation_score: {trajectory: 87}\n  survivors_triaged: yes\n")
     errs = errors(broken)
-    assert any("mutation_score must be a number from 0 to 1" in e for e in errs)
+    assert any("mutation_score[trajectory] must be a number from 0 to 1" in e for e in errs)
     assert not any("survivors_triaged" in e for e in errs)     # yaml `yes` is a bool
+
+
+def test_the_score_is_a_mapping_of_module_to_score(broken):
+    """A slice names several modules and rung 2 measures one at a time, so a single
+    number cannot say which module earned it (CORE-TRC-002)."""
+    edit(broken, "trace/slices.yaml", "  mutation_score: {trajectory: 0.762}\n", "  mutation_score: 0.762\n")
+    assert_error(broken, "SL-01: mutation_score must be a mapping of module to score")
+    edit(broken, "trace/slices.yaml", "  mutation_score: 0.762\n", "  mutation_score: {atmosphere: 0.9}\n")
+    assert_error(broken, "SL-01: mutation_score names 'atmosphere', which contracts: does not")
+
+
+def test_accepted_slice_without_a_mutation_score_is_an_error(broken):
+    """CORE-TST-002 rung 2 is an acceptance record, not advice. Without this the absence
+    of the field is indistinguishable from a suite that killed every mutant."""
+    edit(broken, "trace/slices.yaml", "  mutation_score: {trajectory: 0.762}\n", "")
+    assert_error(broken, "SL-01: accepted with no mutation_score")
+    edit(broken, "trace/slices.yaml", "  status: accepted\n", "  status: in_progress\n")
+    assert not any("mutation_score" in e for e in errors(broken))    # only acceptance demands it
+
+
+def test_accepted_slice_needs_an_entry_for_every_module_it_names(broken):
+    edit(broken, "trace/slices.yaml", "  contracts: [trajectory]\n  status: accepted\n",
+         "  contracts: [trajectory, atmosphere]\n  status: accepted\n")
+    assert_error(broken, "SL-01: accepted with no mutation_score for atmosphere, which its contracts: names")
+
+
+def test_a_score_below_what_an_earlier_accepted_slice_earned_is_an_error(broken):
+    """The ratchet. No constant is compared against: the bar is what this module already
+    reached on an accepted slice, so a suite that weakens is visible (CORE-TST-002 rung 2)."""
+    edit(broken, "trace/slices.yaml", "  contracts: [atmosphere, trajectory]\n  status: in_progress\n",
+         "  contracts: [atmosphere, trajectory]\n  status: accepted\n"
+         "  mutation_score: {atmosphere: 0.5, trajectory: 0.9}\n  survivors_triaged: true\n")
+    assert_error(broken, "SL-01: mutation_score[trajectory] is 0.762, below the 0.9 an accepted "
+                         "slice already earned for it")
+
+
+def test_a_first_measurement_has_no_floor_to_clear(broken):
+    # atmosphere has never been measured, so any score it records is its own bar.
+    edit(broken, "trace/slices.yaml", "  contracts: [trajectory]\n  status: accepted\n",
+         "  contracts: [trajectory, atmosphere]\n  status: accepted\n")
+    edit(broken, "trace/slices.yaml", "  mutation_score: {trajectory: 0.762}\n",
+         "  mutation_score: {trajectory: 0.762, atmosphere: 0.1}\n")
+    assert errors(broken) == []
 
 
 # ------------------------------------------------------------------ targeted reads (CORE-REV-004)
@@ -317,8 +361,8 @@ def test_unarmed_fault_point(broken):
 
 # ------------------------------------------------------------------ mutation survivors (CORE-TST-002)
 
-MUTATION_ROW = ("- id: FND-004\n  date: 2026-09-02\n  slice: SL-02\n  source: mutation\n  form: test\n"
-                "  severity: S1\n  status: admitted\n  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_3\n"
+MUTATION_ROW = ("- id: FND-099\n  date: 2026-09-02\n  slice: SL-02\n  source: mutation\n  form: test\n"
+                "  severity: S2\n  status: admitted\n  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_3\n"
                 "  summary: Survived mutant\n")
 
 
@@ -328,28 +372,45 @@ def test_open_mutation_finding_names_its_mutant(broken):
     assert errors(broken) == []                                   # SL-02 is in_progress: allowed
     edit(broken, "trace/findings.yaml", "ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_3",
          "ref: modules/trajectory/src/integrater.py::x_simulate__mutmut_3")
-    assert_error(broken, "FND-004", "does not exist")
+    assert_error(broken, "FND-099", "does not exist")
     edit(broken, "trace/findings.yaml", "ref: modules/trajectory/src/integrater.py::x_simulate__mutmut_3",
          "ref: x_simulate__mutmut_3")
-    assert_error(broken, "FND-004", "must be modules/<m>/src/<file>::<mutant id> while open")
+    assert_error(broken, "FND-099", "must be modules/<m>/src/<file>::<mutant id> while open")
 
 
 def test_accepted_slice_may_not_carry_open_survivors(broken):
     path = broken / "trace" / "findings.yaml"
     path.write_text(path.read_text(encoding="utf-8") + MUTATION_ROW.replace("slice: SL-02", "slice: SL-01"), encoding="utf-8")
-    assert_error(broken, "SL-01: accepted with untriaged mutation survivors")
-    edit(broken, "trace/slices.yaml", "  contracts: [trajectory]\n  status: accepted\n",
-         "  contracts: [trajectory]\n  status: accepted\n  mutation_score: 0.6\n  survivors_triaged: true\n")
-    assert_error(broken, "SL-01: survivors_triaged is true but FND-004 still open")
-    edit(broken, "trace/findings.yaml", "  status: admitted\n  ref: modules/trajectory/src",
-         "  status: rejected\n  reason: equivalent\n  ref: modules/trajectory/src")
+    assert_error(broken, "SL-01: survivors_triaged is true but FND-099 still open")
+    assert_error(broken, "SL-01: accepted with untriaged S2 mutation survivors on trajectory")
+    edit(broken, "trace/findings.yaml", "  status: admitted\n  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_3",
+         "  status: rejected\n  reason: equivalent\n  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_3")
+    assert errors(broken) == []
+
+
+def test_an_open_s3_survivor_is_backlog_and_does_not_block(broken):
+    """The S3 half of the rule: a survivor on a module no hazard names is recorded and
+    left open without stopping acceptance, which is what makes the rung affordable (P5)."""
+    path = broken / "trace" / "findings.yaml"
+    path.write_text(path.read_text(encoding="utf-8")
+                    + MUTATION_ROW.replace("slice: SL-02", "slice: SL-01").replace("severity: S2", "severity: S3"),
+                    encoding="utf-8")
     assert errors(broken) == []
 
 
 def test_accepted_slice_with_survivors_triaged_false_is_an_error(broken):
-    edit(broken, "trace/slices.yaml", "  contracts: [trajectory]\n  status: accepted\n",
-         "  contracts: [trajectory]\n  status: accepted\n  mutation_score: 0.6\n  survivors_triaged: false\n")
-    assert_error(broken, "SL-01: accepted with untriaged mutation survivors")
+    edit(broken, "trace/slices.yaml", "  survivors_triaged: true\n", "  survivors_triaged: false\n")
+    assert_error(broken, "SL-01: accepted with untriaged S2 mutation survivors on trajectory")
+
+
+def test_survivors_triaged_is_asked_for_only_where_a_hazard_names_the_module(broken):
+    """SL-01 names trajectory, which HZ-002's mitigation_contract points at. Point it
+    somewhere else and the same slice needs no triage flag: nothing there is S2."""
+    edit(broken, "trace/slices.yaml", "  survivors_triaged: true\n", "")
+    assert_error(broken, "SL-01: accepted with untriaged S2 mutation survivors on trajectory")
+    edit(broken, "trace/hazards.yaml", "mitigation_contract: modules/trajectory/CONTRACT.md::C-103",
+         "mitigation_contract: modules/atmosphere/CONTRACT.md::C-003")
+    assert not any("untriaged" in e for e in errors(broken))
 
 
 # ------------------------------------------------------------------ report (F-14)

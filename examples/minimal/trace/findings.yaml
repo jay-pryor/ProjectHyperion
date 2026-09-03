@@ -25,3 +25,559 @@
   status: fixed
   ref: modules/trajectory/CONTRACT.md::C-106
   summary: Contract did not bound dt, so an arbitrarily coarse step was a silently wrong answer
+- id: FND-004
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_operations.py::test_provenance_identifies_this_run_C103
+  summary: "Survived mutant at integrator.py:17 in _config_hash: \"canonical = repr(sorted(vars(config).items()))\" became \"canonical = repr(None)\""
+- id: FND-005
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:22 in _ground_crossing: \"frac = y0 / (y0 - y1)\" became \"frac = y0 / (y0 + y1)\""
+- id: FND-006
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:23 in _ground_crossing: \"return x0 + (x1 - x0) * frac, t1 - dt + dt * frac\" became \"return x0 - (x1 - x0) * frac, t1 - dt + dt * frac\""
+- id: FND-007
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:23 in _ground_crossing: \"return x0 + (x1 - x0) * frac, t1 - dt + dt * frac\" became \"return x0 + (x1 - x0) * frac, t1 - dt - dt * frac\""
+- id: FND-008
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_errors.py::test_dt_bounds_are_exactly_C106
+  summary: "Survived mutant at integrator.py:27 in simulate: \"if not (0.0 < config.dt <= 0.1):\" became \"if not (0.0 <= config.dt <= 0.1):\""
+- id: FND-009
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_errors.py::test_dt_bounds_are_exactly_C106
+  summary: "Survived mutant at integrator.py:27 in simulate: \"if not (0.0 < config.dt <= 0.1):\" became \"if not (0.0 < config.dt < 0.1):\""
+- id: FND-010
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:35 in simulate: \"times, xs, ys = [0.0], [0.0], [0.0]\" became \"times, xs, ys = [1.0], [0.0], [0.0]\""
+- id: FND-011
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:35 in simulate: \"times, xs, ys = [0.0], [0.0], [0.0]\" became \"times, xs, ys = [0.0], [1.0], [0.0]\""
+- id: FND-012
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:35 in simulate: \"times, xs, ys = [0.0], [0.0], [0.0]\" became \"times, xs, ys = [0.0], [0.0], [1.0]\""
+- id: FND-013
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:44 in simulate: \"nx, ny, t = x + vx * dt, y + vy * dt, t + dt\" became \"nx, ny, t = x + vx * dt, y + vy * dt, t - dt\""
+- id: FND-014
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:47 in simulate: \"times.append(t_ground); xs.append(x_ground); ys.append(0.0)\" became \"times.append(None); xs.append(x_ground); ys.append(0.0)\""
+- id: FND-015
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:47 in simulate: \"times.append(t_ground); xs.append(x_ground); ys.append(0.0)\" became \"times.append(t_ground); xs.append(x_ground); ys.append(None)\""
+- id: FND-016
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:47 in simulate: \"times.append(t_ground); xs.append(x_ground); ys.append(0.0)\" became \"times.append(t_ground); xs.append(x_ground); ys.append(1.0)\""
+- id: FND-017
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:50 in simulate: \"times.append(t); xs.append(x); ys.append(y)\" became \"times.append(None); xs.append(x); ys.append(y)\""
+- id: FND-018
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:50 in simulate: \"times.append(t); xs.append(x); ys.append(y)\" became \"times.append(t); xs.append(None); ys.append(y)\""
+- id: FND-019
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:50 in simulate: \"times.append(t); xs.append(x); ys.append(y)\" became \"times.append(t); xs.append(x); ys.append(None)\""
+- id: FND-020
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_operations.py::test_provenance_identifies_this_run_C103
+  summary: "Survived mutant at integrator.py:55 in simulate: \"os.environ.get(\"HYPERION_COMMIT\", \"unknown\"))\" became \"os.environ.get(\"XXHYPERION_COMMITXX\", \"unknown\"))\""
+- id: FND-021
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_operations.py::test_provenance_identifies_this_run_C103
+  summary: "Survived mutant at integrator.py:55 in simulate: \"os.environ.get(\"HYPERION_COMMIT\", \"unknown\"))\" became \"os.environ.get(\"hyperion_commit\", \"unknown\"))\""
+- id: FND-022
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:56 in simulate: \"return Trajectory(tuple(times), tuple(xs), tuple(ys), Metres(xs[-1]), provenance)\" became \"return Trajectory(None, tuple(xs), tuple(ys), Metres(xs[-1]), provenance)\""
+- id: FND-023
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:56 in simulate: \"return Trajectory(tuple(times), tuple(xs), tuple(ys), Metres(xs[-1]), provenance)\" became \"return Trajectory(tuple(times), None, tuple(ys), Metres(xs[-1]), provenance)\""
+- id: FND-024
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:56 in simulate: \"return Trajectory(tuple(times), tuple(xs), tuple(ys), Metres(xs[-1]), provenance)\" became \"return Trajectory(tuple(times), tuple(xs), None, Metres(xs[-1]), provenance)\""
+- id: FND-025
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/conformance/test_invariants.py::test_samples_run_from_launch_to_impact_C108
+  summary: "Survived mutant at integrator.py:56 in simulate: \"return Trajectory(tuple(times), tuple(xs), tuple(ys), Metres(xs[-1]), provenance)\" became \"return Trajectory(tuple(times), tuple(xs), tuple(ys), Metres(xs[-2]), provenance)\""
+- id: FND-026
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "C-103 promises a hash of the config, not a digest of any particular length; two different configs still hash differently"
+  ref: modules/trajectory/src/integrator.py::x__config_hash__mutmut_6
+  summary: "Survived mutant at integrator.py:18 in _config_hash: \"return hashlib.sha256(canonical.encode()).hexdigest()[:16]\" became \"return hashlib.sha256(canonical.encode()).hexdigest()[:17]\""
+- id: FND-027
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "moves the impact point by about 0.02 %, well inside C-101's 0.5 %. The tolerance is what cannot see this, not the suite; raised as FND-061"
+  ref: modules/trajectory/src/integrator.py::x__ground_crossing__mutmut_2
+  summary: "Survived mutant at integrator.py:22 in _ground_crossing: \"frac = y0 / (y0 - y1)\" became \"frac = y0 * (y0 - y1)\""
+- id: FND-028
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "moves the impact point by about 0.02 %, well inside C-101's 0.5 %. The tolerance is what cannot see this, not the suite; raised as FND-061"
+  ref: modules/trajectory/src/integrator.py::x__ground_crossing__mutmut_5
+  summary: "Survived mutant at integrator.py:23 in _ground_crossing: \"return x0 + (x1 - x0) * frac, t1 - dt + dt * frac\" became \"return x0 + (x1 - x0) / frac, t1 - dt + dt * frac\""
+- id: FND-029
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "moves the impact point by about 0.02 %, well inside C-101's 0.5 %. The tolerance is what cannot see this, not the suite; raised as FND-061"
+  ref: modules/trajectory/src/integrator.py::x__ground_crossing__mutmut_8
+  summary: "Survived mutant at integrator.py:23 in _ground_crossing: \"return x0 + (x1 - x0) * frac, t1 - dt + dt * frac\" became \"return x0 + (x1 - x0) * frac, t1 + dt + dt * frac\""
+- id: FND-030
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "moves the impact point by about 0.02 %, well inside C-101's 0.5 %. The tolerance is what cannot see this, not the suite; raised as FND-061"
+  ref: modules/trajectory/src/integrator.py::x__ground_crossing__mutmut_9
+  summary: "Survived mutant at integrator.py:23 in _ground_crossing: \"return x0 + (x1 - x0) * frac, t1 - dt + dt * frac\" became \"return x0 + (x1 - x0) * frac, t1 - dt + dt / frac\""
+- id: FND-031
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "the contract names the exception type, never its message text (CONTRACT.md section 4); RuntimeError is not a contract error condition at all"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_6
+  summary: "Survived mutant at integrator.py:28 in simulate: \"raise ConfigError(f\"dt {config.dt} s outside (0, 0.1]\")   # C-106\" became \"raise ConfigError(None)   # C-106\""
+- id: FND-032
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_10
+  summary: "Survived mutant at integrator.py:31 in simulate: \"k = 0.5 * config.drag_coefficient * config.drag_area_m2 / config.mass_kg\" became \"k = 0.5 * config.drag_coefficient * config.drag_area_m2 * config.mass_kg\""
+- id: FND-033
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_11
+  summary: "Survived mutant at integrator.py:31 in simulate: \"k = 0.5 * config.drag_coefficient * config.drag_area_m2 / config.mass_kg\" became \"k = 0.5 * config.drag_coefficient / config.drag_area_m2 / config.mass_kg\""
+- id: FND-034
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_13
+  summary: "Survived mutant at integrator.py:31 in simulate: \"k = 0.5 * config.drag_coefficient * config.drag_area_m2 / config.mass_kg\" became \"k = 1.5 * config.drag_coefficient * config.drag_area_m2 / config.mass_kg\""
+- id: FND-035
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "the loop bound is internal. C-107 promises that a mid-integration failure leaves no residual state, not the step at which one happens"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_28
+  summary: "Survived mutant at integrator.py:37 in simulate: \"for step in range(1, MAX_STEPS + 1):\" became \"for step in range(MAX_STEPS + 1):\""
+- id: FND-036
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "the loop bound is internal. C-107 promises that a mid-integration failure leaves no residual state, not the step at which one happens"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_30
+  summary: "Survived mutant at integrator.py:37 in simulate: \"for step in range(1, MAX_STEPS + 1):\" became \"for step in range(2, MAX_STEPS + 1):\""
+- id: FND-037
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "the loop bound is internal. C-107 promises that a mid-integration failure leaves no residual state, not the step at which one happens"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_31
+  summary: "Survived mutant at integrator.py:37 in simulate: \"for step in range(1, MAX_STEPS + 1):\" became \"for step in range(1, MAX_STEPS - 1):\""
+- id: FND-038
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "the loop bound is internal. C-107 promises that a mid-integration failure leaves no residual state, not the step at which one happens"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_32
+  summary: "Survived mutant at integrator.py:37 in simulate: \"for step in range(1, MAX_STEPS + 1):\" became \"for step in range(1, MAX_STEPS + 2):\""
+- id: FND-039
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "which step arms the fault point is a test hook, not a promise; C-107 holds wherever the failure lands"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_33
+  summary: "Survived mutant at integrator.py:38 in simulate: \"if step == 10:\" became \"if step != 10:\""
+- id: FND-040
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "which step arms the fault point is a test hook, not a promise; C-107 holds wherever the failure lands"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_34
+  summary: "Survived mutant at integrator.py:38 in simulate: \"if step == 10:\" became \"if step == 11:\""
+- id: FND-041
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_44
+  summary: "Survived mutant at integrator.py:41 in simulate: \"v = math.hypot(vx, vy)\" became \"v = math.hypot(vy)\""
+- id: FND-042
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_45
+  summary: "Survived mutant at integrator.py:41 in simulate: \"v = math.hypot(vx, vy)\" became \"v = math.hypot(vx, )\""
+- id: FND-043
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_47
+  summary: "Survived mutant at integrator.py:42 in simulate: \"vx += -k * rho * v * vx * dt\" became \"vx -= -k * rho * v * vx * dt\""
+- id: FND-044
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_48
+  summary: "Survived mutant at integrator.py:42 in simulate: \"vx += -k * rho * v * vx * dt\" became \"vx += -k * rho * v * vx / dt\""
+- id: FND-045
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_49
+  summary: "Survived mutant at integrator.py:42 in simulate: \"vx += -k * rho * v * vx * dt\" became \"vx += -k * rho * v / vx * dt\""
+- id: FND-046
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_50
+  summary: "Survived mutant at integrator.py:42 in simulate: \"vx += -k * rho * v * vx * dt\" became \"vx += -k * rho / v * vx * dt\""
+- id: FND-047
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_51
+  summary: "Survived mutant at integrator.py:42 in simulate: \"vx += -k * rho * v * vx * dt\" became \"vx += -k / rho * v * vx * dt\""
+- id: FND-048
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_52
+  summary: "Survived mutant at integrator.py:42 in simulate: \"vx += -k * rho * v * vx * dt\" became \"vx += +k * rho * v * vx * dt\""
+- id: FND-049
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_56
+  summary: "Survived mutant at integrator.py:43 in simulate: \"vy += (-G_M_S2 - k * rho * v * vy) * dt\" became \"vy += (-G_M_S2 + k * rho * v * vy) * dt\""
+- id: FND-050
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_58
+  summary: "Survived mutant at integrator.py:43 in simulate: \"vy += (-G_M_S2 - k * rho * v * vy) * dt\" became \"vy += (-G_M_S2 - k * rho * v / vy) * dt\""
+- id: FND-051
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_59
+  summary: "Survived mutant at integrator.py:43 in simulate: \"vy += (-G_M_S2 - k * rho * v * vy) * dt\" became \"vy += (-G_M_S2 - k * rho / v * vy) * dt\""
+- id: FND-052
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "no clause promises anything about the drag term, and drag_coefficient is 0 in every case C-101 covers, so no promise SL-01 claims can tell this mutant from the original. Raised again when SL-02 measures trajectory against the drag clause it adds"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_60
+  summary: "Survived mutant at integrator.py:43 in simulate: \"vy += (-G_M_S2 - k * rho * v * vy) * dt\" became \"vy += (-G_M_S2 - k / rho * v * vy) * dt\""
+- id: FND-053
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "differs only when a sample lands exactly on y = 0, where both branches record the same impact point at the same time"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_67
+  summary: "Survived mutant at integrator.py:45 in simulate: \"if ny < 0.0:\" became \"if ny <= 0.0:\""
+- id: FND-054
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "the contract names the exception type, never its message text (CONTRACT.md section 4); RuntimeError is not a contract error condition at all"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_91
+  summary: "Survived mutant at integrator.py:52 in simulate: \"raise RuntimeError(\"projectile did not land within MAX_STEPS\")\" became \"raise RuntimeError(None)\""
+- id: FND-055
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "the contract names the exception type, never its message text (CONTRACT.md section 4); RuntimeError is not a contract error condition at all"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_92
+  summary: "Survived mutant at integrator.py:52 in simulate: \"raise RuntimeError(\"projectile did not land within MAX_STEPS\")\" became \"raise RuntimeError(\"XXprojectile did not land within MAX_STEPSXX\")\""
+- id: FND-056
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "the contract names the exception type, never its message text (CONTRACT.md section 4); RuntimeError is not a contract error condition at all"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_93
+  summary: "Survived mutant at integrator.py:52 in simulate: \"raise RuntimeError(\"projectile did not land within MAX_STEPS\")\" became \"raise RuntimeError(\"projectile did not land within max_steps\")\""
+- id: FND-057
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "the contract names the exception type, never its message text (CONTRACT.md section 4); RuntimeError is not a contract error condition at all"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_94
+  summary: "Survived mutant at integrator.py:52 in simulate: \"raise RuntimeError(\"projectile did not land within MAX_STEPS\")\" became \"raise RuntimeError(\"PROJECTILE DID NOT LAND WITHIN MAX_STEPS\")\""
+- id: FND-058
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "the placeholder used when no commit is in the environment. C-103 promises the commit is carried, not how an absent one is spelled"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_111
+  summary: "Survived mutant at integrator.py:55 in simulate: \"os.environ.get(\"HYPERION_COMMIT\", \"unknown\"))\" became \"os.environ.get(\"HYPERION_COMMIT\", \"XXunknownXX\"))\""
+- id: FND-059
+  date: 2026-08-22
+  slice: SL-01
+  source: mutation
+  form: test
+  severity: S2
+  status: rejected
+  reason: "the placeholder used when no commit is in the environment. C-103 promises the commit is carried, not how an absent one is spelled"
+  ref: modules/trajectory/src/integrator.py::x_simulate__mutmut_112
+  summary: "Survived mutant at integrator.py:55 in simulate: \"os.environ.get(\"HYPERION_COMMIT\", \"unknown\"))\" became \"os.environ.get(\"HYPERION_COMMIT\", \"UNKNOWN\"))\""
+- id: FND-060
+  date: 2026-08-22
+  slice: SL-01
+  source: specification
+  form: clause
+  severity: S2
+  status: fixed
+  ref: modules/trajectory/CONTRACT.md::C-108
+  summary: "Contract said nothing about the sample arrays, so no conformance test could; seventeen mutants that emptied, reordered or truncated them survived"
+- id: FND-061
+  date: 2026-08-22
+  slice: SL-01
+  source: specification
+  form: clause
+  severity: S3
+  status: admitted
+  ref: modules/trajectory/CONTRACT.md::C-101
+  summary: "C-101's 0.5 % tolerance cannot see a ground-crossing interpolation error four mutants exercise; the convergence study of DEC-001 is what should set it"

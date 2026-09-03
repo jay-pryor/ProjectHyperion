@@ -10,7 +10,7 @@
     "ghcr.io/devcontainers/features/node:1": { "version": "20" },
     "ghcr.io/devcontainers/features/python:1": { "version": "3.11" }
   },
-  "postCreateCommand": "npm install -g @anthropic-ai/claude-code && pip install pytest mutmut pyyaml",
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code && pip install pytest \"mutmut>=3,<4\" pyyaml",
   "customizations": {
     "vscode": { "extensions": ["anthropic.claude-code"] }
   }

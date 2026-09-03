@@ -1,6 +1,7 @@
 """Contract: atmosphere. The module's sole import surface (CORE-CON-003).
 Clause IDs (C-nnn) are defined in CONTRACT.md and cited by conformance tests."""
 import os
+from types import ModuleType
 
 from baseline.units import KgPerM3, Metres
 
@@ -17,11 +18,11 @@ def density(altitude: Metres) -> KgPerM3:
     return _impl().density(altitude)
 
 
-def _impl():
+def _impl() -> ModuleType:
     # Selecting the implementation by environment lets the conformance suite run
     # unchanged against the real implementation and against the null double.
     if os.environ.get("ATMOSPHERE_IMPL") == "null":
-        from modules.atmosphere import null_double as m
-    else:
-        from modules.atmosphere.src import exponential as m
-    return m
+        from modules.atmosphere import null_double
+        return null_double
+    from modules.atmosphere.src import exponential
+    return exponential

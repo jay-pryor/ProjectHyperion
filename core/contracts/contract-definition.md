@@ -51,6 +51,12 @@ This is not pedantry. Unit and frame confusion at interfaces is among the highes
 defect classes to design out, and it is invisible to a model reviewing one module in
 isolation because each side is internally consistent.
 
+A unit type is erased at runtime, so it is a promise only while a checker runs.
+`check_units.py` runs the project's type check and then puts a deliberate unit confusion
+to it, built from the unit definitions themselves: a check that accepts the probe is not
+enforcing units, whatever a clean run said. Without both halves the type carries exactly
+the durability of the comment it replaced.
+
 ## Tolerances
 
 A tolerance is a correctness claim, not a constant. Every tolerance a contract states,

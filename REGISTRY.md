@@ -16,7 +16,7 @@ related: [HYP-000]
 
 Hyperion 0.7.0 (from `VERSION`; history in `CHANGELOG.md`)
 
-Generated 2026-09-03 · 56 documents
+Generated 2026-09-03 · 57 documents
 
 ## Standing context loadout
 
@@ -51,6 +51,7 @@ context budget in every session.
 | `HBK-001` | The Artifact Map | active | never |  | A reader unable to tell whether an artifact is a record, prose, or ceremony because the whole picture exists only in pieces | [handbook/artifact-map.md](handbook/artifact-map.md) |
 | `HBK-005` | Glossary | active | never |  | Attention spent on words instead of the work by a systems engineer who already has a term for the thing | [handbook/glossary.md](handbook/glossary.md) |
 | `HBK-004` | One Slice, Session by Session | active | never |  | A reader who has only the session table being unable to tell a stop from a failure | [handbook/one-slice-session-by-session.md](handbook/one-slice-session-by-session.md) |
+| `HBK-006` | Starting a Project | active | never |  | A project starting at the code, because nothing describes what the first days ask of the person before any code exists | [handbook/starting-a-project.md](handbook/starting-a-project.md) |
 | `HBK-003` | What Do I Do Now | active | never |  | A person who has just watched a test fail not knowing which session type comes next | [handbook/what-do-i-do-now.md](handbook/what-do-i-do-now.md) |
 | `HBK-002` | Who Does What | active | never |  | The human-model line moving toward whoever is faster under time pressure | [handbook/who-does-what.md](handbook/who-does-what.md) |
 

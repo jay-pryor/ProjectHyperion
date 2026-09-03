@@ -6,7 +6,7 @@ argument-hint: "[SL-nn] [scope]"
 ---
 # QUERY session
 
-Declared: !`mkdir -p .hyperion && printf 'QUERY\n' > .hyperion/session && echo "QUERY written to .hyperion/session; the scope hook enforces its globs"`
+Declared: !`echo "QUERY declared; the scope hook binds this session to its globs"`
 
 Arguments: `$ARGUMENTS`. The first token is the slice (`SL-nn`), the rest is the scope.
 

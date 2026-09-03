@@ -49,5 +49,6 @@ it is because the work is judgement the framework refuses to delegate.
   which is also what the scope hook and the commit checker read.
 - Checks: `check_traces.py` ([CORE-TRC-001](../core/traceability/traceability.md)),
   `check_commit.py`, `check_null_doubles.py` and `mutation_score.py`
-  ([CORE-TST-002](../core/testing/tests-are-tested.md)), and the boundary lint
-  ([CORE-CON-003](../core/contracts/boundary-enforcement.md)).
+  ([CORE-TST-002](../core/testing/tests-are-tested.md)), `check_boundaries.py`
+  ([CORE-CON-003](../core/contracts/boundary-enforcement.md)) and `check_units.py`
+  ([CORE-CON-001](../core/contracts/contract-definition.md)).

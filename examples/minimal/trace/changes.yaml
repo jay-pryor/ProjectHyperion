@@ -11,3 +11,9 @@
   driver: FND-003, dt unbounded; trajectory contract 1.1 to 1.2 adds C-106
   ref: FND-003
   contracts: [trajectory]
+- id: CHG-003
+  date: 2026-08-22
+  tier: interface
+  driver: FND-060, the sample arrays were promised nothing; trajectory contract 1.2 to 1.3 adds C-108
+  ref: FND-060
+  contracts: [trajectory]

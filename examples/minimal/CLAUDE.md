@@ -28,7 +28,7 @@ Project state lives in `trace/`; never restate it here.
 <!-- generated:imperatives -->
 | # | Imperative | Source |
 |---|---|---|
-| IMP-01 | Import only from `modules/<name>/contract.*`. Never reach into another module's internals. | CORE-CON-003#the-rule |
+| IMP-01 | Import only from `modules/<name>/contract.*`; its conformance suite is importable from test code alone. | CORE-CON-003#the-rule |
 | IMP-02 | Never make a failing conformance test pass by changing the test. Read the contract and decide which is wrong. | CORE-SES-001#the-load-bearing-prohibitions |
 | IMP-03 | Never resolve an ambiguity silently. Stop and state both readings. | CORE-SES-001#declaration-stop-and-escalate |
 | IMP-05 | Put units and reference frames in type names, not comments. | CORE-CON-001#units-and-frames |
@@ -83,11 +83,14 @@ Project state lives in `trace/`; never restate it here.
 
 ## Commands
     pytest -q  # full suite, writes trace/results.xml
+    mypy       # units are only a promise while this runs; check_units.py proves it discriminates
 <!-- generated:commands-project -->
     python hyperion/tooling/check_traces.py                    # every trace/ record; --report prints the matrix
     python hyperion/tooling/build_console.py .                 # render console/index.html, the reviewer's artifact
     python hyperion/tooling/check_null_doubles.py .            # every suite must FAIL against its null double
-    python hyperion/tooling/mutation_score.py --slice SL-nn .  # at acceptance; --write records the survivors
+    python hyperion/tooling/check_boundaries.py .              # the real import graph against modules/*/manifest.yaml
+    python hyperion/tooling/check_units.py .                   # the type check runs clean and is proved to reject a unit confusion
+    python hyperion/tooling/mutation_score.py --slice SL-nn .  # at acceptance; --write records the survivors, --check re-measures
     python hyperion/tooling/check_imperatives.py               # imperatives drifted from their source sections
     python hyperion/tooling/loadout.py --session <TYPE>        # the documents that session type loads
     python hyperion/tooling/init_project.py --upgrade .        # re-render generated blocks after a version bump

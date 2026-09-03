@@ -6,7 +6,7 @@ argument-hint: "[SL-nn] [scope]"
 ---
 # LESSON session
 
-Declared: !`mkdir -p .hyperion && printf 'LESSON\n' > .hyperion/session && echo "LESSON written to .hyperion/session; the scope hook enforces its globs"`
+Declared: !`echo "LESSON declared; the scope hook binds this session to its globs"`
 
 Arguments: `$ARGUMENTS`. The first token is the slice (`SL-nn`), the rest is the scope.
 

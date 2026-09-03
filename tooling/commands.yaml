@@ -39,10 +39,20 @@ commands:
     context: project
     does: every suite must FAIL against its null double
 
+  - script: check_boundaries.py
+    args: "."
+    context: project
+    does: the real import graph against modules/*/manifest.yaml
+
+  - script: check_units.py
+    args: "."
+    context: project
+    does: the type check runs clean and is proved to reject a unit confusion
+
   - script: mutation_score.py
     args: "--slice SL-nn ."
     context: project
-    does: at acceptance; --write records the survivors
+    does: at acceptance; --write records the survivors, --check re-measures
 
   - script: check_imperatives.py
     context: both

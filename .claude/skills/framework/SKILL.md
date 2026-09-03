@@ -6,7 +6,7 @@ argument-hint: "[scope]"
 ---
 # FRAMEWORK session
 
-Declared: !`mkdir -p .hyperion && printf 'FRAMEWORK\n' > .hyperion/session && echo "FRAMEWORK written to .hyperion/session; the scope hook enforces its globs"`
+Declared: !`echo "FRAMEWORK declared; the scope hook binds this session to its globs"`
 
 Arguments: `$ARGUMENTS`, the scope (or the question).
 

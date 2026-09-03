@@ -6,7 +6,7 @@ argument-hint: "[SL-nn] [scope]"
 ---
 # BASELINE session
 
-Declared: !`mkdir -p .hyperion && printf 'BASELINE\n' > .hyperion/session && echo "BASELINE written to .hyperion/session; the scope hook enforces its globs"`
+Declared: !`echo "BASELINE declared; the scope hook binds this session to its globs"`
 
 Arguments: `$ARGUMENTS`. The first token is the slice (`SL-nn`), the rest is the scope.
 

@@ -6,7 +6,7 @@ argument-hint: "[SL-nn] [scope]"
 ---
 # CONFORMANCE session
 
-Declared: !`mkdir -p .hyperion && printf 'CONFORMANCE\n' > .hyperion/session && echo "CONFORMANCE written to .hyperion/session; the scope hook enforces its globs"`
+Declared: !`echo "CONFORMANCE declared; the scope hook binds this session to its globs"`
 
 Arguments: `$ARGUMENTS`. The first token is the slice (`SL-nn`), the rest is the scope.
 

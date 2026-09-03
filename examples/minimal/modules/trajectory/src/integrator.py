@@ -18,7 +18,8 @@ def _config_hash(config: ScenarioConfig) -> str:
     return hashlib.sha256(canonical.encode()).hexdigest()[:16]
 
 
-def _ground_crossing(x0, y0, x1, y1, t1, dt):
+def _ground_crossing(x0: float, y0: float, x1: float, y1: float,
+                     t1: float, dt: float) -> tuple[float, float]:
     frac = y0 / (y0 - y1)
     return x0 + (x1 - x0) * frac, t1 - dt + dt * frac
 

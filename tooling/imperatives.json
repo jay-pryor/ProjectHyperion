@@ -35,10 +35,10 @@
     },
     {
       "id": "IMP-01",
-      "text": "Import only from `modules/<name>/contract.*`. Never reach into another module's internals.",
+      "text": "Import only from `modules/<name>/contract.*`; its conformance suite is importable from test code alone.",
       "source": "CORE-CON-003#the-rule",
       "source_path": "core/contracts/boundary-enforcement.md",
-      "section_hash": "47f6f84ab80b2951",
+      "section_hash": "51e30ccf2dcb55cc",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
@@ -62,7 +62,7 @@
       "text": "Put units and reference frames in type names, not comments.",
       "source": "CORE-CON-001#units-and-frames",
       "source_path": "core/contracts/contract-definition.md",
-      "section_hash": "7d4204a342f08a6a",
+      "section_hash": "f3f57a4374386a86",
       "carried_in": "templates/project-CLAUDE.md"
     },
     {
@@ -127,7 +127,7 @@
       "source": "SIM-VAL-001#validation-suite",
       "source_path": "profiles/simulation/validation-basis.md",
       "section_hash": "8cba59d11ad81346",
-      "carried_in": "/workspaces/ProjectHyperion/profiles/simulation/fragment.yaml"
+      "carried_in": "profiles/simulation/fragment.yaml"
     },
     {
       "id": "IMP-10",
@@ -135,7 +135,7 @@
       "source": "SIM-DET-001#what-breaks-it",
       "source_path": "profiles/simulation/determinism.md",
       "section_hash": "f2f49b18de3f3415",
-      "carried_in": "/workspaces/ProjectHyperion/profiles/simulation/fragment.yaml"
+      "carried_in": "profiles/simulation/fragment.yaml"
     },
     {
       "id": "IMP-11",
@@ -143,7 +143,7 @@
       "source": "SIM-VAL-001#validity-envelope",
       "source_path": "profiles/simulation/validation-basis.md",
       "section_hash": "d80c35c126a09076",
-      "carried_in": "/workspaces/ProjectHyperion/profiles/simulation/fragment.yaml"
+      "carried_in": "profiles/simulation/fragment.yaml"
     },
     {
       "id": "IMP-12",
@@ -151,7 +151,7 @@
       "source": "CORE-CON-001#tolerances",
       "source_path": "core/contracts/contract-definition.md",
       "section_hash": "faaa998a4fcbd066",
-      "carried_in": "/workspaces/ProjectHyperion/profiles/simulation/fragment.yaml"
+      "carried_in": "profiles/simulation/fragment.yaml"
     }
   ]
 }

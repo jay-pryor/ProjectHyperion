@@ -5,21 +5,34 @@ Rung 2 of CORE-TST-002: at slice acceptance the mutation tool runs over modules/
 for every module the slice's contracts: names, with the test command restricted to that
 module's conformance/ plus validation/ and never tests/, so a unit test written beside
 the implementation cannot mask a weak conformance suite (P8). The score is killed /
-total and goes on the slice as mutation_score (CORE-TRC-002); every survivor is a
-findings row with source: mutation (CORE-TRC-003), S1 when the mutated module is named
-by a hazard's mitigation_contract.
+total per module and goes on the slice as mutation_score (CORE-TRC-002); every survivor
+is a findings row with source: mutation (CORE-TRC-003).
+
+Severity comes from the hazard register, not from here. A survivor on a module some
+hazard's mitigation_contract names is S2 and blocks acceptance; anywhere else it is S3,
+"defect not covered by any contract promise" (CORE-REV-005), and is backlog. Minting one
+severity for every survivor empties whichever class it mints, and a blocking finding per
+line of source is the control that gets dropped first (P5). S1 is never minted here at
+all: whether the gap lets silently wrong output through is read off the mutant.
 
 Usage:
     python tooling/mutation_score.py --slice SL-nn <project_root>        # print only
     python tooling/mutation_score.py --module <m> <project_root>
-    python tooling/mutation_score.py --slice SL-nn --write <project_root>  # append rows, set slice fields
+    python tooling/mutation_score.py --slice SL-nn --write <project_root>  # append S2 rows, set slice fields
+    python tooling/mutation_score.py --slice SL-nn --triage <m> <root>     # append one module's rows, on demand
+    python tooling/mutation_score.py --slice SL-nn --check <project_root>  # CI: the record is still earned
     python tooling/mutation_score.py --slice SL-nn --mutants DIR <root>    # parse an existing mutants/ dir
 
-Toolchain: mutmut 3.x (pip install mutmut). It runs in a scratch copy of the project so
-its mutants/ cache and its test run never touch the project or trace/results.xml. With
---mutants the run is skipped and DIR is parsed instead; tooling/tests uses this with a
-canned results file. --write is idempotent: a survivor whose ref is already in
-findings.yaml is skipped, and the slice's mutation_score and survivors_triaged are set.
+Toolchain: mutmut 3.x, pinned (pip install "mutmut>=3,<4"). The parsing below reads
+mutmut 3.x internals -- its exit-code map, its x_<name>__mutmut_<n> mangling, and its
+mutants/ layout -- so a major version it has not been read against is refused rather
+than silently parsed as zero mutants, which would record a score of 0.0 with no
+survivors and pass every check. A run that finds no mutant at all is an error for the
+same reason. mutmut runs in a scratch copy of the project so its mutants/ cache and its
+test run never touch the project or trace/results.xml. With --mutants the run is skipped
+and DIR is parsed instead; tooling/tests uses this with a canned results file. --write is
+idempotent: a survivor whose ref is already in findings.yaml is skipped, and the slice's
+mutation_score and survivors_triaged are set.
 """
 
 import argparse
@@ -44,6 +57,8 @@ STATUS_BY_EXIT_CODE = {1: "killed", 3: "killed", 0: "survived", 5: "no tests", 3
                        None: "not checked"}
 MUTANT_KEY_RE = re.compile(r"^(?P<module>[\w.]+)\.(?P<mangled>x_\w+?)__mutmut_(?P<n>\d+)$")
 CLASS_SEPARATOR = "ClassName"                   # mutmut: x_<Class>ClassName<method>ClassName...
+MUTMUT_MAJOR = 3                                # the internals below are mutmut 3.x's
+HAZARD_CONTRACT_RE = re.compile(r"^modules/([^/]+)/CONTRACT\.md::")
 
 
 @dataclass
@@ -75,17 +90,63 @@ def modules_for_slice(root, slice_id):
     raise SystemExit(f"ERROR {slice_id} is not in trace/slices.yaml")
 
 
-def hazard_modules(root):
-    """Modules named by any hazard's mitigation_contract (modules/<m>/...)."""
-    found = set()
-    for h in load_yaml(root / "trace" / "hazards.yaml"):
-        parts = str(h.get("mitigation_contract", "")).split("/")
-        if len(parts) >= 2 and parts[0] == "modules":
-            found.add(parts[1])
-    return found
+def hazard_named_modules(hazards):
+    """Modules some hazard's mitigation_contract points at (CORE-TRC-002#hazard).
+
+    This is where a survivor's severity comes from. The field already exists and is the
+    hazard register's, so nothing moves into or out of the blocking class without an
+    edit a human makes to a hazard -- there is no severity knob on this tool to turn."""
+    named = set()
+    for h in hazards:
+        m = HAZARD_CONTRACT_RE.match(str(h.get("mitigation_contract") or ""))
+        if m:
+            named.add(m.group(1))
+    return named
+
+
+def severity_for(module, hazard_named):
+    return "S2" if module in hazard_named else "S3"
+
+
+def derived_floor(slices, module, exclude=None):
+    """The highest score any other accepted slice recorded for `module`, or None.
+
+    The acceptance bar for a module is that its score did not fall. No constant appears
+    anywhere: a fixed floor would be a number with no basis, which CORE-CON-001 forbids
+    of a tolerance, and equivalent mutants give every module a different unreachable
+    ceiling. Derived from the records on every read, never stored, so the only way to
+    lower a floor is to edit the accepted slice it comes from (CORE-TST-002 rung 2)."""
+    seen = []
+    for s in slices:
+        scores = s.get("mutation_score")
+        if s.get("id") == exclude or s.get("status") != "accepted" or not isinstance(scores, dict):
+            continue
+        value = scores.get(module)
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            seen.append(value)
+    return max(seen) if seen else None
 
 
 # ------------------------------------------------------------------ running mutmut
+
+def check_mutmut_version():
+    """Refuse a mutmut whose internals this parser has not been read against.
+
+    parse_results reads mutmut's exit-code map, its name mangling, and its mutants/
+    layout. Under a version that changed any of them it would find nothing and report a
+    score of 0.0 with no survivors -- a passing record for a run that measured nothing
+    (P2). Fail loudly instead."""
+    from importlib import metadata
+    try:
+        version = metadata.version("mutmut")
+    except metadata.PackageNotFoundError:
+        raise SystemExit('ERROR mutmut is not installed; pip install "mutmut>=3,<4"')
+    if version.split(".")[0] != str(MUTMUT_MAJOR):
+        raise SystemExit(f"ERROR mutmut {version} is installed; this reads mutmut "
+                         f'{MUTMUT_MAJOR}.x internals. pip install "mutmut>={MUTMUT_MAJOR},'
+                         f'<{MUTMUT_MAJOR + 1}", or read the new layout and raise MUTMUT_MAJOR.')
+    return version
+
 
 def mutmut_config(module):
     return "\n".join([
@@ -185,8 +246,14 @@ def next_finding_id(findings):
     return max(numbers, default=0) + 1
 
 
-def finding_row(mutant, fid, slice_id, hazard_mods, date):
-    module = mutant.file.split("/")[1]
+def finding_row(mutant, fid, slice_id, date, severity):
+    """One survivor as a findings row, at the severity the hazard register gives it.
+
+    A survivor establishes that the suite cannot see the change. Whether that is a broken
+    promise (S2, a hazard is riding on this module) or a behaviour nothing promised (S3)
+    is not the tool's judgement to make, and S1 never is: whether the gap lets silently
+    wrong output through is read off the mutant, never off its address
+    (CORE-TST-002 rung 2, CORE-REV-005#severity)."""
     where = f"{Path(mutant.file).name}:{mutant.line} in {mutant.function}" if mutant.line else f"{mutant.function}"
     change = f': "{mutant.before}" became "{mutant.after}"' if mutant.before else ""
     return {
@@ -195,7 +262,7 @@ def finding_row(mutant, fid, slice_id, hazard_mods, date):
         "slice": slice_id,
         "source": "mutation",
         "form": "test",
-        "severity": "S1" if module in hazard_mods else "S2",
+        "severity": severity,
         "status": "admitted",
         "ref": mutant.ref,
         "summary": f"Survived mutant at {where}{change}",
@@ -210,16 +277,25 @@ def render_row(row):
     return "\n".join(lines) + "\n"
 
 
-def survivor_rows(survivors, root, slice_id, hazard_mods, date):
-    """Rows for survivors not already recorded by ref; also the refs still open."""
+def survivor_rows(survivors, root, slice_id, date, severity="S2", first_id=None):
+    """Rows for survivors this slice has not recorded; also the refs still open.
+
+    A row is matched on (ref, slice), not on ref alone. A mutant lives in a module, and
+    a module is named by more than one slice: rejecting one as equivalent under the
+    promises the first slice claimed would otherwise excuse it for every later slice,
+    silently, in the one direction that never shows up as an error. Measured again for
+    another slice, it is raised again against that slice's promises.
+
+    `first_id` continues the numbering across modules within one run, since the rows are
+    not appended until every module has been measured."""
     findings = load_yaml(root / "trace" / "findings.yaml")
-    known = {str(f.get("ref")): f.get("status") for f in findings}
-    fid = next_finding_id(findings)
+    known = {str(f.get("ref")): f.get("status") for f in findings if f.get("slice") == slice_id}
+    fid = next_finding_id(findings) if first_id is None else first_id
     rows = []
     for m in survivors:
         if m.ref in known:
             continue
-        rows.append(finding_row(m, fid, slice_id, hazard_mods, date))
+        rows.append(finding_row(m, fid, slice_id, date, severity))
         fid += 1
     open_refs = [m.ref for m in survivors if known.get(m.ref, "admitted") in ("admitted", "reopened")]
     return rows, open_refs
@@ -235,8 +311,16 @@ def append_findings(root, rows):
     path.write_text(text + "".join(render_row(r) for r in rows), encoding="utf-8")
 
 
-def set_slice_fields(root, slice_id, value, triaged):
-    """Replace or add mutation_score and survivors_triaged inside the slice's block, text-wise."""
+def render_scores(scores):
+    """`{trajectory: 0.762}` -- a flow mapping, one entry per module (CORE-TRC-002#slice)."""
+    return "{" + ", ".join(f"{m}: {v}" for m, v in sorted(scores.items())) + "}"
+
+
+def set_slice_fields(root, slice_id, scores, triaged):
+    """Replace or add mutation_score and survivors_triaged inside the slice's block, text-wise.
+
+    `triaged` is None for a slice no hazard-named module belongs to: its survivors are S3
+    backlog, the field would gate nothing, and check_traces.py does not ask for it."""
     path = root / "trace" / "slices.yaml"
     lines = path.read_text(encoding="utf-8").splitlines()
     start = next((i for i, l in enumerate(lines) if l.strip() == f"- id: {slice_id}"), None)
@@ -246,57 +330,149 @@ def set_slice_fields(root, slice_id, value, triaged):
     block = [l for l in lines[start:end] if not l.strip().startswith(("mutation_score:", "survivors_triaged:"))]
     while block and not block[-1].strip():
         block.pop()
-    block += [f"  mutation_score: {value}", f"  survivors_triaged: {'true' if triaged else 'false'}"]
+    block.append(f"  mutation_score: {render_scores(scores)}")
+    if triaged is not None:
+        block.append(f"  survivors_triaged: {'true' if triaged else 'false'}")
     path.write_text("\n".join(lines[:start] + block + lines[end:]) + "\n", encoding="utf-8")
 
 
 # ------------------------------------------------------------------ main
+
+def recorded_score(root, slice_id):
+    """The mutation_score mapping already on the slice, or None."""
+    for s in load_yaml(root / "trace" / "slices.yaml"):
+        if s.get("id") == slice_id:
+            return s.get("mutation_score")
+    raise SystemExit(f"ERROR {slice_id} is not in trace/slices.yaml")
+
+
+def check_against_record(root, slice_id, scores, rows):
+    """CI: is the record still earned by the suite as it stands?
+
+    Three failures a records-only checker cannot see, because it never measures: a score
+    nobody earned, a score that has fallen below what an earlier accepted slice reached
+    for the same module, and a survivor that appeared after the record was written.
+    Whether a recorded survivor is still open is check_traces.py's, not repeated here
+    (P3). Returns the exit code."""
+    recorded = recorded_score(root, slice_id)
+    slices = load_yaml(root / "trace" / "slices.yaml")
+    problems, reported = [], []
+    if recorded is None:
+        problems.append(f"{slice_id} carries no mutation_score; run --write and triage the survivors")
+        recorded = {}
+    elif not isinstance(recorded, dict):
+        problems.append(f"{slice_id} records mutation_score as a single number; it is a mapping of "
+                        f"module to score (CORE-TRC-002). Re-run --write.")
+        recorded = {}
+    for module, value in sorted(scores.items()):
+        was = recorded.get(module)
+        if was is None and recorded:
+            problems.append(f"{slice_id} records no mutation_score for {module}, which its contracts: names")
+        elif was is not None and value < was:
+            problems.append(f"{module} measured {value}, below the recorded {was}; the suite has "
+                            f"weakened since it was written, or the record was never earned")
+        floor = derived_floor(slices, module, exclude=slice_id)
+        if floor is not None and value < floor:
+            problems.append(f"{module} measured {value}, below the {floor} an accepted slice already "
+                            f"earned for it; the score ratchets (CORE-TST-002 rung 2)")
+        reported.append(f"{module} measured {value}, recorded {was}"
+                        + (f", floor {floor}" if floor is not None else ", no floor yet"))
+    if rows:
+        refs = "\n  ".join(r["ref"] for r in rows)
+        problems.append(f"{len(rows)} S2 survivor(s) have no findings row:\n  {refs}")
+    for line in problems:
+        print(f"ERROR {line}")
+    if not problems:
+        print(f"OK {slice_id}: {'; '.join(reported)}; every S2 survivor recorded")
+    return 1 if problems else 0
+
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     which = ap.add_mutually_exclusive_group(required=True)
     which.add_argument("--slice", help="SL-nn; modules come from its contracts: list")
     which.add_argument("--module", help="one module; rows are printed without a slice unless --slice")
-    ap.add_argument("--write", action="store_true", help="append survivor rows and set the slice fields")
+    mode = ap.add_mutually_exclusive_group()
+    mode.add_argument("--write", action="store_true",
+                      help="append the S2 survivor rows and set the slice fields")
+    mode.add_argument("--triage", metavar="MODULE",
+                      help="append this module's survivor rows on demand, at the severity the "
+                           "hazard register gives them; a worklist, never a gate")
+    mode.add_argument("--check", action="store_true",
+                      help="exit 1 unless every recorded score is still earned, none has fallen "
+                           "below its floor, and every S2 survivor is recorded")
     ap.add_argument("--mutants", help="parse this mutants/ directory instead of running mutmut")
     ap.add_argument("root")
     args = ap.parse_args(argv)
     root = Path(args.root).resolve()
-    if args.write and not args.slice:
-        ap.error("--write needs --slice; the fields go on a slice record")
+    if (args.write or args.check or args.triage) and not args.slice:
+        ap.error("--write, --triage and --check need --slice; the rows and fields belong to a slice")
 
     modules = modules_for_slice(root, args.slice) if args.slice else [args.module]
     for m in modules:
         if not (root / "modules" / m / "src").is_dir():
             raise SystemExit(f"ERROR modules/{m}/src does not exist")
-    hazard_mods = hazard_modules(root)
+    if args.triage and args.triage not in modules:
+        raise SystemExit(f"ERROR --triage {args.triage} is not in {args.slice}'s contracts: "
+                         f"({', '.join(modules)})")
     today = dt.date.today().isoformat()
+    if not args.mutants:
+        print(f"mutmut {check_mutmut_version()}")
 
-    mutants = []
+    per_module = {}
     with tempfile.TemporaryDirectory(prefix="hyperion-mutmut-") as tmp:
         for m in modules:
             mutants_dir = Path(args.mutants) if args.mutants else run_mutmut(root, m, Path(tmp) / m)
             found = parse_results(mutants_dir, m)
-            mutants += [describe(mutants_dir, root, x) for x in found]
+            if not found:
+                raise SystemExit(f"ERROR no mutant was found for modules/{m}/src under {mutants_dir}. "
+                                 "A run that measures nothing must not be recorded as a score of 0.0; "
+                                 "check the mutmut version and the module's src/ (CORE-TST-002).")
+            per_module[m] = [describe(mutants_dir, root, x) for x in found]
             print(f"{m}: {len(found)} mutants from modules/{m}/src ({'parsed' if args.mutants else 'mutmut run'})")
 
-    killed, survived, value = score(mutants)
-    other = len(mutants) - killed - survived
-    survivors = [x for x in mutants if x.status in SURVIVED]
-    label = args.slice or args.module
-    print(f"mutation_score {label}: {value}  ({killed} killed, {survived} survived, {other} other of {len(mutants)})")
+    hazard_named = hazard_named_modules(load_yaml(root / "trace" / "hazards.yaml"))
+    slice_id = args.slice or "<SL-nn>"
+    scores, rows, s2_rows, open_refs = {}, [], [], []
+    fid = next_finding_id(load_yaml(root / "trace" / "findings.yaml"))
+    for m, muts in per_module.items():
+        killed, survived, scores[m] = score(muts)
+        other = len(muts) - killed - survived
+        severity = severity_for(m, hazard_named)
+        survivors = [x for x in muts if x.status in SURVIVED]
+        module_rows, module_open = survivor_rows(survivors, root, slice_id, today, severity, fid)
+        fid += len(module_rows)
+        rows += module_rows
+        if severity == "S2":
+            s2_rows += module_rows
+            open_refs += module_open
+        print(f"mutation_score {slice_id}/{m}: {scores[m]}  ({killed} killed, {survived} survived, "
+              f"{other} other of {len(muts)}); {len(survivors)} survivor(s) at {severity}, "
+              f"{len(module_rows)} new row(s)"
+              + ("" if severity == "S2" else " (backlog; --triage to record them)"))
 
-    rows, open_refs = survivor_rows(survivors, root, args.slice or "<SL-nn>", hazard_mods, today)
-    print(f"survivors: {len(survivors)}, new rows: {len(rows)}, already recorded: {len(survivors) - len(rows)}")
+    if args.check:
+        return check_against_record(root, args.slice, scores, s2_rows)
+
+    # --write records what blocks acceptance; --triage records one module on request.
+    # Everything else is printed, so a survivor is never invisible, only unfiled.
+    to_write = s2_rows if args.write else [r for r in rows if r["ref"].startswith(
+        f"modules/{args.triage}/")] if args.triage else []
     if rows:
-        print("# ready to append to trace/findings.yaml" + ("" if args.write else " (not written; pass --write)"))
+        print("# ready to append to trace/findings.yaml"
+              + ("" if to_write else " (not written; pass --write, or --triage <module>)"))
         print("".join(render_row(r) for r in rows), end="")
 
-    if args.write:
-        if rows:
-            append_findings(root, rows)
-        set_slice_fields(root, args.slice, value, triaged=not open_refs)
-        print(f"wrote {len(rows)} row(s); {args.slice}: mutation_score {value}, survivors_triaged {not open_refs}")
+    if args.write or args.triage:
+        if to_write:
+            append_findings(root, to_write)
+        if args.write:
+            triaged = not open_refs if hazard_named & set(modules) else None
+            set_slice_fields(root, args.slice, scores, triaged)
+            print(f"wrote {len(to_write)} row(s); {args.slice}: mutation_score "
+                  f"{render_scores(scores)}, survivors_triaged {triaged}")
+        else:
+            print(f"wrote {len(to_write)} row(s) for {args.triage}; slice fields untouched")
     return 0
 
 

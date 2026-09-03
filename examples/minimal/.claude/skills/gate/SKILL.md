@@ -6,7 +6,7 @@ argument-hint: "[SL-nn] [scope]"
 ---
 # GATE session
 
-Declared: !`mkdir -p .hyperion && printf 'GATE\n' > .hyperion/session && echo "GATE written to .hyperion/session; the scope hook enforces its globs"`
+Declared: !`echo "GATE declared; the scope hook binds this session to its globs"`
 
 Arguments: `$ARGUMENTS`. The first token is the slice (`SL-nn`), the rest is the scope.
 

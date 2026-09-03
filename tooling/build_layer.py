@@ -39,6 +39,7 @@ FRAMEWORK_CLAUDE = "CLAUDE.md"
 README = "README.md"
 LENS_DOC = "core/reviews/lens-reviews.md"
 AGENT_INDEX = "agents/00-agent-index.md"
+STARTING = "handbook/starting-a-project.md"
 MAP = "tooling/imperatives.json"
 COMMANDS = "tooling/commands.yaml"
 
@@ -49,7 +50,7 @@ class Sources:
     """Every hand-written input, loaded once. `errors` collects source defects."""
 
     def __init__(self, root=fd.FRAMEWORK_ROOT):
-        self.root = Path(root)
+        self.root = Path(root).resolve()
         self.docs = fd.collect_docs(self.root)
         self.by_id = fd.docs_by_id(self.docs)
         self.types = fd.session_types(self.root)
@@ -62,6 +63,12 @@ class Sources:
             key=lambda d: (d["fm"].get("profile") or "", d["fm"]["lens"]))
         self.errors = []
         self.commands = self._commands()
+
+    def rel(self, path):
+        """A path as a generated artefact records it: relative to the repository root.
+        An absolute path would make the rendering depend on where this checkout sits, so
+        --check would call the output stale on every other machine (P2)."""
+        return Path(path).resolve().relative_to(self.root).as_posix()
 
     def _commands(self):
         """The command rows (P3). A row names a script that must exist, or a literal `run`."""
@@ -354,7 +361,7 @@ def framework_outputs(src):
     fw_rows = src.imperative_rows(src.framework, src.framework.get("carried_in", FRAMEWORK_CLAUDE))
     profile_rows = []
     for name, frag in src.profiles.items():
-        profile_rows += src.imperative_rows(frag, frag["_path"])
+        profile_rows += src.imperative_rows(frag, src.rel(frag["_path"]))
     out = {}
     root = src.root
     out[TEMPLATE] = _filled(root / TEMPLATE, claude_renders(src, core_rows, [], []), src)
@@ -366,6 +373,8 @@ def framework_outputs(src):
             src.commands, "project", "hyperion/tooling/",
             header="not from this repository: cd examples/minimal, then ../../tooling/ for hyperion/tooling/"),
     }, src)
+    out[STARTING] = _filled(root / STARTING, {
+        "commands-project": render_commands(src.commands, "project", "hyperion/tooling/")}, src)
     out[LENS_DOC] = _filled(root / LENS_DOC, {"lens-library": render_lens_library(src)}, src)
     out[AGENT_INDEX] = _filled(root / AGENT_INDEX, {"agent-index": render_agent_index(src)}, src)
     for name, frag in src.profiles.items():

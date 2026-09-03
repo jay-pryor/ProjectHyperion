@@ -6,7 +6,7 @@ argument-hint: "[scope]"
 ---
 # REVIEW session
 
-Declared: !`mkdir -p .hyperion && printf 'REVIEW\n' > .hyperion/session && echo "REVIEW written to .hyperion/session; the scope hook enforces its globs"`
+Declared: !`echo "REVIEW declared; the scope hook binds this session to its globs"`
 
 Arguments: `$ARGUMENTS`, the scope (or the question).
 

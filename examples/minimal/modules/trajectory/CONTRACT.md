@@ -1,5 +1,5 @@
 # Contract: trajectory
-Version: 1.2 · Status: active
+Version: 1.3 · Status: active
 
 ## 1. Purpose
 Integrate a point-mass projectile with drag from launch to ground impact.
@@ -26,6 +26,9 @@ Integrate a point-mass projectile with drag from launch to ground impact.
 - **C-105** `from_dict` rejects unknown keys and missing keys.
 - **C-106** `dt` must be in (0, 0.1] s.
 - **C-107** A failure mid-integration leaves no residual state; the next call is unaffected.
+- **C-108** The samples run from launch to impact: `times_s`, `x_m`, `y_m` are equal in
+  length and finite, start at `(0, 0, 0)`, `times_s` and `x_m` strictly increase, the last
+  `y_m` is exactly 0, and `range_m` is the last `x_m`.
 - Side effects: none. Wall-clock time is never read.
 
 ## 6. Performance envelope

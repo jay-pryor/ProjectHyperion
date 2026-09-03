@@ -58,9 +58,12 @@ and permissions story.
 
 ## Boundary enforcement
 
-Per [CORE-CON-003](../../core/contracts/boundary-enforcement.md), selected with the
-language. Python → `import-linter`. Rust → module privacy. Plus the dependency manifest
-in all cases.
+Per [CORE-CON-003](../../core/contracts/boundary-enforcement.md). Python is covered by
+`check_boundaries.py`; another language configures its own lint in the same CI position.
+The dependency manifest is the declaration in all cases. Where the language does not
+carry units in the type system as Rust does, `check_units.py` is what keeps
+[CORE-CON-001](../../core/contracts/contract-definition.md)'s unit types from decaying
+into comments.
 
 ## Baseline additions for this profile
 

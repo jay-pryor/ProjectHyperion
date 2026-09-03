@@ -8,7 +8,7 @@ load: never
 sessions: []
 prevents: A new reader meeting the rules before the reason for them by reading the registry in path order
 reader: A person joining or evaluating a project under Hyperion who does not read code, first
-related: [HYP-000, HYP-001, HBK-001, HBK-002, HBK-003, HBK-004, HBK-005, CORE-PRN-001, CORE-LFC-001]
+related: [HYP-000, HYP-001, HBK-001, HBK-002, HBK-003, HBK-004, HBK-005, HBK-006, CORE-PRN-001, CORE-LFC-001]
 ---
 
 # Reading Order
@@ -21,13 +21,14 @@ project console renders them under its Handbook tab.
 
 ## What the handbook is
 
-Five aids drawn from the framework as it stands and from the example project. They add
+Six aids drawn from the framework as it stands and from the example project. They add
 no rules. Where an aid and a core document disagree, the core document is right and the
 aid has a defect; every aid cites the document it summarises so the disagreement can be
 found.
 
 | Aid | Question it answers | Document |
 |---|---|---|
+| Starting a project | What do the first days ask of me, before any code? | [HBK-006](starting-a-project.md) |
 | Artifact map | What does each gate produce, where does it live, what checks it? | [HBK-001](artifact-map.md) |
 | Who does what | Which of human, model, and check owns each step? | [HBK-002](who-does-what.md) |
 | What do I do now | Something happened; which session type is next? | [HBK-003](what-do-i-do-now.md) |
@@ -38,28 +39,31 @@ found.
 
 The order the [README](../README.md) gives, with the aids placed where they help.
 
-1. **The example first.** `examples/minimal/` is a complete, tiny project: two modules,
+1. **What a beginning looks like.** [HBK-006](starting-a-project.md), in plain language:
+   the stages from deciding to use Hyperion to the first slice, what each asks you to
+   decide, and how to generate the console that shows where the project stands.
+2. **The example.** `examples/minimal/` is a complete, tiny project: two modules,
    six requirements, two hazards, one accepted slice, every record filled in
    ([examples/README.md](../examples/README.md)). Twenty minutes. Then
    [HBK-004](one-slice-session-by-session.md), which walks its first slice.
-2. **Principles and gates.** [CORE-PRN-001](../core/00-principles.md), then
+3. **Principles and gates.** [CORE-PRN-001](../core/00-principles.md), then
    [CORE-LFC-001](../core/lifecycle/00-gates-overview.md). Every rule in the framework
    traces to one of the ten principles; a rule that does not is a defect.
    [HBK-001](artifact-map.md) shows the gates and their outputs on one page.
-3. **The line between human and model.** P10 in the principles, then
+4. **The line between human and model.** P10 in the principles, then
    [HBK-002](who-does-what.md), then [CORE-SES-001](../core/session-protocol.md),
    which is the mechanism that keeps the line under time pressure.
-4. **The slice loop.** [CORE-LFC-006](../core/lifecycle/slice-loop.md) and
+5. **The slice loop.** [CORE-LFC-006](../core/lifecycle/slice-loop.md) and
    [HBK-003](what-do-i-do-now.md). The loop's job is to answer "what next"; the tree
    answers it from the situation's side.
-5. **The records.** [CORE-TRC-001](../core/traceability/traceability.md) for why,
+6. **The records.** [CORE-TRC-001](../core/traceability/traceability.md) for why,
    [CORE-TRC-002](../core/traceability/trace-records.md) and
    [CORE-TRC-003](../core/traceability/trace-logs.md) for the schemas. Everything the
    console shows comes from these.
-6. **One profile at a time**, and only after the core. Start with its `PROFILE.md`
+7. **One profile at a time**, and only after the core. Start with its `PROFILE.md`
    ([SIM-000](../profiles/simulation/PROFILE.md) for simulation). Profile documents
    assume the core vocabulary.
-7. **Reviews, findings, lessons, changes** as they arise:
+8. **Reviews, findings, lessons, changes** as they arise:
    [CORE-REV-001](../core/reviews/00-review-taxonomy.md),
    [CORE-REV-005](../core/reviews/review-findings-handling.md),
    [CORE-LSN-001](../core/lessons/lesson-ladder.md),

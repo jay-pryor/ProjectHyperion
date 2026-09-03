@@ -6,7 +6,7 @@
 # in that section, so a mis-sourced row is a build error, not a discovery).
 imperatives:
   - id: IMP-01
-    text: "Import only from `modules/<name>/contract.*`. Never reach into another module's internals."
+    text: "Import only from `modules/<name>/contract.*`; its conformance suite is importable from test code alone."
     source: CORE-CON-003#the-rule
     anchor: [import, contract]
   - id: IMP-02

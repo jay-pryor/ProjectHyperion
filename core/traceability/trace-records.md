@@ -96,13 +96,18 @@ clause is a marked `C-nnn` in its `CONTRACT.md` ([CORE-CON-001](../contracts/con
   hazards: [HZ-nnn]
   contracts: [<module>]                 # contracts this slice touches
   status: planned | in_progress | accepted
-  mutation_score: <0 to 1>              # acceptance record; killed / total
-  survivors_triaged: true | false       # every survivor has a findings row, source mutation
+  mutation_score: {<module>: <0 to 1>}  # required once accepted; killed / total per module
+  survivors_triaged: true               # required once accepted, hazard-named modules only
   authored_by: <model alias or id>      # optional: the implementing session's model (CORE-HRN-001)
 ```
 
 An `accepted` slice may claim only `verified` requirements and hazards, whatever the
 gate state, and must carry a completed targeted read naming it
-([CORE-REV-004](../reviews/targeted-human-reads.md#recording)). The last two fields are
-optional until acceptance; they are the mechanical half of the acceptance record in
-[TPL-005](../../templates/slice-definition.md).
+([CORE-REV-004](../reviews/targeted-human-reads.md#recording)). The mutation fields are
+absent until acceptance and are the mechanical half of the acceptance record in
+[TPL-005](../../templates/slice-definition.md). `mutation_score` carries an entry for every
+module in `contracts:`; a score below the highest that module reached in a previously
+accepted slice is an error, so the measurement ratchets rather than meeting a fixed floor.
+`survivors_triaged` is required only when the slice names a module some hazard's
+`mitigation_contract` points at, which is where survivors are S2 and block; elsewhere they
+are S3 backlog ([CORE-TST-002](../testing/tests-are-tested.md#rung-2--the-mutation-score)).

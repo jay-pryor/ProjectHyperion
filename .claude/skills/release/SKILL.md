@@ -6,7 +6,7 @@ argument-hint: "[scope]"
 ---
 # RELEASE session
 
-Declared: !`mkdir -p .hyperion && printf 'RELEASE\n' > .hyperion/session && echo "RELEASE written to .hyperion/session; the scope hook enforces its globs"`
+Declared: !`echo "RELEASE declared; the scope hook binds this session to its globs"`
 
 Arguments: `$ARGUMENTS`, the scope (or the question).
 

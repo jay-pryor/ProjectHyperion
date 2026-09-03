@@ -6,7 +6,7 @@ argument-hint: "SL-nn [lens ...]"
 ---
 # REVIEW session: the lens fan-out
 
-Declared: !`mkdir -p .hyperion && printf 'REVIEW\n' > .hyperion/session && echo "REVIEW written to .hyperion/session; the scope hook enforces its globs"`
+Declared: !`echo "REVIEW declared; the scope hook binds this session to its globs"`
 
 Arguments: `$ARGUMENTS`. The first token is the slice; any further tokens name lenses.
 Output the declaration and continue; REVIEW has no scope to confirm and does not wait.

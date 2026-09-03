@@ -16,7 +16,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - run: pip install pytest pyyaml
+      # mypy is here for tooling/tests: test_check_units.py runs the real checker
+      # against examples/minimal and skips itself without it, which would leave the
+      # gate untested in the one job that tests the gates.
+      - run: pip install pytest pyyaml "mypy>=1.11,<3"
 
       # The registry is generated, never hand-maintained. A stale index is worse
       # than none, because it is trusted. Also validates frontmatter (sessions,
@@ -43,16 +46,20 @@ jobs:
       - name: Tooling rules hold
         run: pytest -q tooling/tests
 
-      # Every framework commit carries its Session trailer (CORE-SES-001). Checked on
-      # pull requests over the PR range, starting at the first commit that carried one.
+      # Every framework commit carries its Session trailer (CORE-SES-001). On pushes as
+      # well as pull requests: this repository is committed to directly, so a PR-only
+      # check left the ordinary path unchecked and the scope hook without its backstop.
+      # The range starts at the first commit that carried a trailer; a new branch, a
+      # force push, or a tag gives no usable base, so it falls back to that commit.
       - name: Commits carry their session trailer
-        if: github.event_name == 'pull_request'
         env:
           FIRST_CHECKED: 218e6f55616e780f2b3458a64f0a9f25e8a69afa
-          BASE: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
+          git cat-file -e "${BASE}^{commit}" 2>/dev/null || BASE="$FIRST_CHECKED"
           git merge-base --is-ancestor "$FIRST_CHECKED" "$BASE" || BASE="$FIRST_CHECKED"
+          if [ "$BASE" = "$HEAD_SHA" ]; then echo "OK no new commits to check"; exit 0; fi
           python tooling/check_commit.py --framework "$BASE..$HEAD_SHA"
 
   example-project:
@@ -70,7 +77,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - run: pip install pytest pyyaml
+      # mypy is a gate here, not an editor convenience (CORE-CON-001). The range is
+      # loose because check_units.py reads only mypy's reported errors and file count,
+      # not its internals; a major bump is still a deliberate change.
+      - run: pip install pytest pyyaml "mypy>=1.11,<3"
 
       # pytest.ini writes trace/results.xml on every run; the checker reads outcomes
       # from it, so the suite runs immediately before the check (CORE-TRC-003).
@@ -95,20 +105,39 @@ jobs:
           name: console
           path: examples/minimal/console/index.html
 
+      # CORE-CON-003: the module map is drawn from modules/*/manifest.yaml and this is
+      # what makes the drawing true. Four rules, all fatal: an import outside the module's
+      # surface, an import the manifest does not list, a manifest entry nothing imports,
+      # and a cycle. Without it the manifest enforces nothing and the diagram drifts.
+      - name: Import graph matches the manifests
+        run: python ../../tooling/check_boundaries.py .
+
+      # CORE-CON-001: NewType units are erased at runtime, so the unit in the type is a
+      # promise only while a checker runs. The step runs mypy over the project and then
+      # proves that run rejects a unit confusion built from baseline/units.py. A mypy
+      # that matched no files, or that ignores errors, passes the first half and fails
+      # the second.
+      - name: Units enforced by the type check
+        run: python ../../tooling/check_units.py .
+
       # CORE-TST-002 rung 1: every module ships a null double and its conformance
       # suite must fail against it in errors, invariants, and boundaries. The script
       # writes each run's JUnit to a temp file so trace/results.xml keeps the real run.
       - name: Conformance suites fail against their null doubles
         run: python ../../tooling/check_null_doubles.py .
 
-      # CORE-TST-002 rung 2: the mutation score for the accepted slice, print mode,
-      # so the number and the survivors are in the log. Survivors are triaged by a
-      # human through trace/findings.yaml, not by CI; nothing is written here.
-      # mutmut runs every mutant in a subprocess; the example is tiny, but allow time.
-      - run: pip install mutmut
-      - name: Mutation score for SL-01 (informational)
+      # CORE-TST-002 rung 2: measure again and compare against what SL-01 records.
+      # --check fails on a score the suite no longer earns and on a survivor with no
+      # findings row; whether a recorded survivor is still open is check_traces.py's
+      # above. Survivors are triaged by a human through trace/findings.yaml, never by
+      # CI, and nothing is written here. The major version is pinned because the tool
+      # reads mutmut 3.x internals and refuses anything else (it would otherwise parse
+      # a mutmut 4 run as zero mutants). Every mutant runs in a subprocess; the example
+      # is tiny, but allow time.
+      - run: pip install "mutmut>=3,<4"
+      - name: Mutation score for SL-01 still earned
         timeout-minutes: 20
-        run: python ../../tooling/mutation_score.py --slice SL-01 .
+        run: python ../../tooling/mutation_score.py --slice SL-01 --check .
 
   release-tag:
     # One version, one place (F-22): a release tag must equal `v$(cat VERSION)` and

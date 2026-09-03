@@ -5,6 +5,8 @@
   contracts: [trajectory]
   status: accepted
   authored_by: sonnet
+  mutation_score: {trajectory: 0.762}
+  survivors_triaged: true
 - id: SL-02
   name: Drag and the atmosphere envelope
   requirements: [REQ-001, REQ-003]

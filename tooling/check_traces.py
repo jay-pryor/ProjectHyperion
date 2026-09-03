@@ -24,7 +24,9 @@ Library API, used by the project console and by tooling/tests:
 The CLI is a thin wrapper over these three calls.
 
 Requires PyYAML. Records are flat (scalars and lists of scalars); nesting is rejected
-so a mis-parsed trace is loud, not silent.
+so a mis-parsed trace is loud, not silent. One field is not: `mutation_score` is a
+mapping of module to score, because rung 2 measures a module and a slice names several
+(CORE-TRC-002). It is listed in SCALAR_MAPS rather than loosening the rule.
 """
 
 import ast
@@ -36,6 +38,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
+
+# The mutation rung's two derived quantities -- which modules a hazard names, and a
+# module's floor -- are defined once, in the tool that measures them (CORE-TST-002 rung 2).
+# Restating either here would let the checker and the tool disagree about acceptance (P3).
+import mutation_score
 
 # ------------------------------------------------------------------ vocabulary (CORE-TRC-002/003)
 
@@ -136,7 +143,12 @@ class Project:
 
 # ------------------------------------------------------------------ loading
 
-def _flat(value):
+SCALAR_MAPS = {"mutation_score"}      # the only fields allowed to be a mapping, one level deep
+
+
+def _flat(value, key=None):
+    if key in SCALAR_MAPS and isinstance(value, dict):
+        return all(not isinstance(v, (list, dict)) for v in value.values())
     if isinstance(value, list):
         return all(not isinstance(v, (list, dict)) for v in value)
     return not isinstance(value, dict)
@@ -166,7 +178,7 @@ def _load_records(project, stem):
             project.load_issues.append(Issue("error", rid, "duplicate id"))
         seen.add(rid)
         for k, v in rec.items():
-            if not _flat(v):
+            if not _flat(v, k):
                 project.load_issues.append(Issue("error", rid, f"'{k}' is nested; records are flat"))
         out.append(rec)
     return out
@@ -467,6 +479,7 @@ def check_hazards(project, err, warn):
 
 def check_slices(project, err, warn):
     reqs, hazards = project.by_id("requirements"), project.by_id("hazards")
+    hazard_named = mutation_score.hazard_named_modules(project.records["hazards"])
     claimed = set()
     for s in project.records["slices"]:
         sid = s["id"]
@@ -487,22 +500,51 @@ def check_slices(project, err, warn):
         for m in _as_list(s.get("contracts")):
             if m not in project.modules or m == "baseline":
                 err(sid, f"contracts names '{m}', which is not a module with a contract")
-        if "mutation_score" in s and not (isinstance(s["mutation_score"], (int, float)) and 0 <= s["mutation_score"] <= 1):
-            err(sid, "mutation_score must be a number from 0 to 1 (killed / total)")
+        modules = _as_list(s.get("contracts"))
+        scores = s.get("mutation_score")
+        if "mutation_score" in s:
+            if not isinstance(scores, dict):
+                err(sid, "mutation_score must be a mapping of module to score, one entry per module "
+                         "in contracts: (CORE-TRC-002); a single number is the pre-0.8 form")
+                scores = {}
+            for m, v in sorted(scores.items()):
+                if not (isinstance(v, (int, float)) and not isinstance(v, bool) and 0 <= v <= 1):
+                    err(sid, f"mutation_score[{m}] must be a number from 0 to 1 (killed / total)")
+                elif m not in modules:
+                    err(sid, f"mutation_score names '{m}', which contracts: does not")
+        else:
+            scores = {}
         if "survivors_triaged" in s and not isinstance(s["survivors_triaged"], bool):
             err(sid, "survivors_triaged must be true or false")
         if "authored_by" in s and not (isinstance(s["authored_by"], str) and s["authored_by"].strip()):
             err(sid, "authored_by must name the implementing session's model (CORE-HRN-001)")
-        # CORE-TST-002 rung 2: triaged means no mutation finding on the slice is still open,
-        # and an accepted slice may not carry open survivors.
+        # CORE-TST-002 rung 2: the score is an acceptance record, so an accepted slice carries
+        # one per module. Absent fields used to be indistinguishable from a clean run, which made
+        # the rung a written rule rather than a check; a slice that never ran the tool fails here.
+        # Only S2 survivors gate: they are the ones a hazard is riding on. S3 rows are backlog,
+        # and a slice with no hazard-named module has no survivors_triaged field to carry (P5).
         open_survivors = [f["id"] for f in project.records["findings"]
                           if f.get("slice") == sid and f.get("source") == "mutation"
+                          and f.get("severity") == "S2"
                           and f.get("status") in ("admitted", "reopened")]
+        gated = sorted(set(modules) & hazard_named)
+        if accepted and "mutation_score" not in s:
+            err(sid, "accepted with no mutation_score; rung 2 runs at acceptance "
+                     "(tooling/mutation_score.py --slice <id> --write .), CORE-TST-002")
+        elif accepted:
+            for m in modules:
+                if m not in scores:
+                    err(sid, f"accepted with no mutation_score for {m}, which its contracts: names")
+                    continue
+                floor = mutation_score.derived_floor(project.records["slices"], m, exclude=sid)
+                if floor is not None and scores[m] < floor:
+                    err(sid, f"mutation_score[{m}] is {scores[m]}, below the {floor} an accepted slice "
+                             f"already earned for it; the score ratchets (CORE-TST-002 rung 2)")
         if s.get("survivors_triaged") is True and open_survivors:
-            err(sid, f"survivors_triaged is true but {', '.join(open_survivors)} still open (source mutation)")
-        if accepted and (s.get("survivors_triaged") is False or open_survivors):
-            err(sid, "accepted with untriaged mutation survivors; kill each with a conformance test "
-                     "or reject it as equivalent with a reason")
+            err(sid, f"survivors_triaged is true but {', '.join(open_survivors)} still open (source mutation, S2)")
+        if accepted and gated and (s.get("survivors_triaged") is not True or open_survivors):
+            err(sid, f"accepted with untriaged S2 mutation survivors on {', '.join(gated)}, which a hazard "
+                     "names; kill each with a conformance test or reject it as equivalent with a reason")
         # CORE-REV-004: acceptance requires the artifact of a targeted read, on the same footing
         # as verified requirements and triaged survivors. Pending does not count; every other
         # disposition does, findings_raised included -- those findings are dispositioned under

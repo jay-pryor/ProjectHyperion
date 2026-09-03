@@ -26,6 +26,14 @@ def test_bad_dt_rejected_C106():
         contract.simulate(vacuum(dt=0.5))
 
 
+def test_dt_bounds_are_exactly_C106():
+    # (0, 0.1]: zero is out, 0.1 is in. An interval is two decisions, and a suite that
+    # only tries 0.5 s makes neither of them.
+    with pytest.raises(contract.ConfigError):
+        contract.simulate(vacuum(dt=0.0))
+    contract.simulate(vacuum(dt=0.1))
+
+
 def test_leaving_envelope_raises_C104():
     # Apex of a 2000 m/s shot at 80 deg is ~198 km, far above the 80 km envelope.
     with pytest.raises(EnvelopeError):

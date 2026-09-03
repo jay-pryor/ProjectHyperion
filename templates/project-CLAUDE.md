@@ -69,7 +69,7 @@ table and `.hyperion/imperatives.json` disagree, and an `--upgrade` needs a re-r
 <!-- generated:imperatives -->
 | # | Imperative | Source |
 |---|---|---|
-| IMP-01 | Import only from `modules/<name>/contract.*`. Never reach into another module's internals. | CORE-CON-003#the-rule |
+| IMP-01 | Import only from `modules/<name>/contract.*`; its conformance suite is importable from test code alone. | CORE-CON-003#the-rule |
 | IMP-02 | Never make a failing conformance test pass by changing the test. Read the contract and decide which is wrong. | CORE-SES-001#the-load-bearing-prohibitions |
 | IMP-03 | Never resolve an ambiguity silently. Stop and state both readings. | CORE-SES-001#declaration-stop-and-escalate |
 | IMP-05 | Put units and reference frames in type names, not comments. | CORE-CON-001#units-and-frames |
@@ -105,8 +105,7 @@ Stop, state the condition, and end the session. Do not work around it or ask per
 
 ## Context loadout
 
-Load only what the session type needs, plus this file; the skill lists the paths, as does
-`loadout.py`. Need more? Say which and why first.
+Load only what the session needs, plus this file; `loadout.py` lists the paths. Need more? Say why first.
 
 <!-- generated:loadout -->
 | Session | Load |
@@ -126,15 +125,16 @@ Load only what the session type needs, plus this file; the skill lists the paths
 ## Commands
 
     <test>              # full suite; writes trace/results.xml, which check_traces.py reads
-    <conformance>       # conformance only
-    <validation>        # validation suite — separate from tests
-    <lint>              # includes boundary and token checks
+    <conformance>       # conformance only; <validation> for the validation suite alone
+    <lint>              # the language linter; boundaries and units have checks below
 
 <!-- generated:commands-project -->
     python hyperion/tooling/check_traces.py                    # every trace/ record; --report prints the matrix
     python hyperion/tooling/build_console.py .                 # render console/index.html, the reviewer's artifact
     python hyperion/tooling/check_null_doubles.py .            # every suite must FAIL against its null double
-    python hyperion/tooling/mutation_score.py --slice SL-nn .  # at acceptance; --write records the survivors
+    python hyperion/tooling/check_boundaries.py .              # the real import graph against modules/*/manifest.yaml
+    python hyperion/tooling/check_units.py .                   # the type check runs clean and is proved to reject a unit confusion
+    python hyperion/tooling/mutation_score.py --slice SL-nn .  # at acceptance; --write records the survivors, --check re-measures
     python hyperion/tooling/check_imperatives.py               # imperatives drifted from their source sections
     python hyperion/tooling/loadout.py --session <TYPE>        # the documents that session type loads
     python hyperion/tooling/init_project.py --upgrade .        # re-render generated blocks after a version bump

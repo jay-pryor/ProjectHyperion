@@ -30,9 +30,9 @@ Unstructured LLM-assisted development fails in three specific ways:
 Hyperion is **core + profiles**.
 
 - **`core/`** — process invariants. Domain-independent. Applies to every project.
-- **`handbook/`** — orientation for the person: reading order, the artifact map, who
-  does what, what to do now, one slice session by session, and the glossary. Never
-  loaded by a session; rendered in the project console.
+- **`handbook/`** — orientation for the person: reading order, how a project starts,
+  the artifact map, who does what, what to do now, one slice session by session, and the
+  glossary. Never loaded by a session; rendered in the project console.
 - **`profiles/`** — toolchain, test harness, and gate artifacts for a class of software.
   A project may instantiate more than one (see [Profile composition](profiles/simulation/PROFILE.md)).
 - **`agents/`** — ready-to-use prompts for machine reviews. One file per review type.
@@ -78,7 +78,9 @@ to run them against the example it ships, `cd examples/minimal` first:
     python hyperion/tooling/check_traces.py                    # every trace/ record; --report prints the matrix
     python hyperion/tooling/build_console.py .                 # render console/index.html, the reviewer's artifact
     python hyperion/tooling/check_null_doubles.py .            # every suite must FAIL against its null double
-    python hyperion/tooling/mutation_score.py --slice SL-nn .  # at acceptance; --write records the survivors
+    python hyperion/tooling/check_boundaries.py .              # the real import graph against modules/*/manifest.yaml
+    python hyperion/tooling/check_units.py .                   # the type check runs clean and is proved to reject a unit confusion
+    python hyperion/tooling/mutation_score.py --slice SL-nn .  # at acceptance; --write records the survivors, --check re-measures
     python hyperion/tooling/check_imperatives.py               # imperatives drifted from their source sections
     python hyperion/tooling/loadout.py --session <TYPE>        # the documents that session type loads
     python hyperion/tooling/init_project.py --upgrade .        # re-render generated blocks after a version bump

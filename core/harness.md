@@ -27,9 +27,9 @@ Rendered by `build_layer.py` from the sources named, never written by hand
 
 | Piece | What it enforces | Source |
 |---|---|---|
-| One skill per session type (`/implement SL-nn <scope>`) | Prints the declaration, records the type in `.hyperion/session`, lists exactly the loadout, the may and must-not sets, the stop conditions; waits unless the type does not | session-types block, frontmatter `sessions:`, the fragments |
+| One skill per session type (`/implement SL-nn <scope>`) | Prints the declaration, which the scope hook binds to this session's id, lists exactly the loadout, the may and must-not sets, the stop conditions; waits unless the type does not | session-types block, frontmatter `sessions:`, the fragments |
 | One agent per lens | Read-only tools, model pinned, prompt and inputs verbatim from the agent file, told to disregard project instructions other than the read-only restriction | `agents/*.md` |
-| The scope hook | Denies a write outside the declared type's globs before it happens; inside a lens agent denies every write but `trace/findings.yaml` and every command but the test command | `.hyperion/session-types.json` |
+| The scope hook | Denies an `Edit`, `Write`, `MultiEdit` or `NotebookEdit` outside the declared type's globs before it happens, and denies any `Bash` that can write at all; inside a lens agent denies every write but `trace/findings.yaml` and every command but the test command | `.hyperion/session-types.json` |
 | The session-start check | Warns, never blocks, when a plugin outside the declared list is enabled | `.claude/settings.json` |
 | The settings file | The two hooks and `enabledPlugins`, the union of the chosen profiles' `plugins` lists | `profiles/*/fragment.yaml` |
 | The container | The same toolchain in every Codespace | `tooling/claude-code/devcontainer.json` |
@@ -40,7 +40,17 @@ sessions: if unattended chaining is ever wanted it is a script running headless 
 in order, each with its own tool set and model, not an agent making rulings
 ([P10](00-principles.md)).
 
-## Two limits the runtime cannot remove
+## Limits the runtime cannot remove
+
+**A shell command's paths are not visible to a hook.** No parse of one is sound; a
+quoting trick reaches any path. So the hook denies `Bash` whenever it can write —
+a redirection, a file-mutating command, an in-place stream editor, a program handed to
+an interpreter inline — rather than guessing where the write lands, and writes go
+through the tools whose path is a field it can read. What stays allowed is reading and
+running a program that is checked in. What that program writes, and what `git` moves,
+is visible only in the diff: `check_commit.py` over the real paths of each commit is
+the layer that sees it, which is why it runs on every push and not only on pull
+requests.
 
 **A subagent is only as clean as the prompt its parent wrote.** The parent chooses what
 the child sees, so separation between two contexts cannot be delegated to a third that
@@ -91,4 +101,12 @@ binding is written only when a real project needs it, under the rule that forbid
 speculative profiles (HYP-002). The rendered outputs are `.claude/` (skills, agents,
 hooks, settings), `.hyperion/session-types.json`, and `.devcontainer/`, in this
 repository and in every project; `build_layer.py --check` fails CI when any is stale.
-`.hyperion/session` is per-session state and is ignored by git.
+
+A declared type is bound to the runtime's session id, at `.hyperion/sessions/<id>`,
+written by the hook when it sees a declaration go past and never by the session itself: a
+session that could restate its own type could widen it. Keying it to the working tree
+instead would let a second session in the same tree overwrite the first's scope, and let
+a session that declared nothing inherit yesterday's — always in the permissive direction,
+so the hook would authorise rather than fail to deny. A session with no binding of its
+own is undeclared, warned once, and unrestricted. Bindings are scratch state, aged out
+after a week, and ignored by git.

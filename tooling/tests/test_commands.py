@@ -82,3 +82,12 @@ def test_the_readme_block_says_it_is_not_run_from_this_repository():
 
 def test_the_console_is_among_the_project_commands():
     assert "build_console.py" in block("templates/project-CLAUDE.md", "commands-project")
+
+
+def test_the_handbook_tells_a_new_reader_how_to_generate_the_console():
+    """HBK-006 is the first handbook document a person reads and the only one that says
+    how to see where a project stands. It renders the same block rather than stating the
+    command line by hand, so the instruction cannot drift from the script (P3)."""
+    handbook = block("handbook/starting-a-project.md", "commands-project")
+    assert handbook == bl.render_commands(ROWS, "project", "hyperion/tooling/")
+    assert "build_console.py" in handbook
