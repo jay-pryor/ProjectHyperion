@@ -15,6 +15,21 @@ related: [HYP-000]
 One heading per release, newest first. The heading equals the content of `VERSION`, and CI
 refuses a `v*` tag whose version has no heading here. Per-document history is `git log`.
 
+## 0.7.0 — 2026-09-03
+
+Single sources for the last two restated facts, and the release itself becomes a session.
+
+- Every command a human runs is a row in `tooling/commands.yaml` carrying its context;
+  README, the project template, and each project's `CLAUDE.md` render their command
+  blocks from it, and `--check` fails CI when a rendered block drifts.
+- The seven validation classes are the table in CORE-LFC-003 and nothing else; SIM-VAL-001
+  says what each class means in simulation rather than listing eight of its own.
+- Acceptance requires a recorded `targeted_read` review naming the slice. A targeted read
+  that leaves no record was a statement of intent, not a control (CORE-REV-004).
+- RELEASE is a session type (CORE-SES-001, IMP-F4): `VERSION` and `CHANGELOG.md` belong to
+  it, not to the FRAMEWORK sessions it summarises. The tag job fails a release whose
+  changelog entry is not the newest commit in the range.
+
 ## 0.6.0 — 2026-09-02
 
 The consultant review's order of attack, steps 1 to 10, closing every MVP finding.
