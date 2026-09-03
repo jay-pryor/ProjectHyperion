@@ -14,3 +14,7 @@ imperatives:
     text: "Regenerate the operating layer (`build_layer.py`) after changing any source it renders."
     source: CORE-IMP-001#generated-blocks
     anchor: [build_layer]
+  - id: IMP-F4
+    text: "Never bump `VERSION` or edit `CHANGELOG.md` in a FRAMEWORK session; RELEASE does that."
+    source: CORE-SES-001#session-types
+    anchor: [RELEASE, CHANGELOG.md, VERSION]

@@ -41,6 +41,24 @@
         "REGISTRY.md"
       ],
       "must_not_modify": []
+    },
+    "RELEASE": {
+      "may_modify": [
+        "CHANGELOG.md",
+        "VERSION",
+        "README.md",
+        "REGISTRY.md",
+        "examples/**/.hyperion/version"
+      ],
+      "must_not_modify": [
+        "core/**",
+        "profiles/**",
+        "agents/**",
+        "templates/**",
+        "tooling/**",
+        "imperatives/**",
+        ".github/**"
+      ]
     }
   },
   "agents": {

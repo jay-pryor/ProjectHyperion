@@ -75,6 +75,7 @@ The imperatives this file carries, rendered from `imperatives/framework.yaml`:
 | IMP-F1 | Regenerate the registry after any change to this repository. | TOOL-001#enforcement |
 | IMP-F2 | Every rule added to core must trace to a principle. | CORE-PRN-001#principles |
 | IMP-F3 | Regenerate the operating layer (`build_layer.py`) after changing any source it renders. | CORE-IMP-001#generated-blocks |
+| IMP-F4 | Never bump `VERSION` or edit `CHANGELOG.md` in a FRAMEWORK session; RELEASE does that. | CORE-SES-001#session-types |
 <!-- /generated -->
 
 10. **Do not add a profile speculatively.** Profiles are written when a real project needs

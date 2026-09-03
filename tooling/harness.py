@@ -26,6 +26,24 @@ HOOKS = ["scope.py", "plugins.py"]
 READ_ONLY_TOOLS = "Read, Grep, Glob, Bash"
 DENIED_TOOLS = "Edit, Write, MultiEdit, NotebookEdit, Agent"
 WAITS = {"QUERY", "REVIEW"}        # types with no scope to confirm (CORE-SES-001)
+
+# RELEASE runs a fixed sequence, and only two of its steps are decisions (CORE-SES-001).
+# Rendered in place of the FRAMEWORK rules block, so the checklist is stated once.
+RELEASE_CHECKLIST = [
+    "## Checklist", "",
+    "Steps 3 and 4 are the human's; the rest run unattended. Stop at the first step that fails.",
+    "`CHANGELOG.md` (HYP-003) is what this session writes; it is human-audience, so it is not in",
+    "the loadout above.", "",
+    "1. Merge the working branch into `main`. Stop and report if it conflicts.",
+    "2. Read `git log <last tag>..HEAD` and the diff over the same range.",
+    "3. Draft the `CHANGELOG.md` entry from that diff, newest heading first. **Show it and stop.**",
+    "4. Propose the version number, with the reason it is that one and not the next up. **Show it and stop.**",
+    "5. Write `VERSION` and `CHANGELOG.md`, then `build_registry.py`, `build_layer.py`, and both `--check`s.",
+    "6. Commit with `Session: RELEASE`, push, `git tag v$(cat VERSION)`, push the tag.", "",
+    "A framework change discovered on the way is a FRAMEWORK session after the tag, not a step here.",
+    "",
+]
+RELEASE_PRINCIPLE = "P8 - the session that made a change is the wrong one to summarise it"
 FENCE = re.compile(r"```[^\n]*\n(.*?)```", re.DOTALL)
 
 
@@ -142,8 +160,9 @@ def render_session_skill(src, name, fragments, profiles, framework):
             f'argument-hint: "{"[scope]" if framework else "[SL-nn] [scope]"}"', "---",
             f"# {name} session", "", _declare_line(name), ""]
     if framework:
+        principle = RELEASE_PRINCIPLE if name == "RELEASE" else "<which of P1-P10 this change serves>"
         decl = [f"    SESSION: {name}", "    SCOPE: $ARGUMENTS", f"    MAY MODIFY: {_globs(t['may_modify'])}",
-                "    PRINCIPLE: <which of P1-P10 this change serves>"]
+                f"    PRINCIPLE: {principle}"]
         arg_note = "Arguments: `$ARGUMENTS`, the scope (or the question)."
     else:
         decl = [f"    SESSION: {name}", "    SLICE: <first token of the arguments, or n/a>",
@@ -165,6 +184,8 @@ def render_session_skill(src, name, fragments, profiles, framework):
         body += ["## Stop conditions", "",
                  build_layer.render_stop_conditions(src.core, fragments), "",
                  "Stop, state the condition, and end the session; do not work around it (CORE-SES-001).", ""]
+    elif name == "RELEASE":
+        body += RELEASE_CHECKLIST
     else:
         body += ["## Rules", "", "Every change traces to a principle; one fact, one place; regenerate the registry and",
                  "the operating layer before finishing (HYP-002).", ""]

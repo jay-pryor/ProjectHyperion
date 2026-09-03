@@ -14,7 +14,7 @@
       "text": "Never make a failing conformance test pass by changing the test. Read the contract and decide which is wrong.",
       "source": "CORE-SES-001#the-load-bearing-prohibitions",
       "source_path": "core/session-protocol.md",
-      "section_hash": "b2943b7dabdb1bc2",
+      "section_hash": "ccd398e6d8d57c93",
       "carried_in": "CLAUDE.md"
     },
     {
@@ -22,7 +22,7 @@
       "text": "Never resolve an ambiguity silently. Stop and state both readings.",
       "source": "CORE-SES-001#declaration-stop-and-escalate",
       "source_path": "core/session-protocol.md",
-      "section_hash": "03bca6be5fda4bec",
+      "section_hash": "1d3696d1f112e7dc",
       "carried_in": "CLAUDE.md"
     },
     {
@@ -46,7 +46,7 @@
       "text": "Declare session type, scope, and permitted files before touching anything.",
       "source": "CORE-SES-001#declaration-stop-and-escalate",
       "source_path": "core/session-protocol.md",
-      "section_hash": "03bca6be5fda4bec",
+      "section_hash": "1d3696d1f112e7dc",
       "carried_in": "CLAUDE.md"
     },
     {
@@ -54,7 +54,7 @@
       "text": "Stop if the slice cannot be built within existing contracts.",
       "source": "CORE-SES-001#the-load-bearing-prohibitions",
       "source_path": "core/session-protocol.md",
-      "section_hash": "b2943b7dabdb1bc2",
+      "section_hash": "ccd398e6d8d57c93",
       "carried_in": "CLAUDE.md"
     },
     {

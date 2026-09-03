@@ -85,36 +85,36 @@ FRAMEWORK:
   scope: framework
   may_modify: [core/**, profiles/**, agents/**, templates/**, tooling/**, examples/**, handbook/**, imperatives/**, .github/**, .claude/**, .devcontainer/**, .hyperion/**, .gitignore, CLAUDE.md, README.md, REGISTRY.md]
   must_not_modify: []   # nothing by path; every change traces to a principle (HYP-002)
+RELEASE:
+  purpose: Name what a run of framework changes was, and cut the version for it
+  scope: framework
+  may_modify: [CHANGELOG.md, VERSION, README.md, REGISTRY.md, examples/**/.hyperion/version]
+  must_not_modify: [core/**, profiles/**, agents/**, templates/**, tooling/**, imperatives/**, .github/**]
 ```
+
+Session discipline is honour-based, but its main violation is visible in the diff:
+`check_commit.py` rejects a commit whose paths fall outside its `Session:` trailer's type, and the
+harness denies the write (CORE-HRN-001) — the shortcut made inconvenient, not proof ([P2](00-principles.md)).
 
 ## The load-bearing prohibitions
 
-- **CONFORMANCE must not implement** — [P8](00-principles.md).
-- **IMPLEMENT must not touch `conformance/` or `contract.*`.** When a conformance test
-  fails, read the **contract** to decide *which is wrong, the test or the code* (P8). If the
-  slice needs a contract change, stop; an Interface change runs ([CORE-CHG-001](change-control/change-tiers.md)) — [P4](00-principles.md).
-- **REVIEW appends findings and nothing else** — [P9](00-principles.md).
-- **BASELINE is entered only with a decision record cited in the declaration**
-  ([CORE-CHG-002](change-control/baseline-change-procedure.md)) — [P1](00-principles.md).
-- **QUERY modifies nothing and may read anything**, human-only documents included. It
-  ends by naming the session type that makes any change it uncovers — [P10](00-principles.md).
-
-## Mechanical backstop
-
-Session discipline is honour-based, but its main violation is visible in the diff.
-`tooling/check_commit.py` reads the block above and rejects a commit whose paths fall outside
-its `Session:` trailer's type, and the harness denies the write itself ([CORE-HRN-001](harness.md)):
-not proof the sessions were separate, but the shortcut made inconvenient ([P2](00-principles.md)).
+| Type | Prohibition | Principle |
+|---|---|---|
+| CONFORMANCE | must not implement | [P8](00-principles.md) |
+| IMPLEMENT | must not touch `conformance/` or `contract.*`. When a conformance test fails, read the **contract** to decide *which is wrong*, the test or the code. If the slice needs a contract change, stop; an Interface change runs ([CORE-CHG-001](change-control/change-tiers.md)) | [P4](00-principles.md) |
+| REVIEW | appends findings and nothing else | [P9](00-principles.md) |
+| BASELINE | is entered only with a decision record cited in the declaration ([CORE-CHG-002](change-control/baseline-change-procedure.md)) | [P1](00-principles.md) |
+| QUERY | modifies nothing and may read anything, human-only documents included; it ends by naming the session type that makes any change it uncovers | [P10](00-principles.md) |
+| FRAMEWORK | must not cut the release that describes it: `VERSION` and `CHANGELOG.md` belong to RELEASE, because the session that made a change is the wrong one to summarise it | [P8](00-principles.md) |
 
 ## Declaration, stop, and escalate
 
-Every session opens with a declaration of type, scope, and permitted files, in the form
-the project `CLAUDE.md` gives, so scope is committed to **before** anything is touched
-and drift is visible against it. REVIEW and QUERY have no scope and do not wait.
+Every session opens with a declaration of type, scope, and permitted files, in the form the
+project `CLAUDE.md` gives, so scope is committed to **before** anything is touched and drift is
+visible against it. REVIEW and QUERY have no scope and do not wait.
 
-A session that hits a stop condition ends with a written statement of the condition. It
-does not work around it, and it does not ask permission to. Stop conditions are listed in
-`CLAUDE.md`; they are the primary defence against architectural decisions made silently.
-An ambiguity is a stop condition: a session that finds two defensible readings of a
-criterion, a clause, or an instruction states both readings and ends. Picking one
-silently is the model deciding what the problem is ([P10](00-principles.md)).
+A session that hits a stop condition ends with a written statement of the condition. It does
+not work around it and does not ask permission to; the conditions are listed in `CLAUDE.md`.
+An ambiguity is one: a session that finds two defensible readings of a criterion or an
+instruction states both readings and ends. Picking one silently is the model deciding what
+the problem is ([P10](00-principles.md)).

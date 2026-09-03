@@ -118,6 +118,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # the range since the previous tag, for the check below
 
       - name: Tag equals VERSION and CHANGELOG.md has its heading
         env:
@@ -131,3 +133,28 @@ jobs:
             echo "ERROR CHANGELOG.md has no '## $VERSION' heading"; exit 1
           fi
           echo "OK tag $TAG matches VERSION and CHANGELOG.md"
+
+      # Several FRAMEWORK sessions, one RELEASE (CORE-SES-001): the entry describes changes
+      # that are already in, so over the range since the previous tag the commit that last
+      # touched CHANGELOG.md must be the newest one. An entry written before the framework
+      # commits it claims to summarise is the failure this catches.
+      - name: The release commit is the newest in the range
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          PREV="$(git describe --tags --abbrev=0 "$TAG^" 2>/dev/null || true)"
+          if [ -z "$PREV" ]; then echo "OK $TAG is the first tag; no range to check"; exit 0; fi
+          RANGE="$PREV..$TAG"
+          CHANGED="$(git diff --name-only "$RANGE" -- . \
+            ':!CHANGELOG.md' ':!VERSION' ':!README.md' ':!REGISTRY.md' ':!examples/*/.hyperion/version')"
+          if [ -z "$CHANGED" ]; then echo "OK $RANGE changes no framework file"; exit 0; fi
+          NEWEST="$(git rev-list -1 "$RANGE")"
+          LAST="$(git rev-list -1 "$RANGE" -- CHANGELOG.md)"
+          if [ "$LAST" != "$NEWEST" ]; then
+            echo "ERROR $RANGE changes framework files, but CHANGELOG.md was last written in"
+            echo "      ${LAST:-no commit in the range}, not in the newest commit $NEWEST."
+            echo "      The entry predates what it describes; cut the release from a RELEASE session"
+            echo "      after the FRAMEWORK sessions land (CORE-SES-001)."
+            exit 1
+          fi
+          echo "OK the newest commit in $RANGE is the one that wrote CHANGELOG.md"
